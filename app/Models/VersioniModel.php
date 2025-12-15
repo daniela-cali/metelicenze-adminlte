@@ -19,8 +19,8 @@ class VersioniModel extends Model
         'dt_rilascio',
         'stato',
         'ultima',
-
-    ];
+        'tipo'
+];
 
     protected bool $allowEmptyInserts = false;
 
@@ -37,6 +37,12 @@ class VersioniModel extends Model
     public function getVersioni()
     {
         return $this->orderBy('dt_rilascio', 'DESC')
+            ->findAll();    
+    }
+
+    public function getVersioniByTipo($tipo)
+    {
+        return $this->where('tipo', $tipo)->orderBy('dt_rilascio', 'DESC')
             ->findAll();    
     }
 

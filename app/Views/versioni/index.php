@@ -16,6 +16,7 @@
                         <thead class="table-light">
                             <tr>
                                 <th>ID</th>
+                                <th>Tipo</th>
                                 <th>Codice</th>
                                 <th>Release</th>
                                 <th>Data Rilascio</th>
@@ -27,6 +28,7 @@
                             <?php foreach ($versioni as $versione): ?>
                                 <tr>
                                     <td><?= esc($versione->id) ?></td>
+                                    <td><?= esc($versione->tipo) ?></td>
                                     <td><?= esc($versione->codice) ?></td>
                                     <td><?= esc($versione->release) ?></td>
                                     <td><?= date('d/m/Y', strtotime($versione->dt_rilascio)) ?></td>
@@ -74,7 +76,7 @@
             order: [],
             columnDefs: [
                 {
-                    targets: 6,
+                    targets: 7,
                     orderable: true,
                     searchable: true
                 }       

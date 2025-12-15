@@ -65,9 +65,10 @@ class VersioniController extends BaseController
         $data = $this->request->getPost();
 
         $ultima_sn = $data['ultima'] ?? false;
+        $tipo = $data['tipo'] ?? false;
         if ($ultima_sn) {
-            // Se l'utente ha selezionato "Ultima", aggiorno tutte le altre versioni
-            $this->VersioniModel->set(['ultima' => 0])->where('ultima', 1)->update();
+            // Se l'utente ha selezionato "Ultima", aggiorno tutte le altre versioni dello stesso tipo
+            $this->VersioniModel->set(['ultima' => 0])->where('ultima', 1)->where('tipo', $tipo)->update();
         }
         log_message('info', 'Dati ricevuti per il salvataggio: ' . print_r($data, true));
         //echo "Dati ricevuti: ";

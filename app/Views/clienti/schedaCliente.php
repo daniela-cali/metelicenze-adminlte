@@ -89,7 +89,7 @@
                                             </span>
                                         </td>
                                         <td>
-                                            <a href="/aggiornamenti/crea/<?= $licenza->id ?>" class="btn btn-sm btn-outline-primary" title="Crea Aggiornamento">
+                                            <a href="/aggiornamenti/crea/<?= $licenza->id ?>/<?= $licenza->tipo ?> " class="btn btn-sm btn-outline-primary" title="Crea Aggiornamento">
                                                 <i class="bi bi-clock-history"></i>
                                                 <a href="/licenze/modifica/<?= $licenza->id ?>" class="btn btn-sm btn-outline-secondary" title="Modifica">
                                                     <i class="bi bi-pencil"></i>

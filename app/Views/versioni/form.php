@@ -15,7 +15,7 @@
                 <div class="mb-3 form-check">
                     <label class="form-check-label" class="form-label" for="stato">Ultima Versione</label>
                     <!-- Per gestire il checkbox in modo che invii sempre un valore -->
-                    <input type="hidden" name="ultima" value="0"/>
+                    <input type="hidden" name="ultima" value="0" />
                     <input
                         type="checkbox"
                         class="form-check-input"
@@ -30,7 +30,12 @@
                     <input type="date" name="dt_rilascio" id="dt_rilascio" class="form-control" required
                         value="<?= isset($versione) ? esc($versione->dt_rilascio) : '' ?>">
                 </div>
-
+                <select name="tipo" id="tipo" class="form-select" required>
+                    <option value="Common">-- Seleziona --</option>
+                    <option value="Sigla" <?= (isset($licenza) && $licenza->tipo === 'Sigla') ? 'selected' : '' ?>>Sigla</option>
+                    <option value="VarHub" <?= (isset($licenza) && $licenza->tipo === 'VarHub') ? 'selected' : '' ?>>VarHub</option>
+                    <option value="SKNT" <?= (isset($licenza) && $licenza->tipo === 'SKNT') ? 'selected' : '' ?>>SKTN</option>
+                </select>
                 <div class="mb-3">
                     <label for="codice" class="form-label">Codice</label>
                     <input type="text" name="codice" id="codice" class="form-control" rows="3" placeholder="Codice della versione" required
@@ -44,8 +49,8 @@
                 <div class="mb-3">
                     <label for="note_versione" class="form-label">Note di versione</label>
                     <textarea name="note_versione" id="note_versione" class="form-control" rows="10"><?=
-                                                                                                        isset($versione) ? esc($versione->note_versione) : ''
-                                                                                                        ?></textarea>
+                    isset($versione) ? esc($versione->note_versione) : ''
+                    ?></textarea>
                 </div>
                 <div class="mt-4">
                     <button type="submit" class="btn btn-success">

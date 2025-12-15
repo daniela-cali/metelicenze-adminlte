@@ -56,7 +56,7 @@
                                             </button>
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                                 <li>
-                                                    <a class="dropdown-item" href="<?= site_url('aggiornamenti/crea/' . $licenza->id) ?>">
+                                                    <a class="dropdown-item" href="<?= site_url('aggiornamenti/crea/' . $licenza->id . '/'. $licenza->tipo) ?>">
                                                         <i class="bi bi-clock-history"></i>
                                                         Aggiornamento
                                                     </a>

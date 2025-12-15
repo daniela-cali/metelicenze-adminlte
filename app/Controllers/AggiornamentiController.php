@@ -45,15 +45,16 @@ class AggiornamentiController extends BaseController
 
         return view('aggiornamenti/form', $data);
     }
-    public function crea($idLicenza = null)
+    public function crea($idLicenza = null, $tipo = null)
     {
         log_message('info', 'AggiornamentiController::crea - ID Licenza: ' . $idLicenza);
         // Se non è fornito un ID licenza, non posso creare un aggiornamento
         if ($idLicenza === null) {
             return redirect()->back()->with('error', 'Selezionare una licenza!.');
         }
-
-        $versioni = $this->VersioniModel->getVersioni();
+        $tipo = $tipo ?? '';
+        log_message('info', 'AggiornamentiController::crea - Creazione aggiornamento per Licenza ID: ' . $idLicenza);
+        $versioni = $this->VersioniModel->getVersioniByTipo($tipo);
         $data['licenze_id'] = $idLicenza;
         $data['title'] = 'Crea Aggiornamento per Licenza ID' . esc($idLicenza);
         $data['versioni'] = $versioni;
