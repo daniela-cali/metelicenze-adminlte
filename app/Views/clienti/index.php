@@ -150,11 +150,14 @@
         $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
             if (settings.nTable.id !== 'clientiTable') return true;
 
-            // --- filtro "licenze" (colonna N° index 5)
+            // --- filtro "licenze" (colonna N° index 6)
             const licenzeVal = $('input[name="licenze"]:checked').val(); // 'si'|'no'|undefined
             const rowNode = table.row(dataIndex).node();
-            const numLicenzeText = $(rowNode).find('td').eq(5).text().trim();
+            //console.log("Valore licenze selezionato: " + licenzeVal);
+            const numLicenzeText = $(rowNode).find('td').eq(6).text().trim();
+            //console.log("Numero licenze cella: " + numLicenzeText);
             const numLicenze = parseInt(numLicenzeText.replace(/\D/g, '')) || 0; // estrai numero
+            if (licenzeVal === 'tutti') return true; // nessun filtro licenze
             if (licenzeVal === 'si' && numLicenze <= 0) return false;
             if (licenzeVal === 'no' && numLicenze > 0) return false;
 

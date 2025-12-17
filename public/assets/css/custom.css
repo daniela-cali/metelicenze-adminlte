@@ -131,3 +131,5 @@
 .dt-button.btn {
     background-color: transparent !important;
 }
+
+tr { cursor: pointer; }
