@@ -36,10 +36,14 @@
                         <div class="col">
                             <div class="d-flex justify-content-end align-items-center gap-3" id="licenze">
                                 <div class="form-check">
-
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="licenze" value="tutti"
+                                            id="licenzeTutti" checked>
+                                        <label class="form-check-label" for="licenzeTutti">Tutti i clienti</label>
+                                    </div>
                                     <div class="form-check">
                                         <input class="form-check-input" type="radio" name="licenze" value="si"
-                                            id="licenzeSi" checked>
+                                            id="licenzeSi">
                                         <label class="form-check-label" for="licenzeSi">Con Licenze attive</label>
                                     </div>
                                     <div class="form-check">
@@ -58,6 +62,7 @@
                         <table class="table table-striped table-hover align-middle datatable" id="clientiTable">
                             <thead class="table-light">
                                 <tr>
+                                    <th>ID</th>
                                     <th>Codice cliente</th>
                                     <th>Nome</th>
                                     <th>Email</th>
@@ -70,7 +75,8 @@
                             </thead>
                             <tbody>
                                 <?php foreach ($clienti as $cliente): ?>
-                                    <tr>
+                                    <tr class="cliente-row" data-id="<?= esc($cliente->id) ?>">
+                                        <td><?= esc($cliente->id) ?></td>
                                         <td><?= esc($cliente->codice) ?></td>
                                         <td><?= esc($cliente->nome) ?></td>
                                         <td><?= esc($cliente->email) ?></td>
@@ -116,44 +122,66 @@
 <?= $this->endSection() ?>
 <?= $this->section('scripts') ?>
 <script>
-$(document).ready(function () {
-    // inizializza la DataTable 
-    const table = $('#clientiTable').DataTable($.extend(true, {}, datatableDefaults, { order: [] }));
+    document.addEventListener("DOMContentLoaded", function() {
+        //$(document).ready(function () {
+        const clientiRows = document.querySelectorAll('.cliente-row');
+        let selectedClienteId = null;
+        clientiRows.forEach(row => {
+            row.addEventListener('click', function() {
+                clientiRows.forEach(r => r.classList.remove('table-primary', 'selected'));
+                selectedClienteId = this.getAttribute('data-id');
+                console.log("Cliente selezionato: " + selectedClienteId);
+                this.classList.add('table-primary', 'selected');
+            });
+            row.addEventListener('dblclick', function() {
+                selectedClienteId = this.getAttribute('data-id');
+                const baseUrl = "<?= base_url() ?>";
+                selectedClienteId = this.getAttribute('data-id');
+                console.log("Redirecting to cliente ID: " + selectedClienteId);
+                window.location.href = `${baseUrl}/clienti/schedaCliente/${selectedClienteId}`;
+            });
+        });
+        // inizializza la DataTable 
+        const table = $('#clientiTable').DataTable($.extend(true, {}, datatableDefaults, {
+            order: []
+        }));
 
-    // filtro custom: licenze + tipi
-    $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-        if (settings.nTable.id !== 'clientiTable') return true;
+        // filtro custom: licenze + tipi
+        $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+            if (settings.nTable.id !== 'clientiTable') return true;
 
-        // --- filtro "licenze" (colonna N° index 5)
-        const licenzeVal = $('input[name="licenze"]:checked').val(); // 'si'|'no'|undefined
-        const rowNode = table.row(dataIndex).node();
-        const numLicenzeText = $(rowNode).find('td').eq(5).text().trim();
-        const numLicenze = parseInt(numLicenzeText.replace(/\D/g, '')) || 0; // estrai numero
-        if (licenzeVal === 'si' && numLicenze <= 0) return false;
-        if (licenzeVal === 'no' && numLicenze > 0) return false;
+            // --- filtro "licenze" (colonna N° index 5)
+            const licenzeVal = $('input[name="licenze"]:checked').val(); // 'si'|'no'|undefined
+            const rowNode = table.row(dataIndex).node();
+            const numLicenzeText = $(rowNode).find('td').eq(5).text().trim();
+            const numLicenze = parseInt(numLicenzeText.replace(/\D/g, '')) || 0; // estrai numero
+            if (licenzeVal === 'si' && numLicenze <= 0) return false;
+            if (licenzeVal === 'no' && numLicenze > 0) return false;
 
-        // --- filtro "tipi" (colonna Tipi index 6)
-        const selectedTipi = $('input[name="tipi"]:checked').map(function(){ return $(this).val(); }).get();
-        if (selectedTipi.length === 0) return true; // nessun filtro tipi
-        const tipiCellText = $(rowNode).find('td').eq(6).text().trim();
-        // includi se ALMENO un tipo selezionato è presente nella cella (OR)
-        return selectedTipi.some(t => tipiCellText.indexOf(t) !== -1);
+            // --- filtro "tipi" (colonna Tipi index 6)
+            const selectedTipi = $('input[name="tipi"]:checked').map(function() {
+                return $(this).val();
+            }).get();
+            if (selectedTipi.length === 0) return true; // nessun filtro tipi
+            const tipiCellText = $(rowNode).find('td').eq(6).text().trim();
+            // includi se ALMENO un tipo selezionato è presente nella cella (OR)
+            return selectedTipi.some(t => tipiCellText.indexOf(t) !== -1);
+        });
+
+        // quando cambia un filtro, ridisegna la tabella 
+        $('input[name="tipi"]').on('change', function() {
+            $(":radio[value=no][name=licenze]").prop("checked", false);
+            $(":radio[value=si][name=licenze]").prop("checked", true);
+            table.draw();
+        });
+        $('input[name="licenze"]').on('change', function() {
+            //leggo il valore selezionato e disabilito le checkbox dei tipi se "no" per coerenza di interfaccia
+            let val = this.value;
+            if (val == 'no') {
+                $('input[name="tipi"]').prop('checked', false);
+            }
+            table.draw();
+        });
     });
-
-    // quando cambia un filtro, ridisegna la tabella 
-    $('input[name="tipi"]').on('change', function() {
-        $(":radio[value=no][name=licenze]").prop("checked", false);
-        $(":radio[value=si][name=licenze]").prop("checked", true);
-        table.draw();
-    });
-    $('input[name="licenze"]').on('change', function() {
-        //leggo il valore selezionato e disabilito le checkbox dei tipi se "no" per coerenza di interfaccia
-        let val = this.value;
-        if (val == 'no') {
-            $('input[name="tipi"]').prop('checked', false);
-        }
-        table.draw();
-    });
-});
 </script>
 <?= $this->endSection() ?>
