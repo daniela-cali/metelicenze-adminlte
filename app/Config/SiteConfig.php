@@ -10,4 +10,7 @@ class SiteConfig extends BaseConfig
     public string $siteTheme = 'metelicenze'; // Default theme
     public string $adminEmail = 'nhildra.morwen@gmail.com';
     public string $siteURL    = 'https://metelicenze.unresolved.it/'; 
+
+    // Abilita o disabilita la connessione a un secondo database
+    public bool $enableMultiDB = false;
 }

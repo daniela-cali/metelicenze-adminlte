@@ -13,23 +13,23 @@
         </div>
 
         <div class="row g-4">
-            <!-- Database 1 Card -->
+            <?php 
+            foreach ($databases as $index => $dbInfo) : ?>
             <div class="col-md-6">
                 <div class="card h-100 shadow-sm">
                     <div class="card-header">
-                        <i class="bi bi-database-check"></i> Connessione a MySQLi
+                        <i class="bi bi-database-check"></i> <?= esc($dbInfo['title']) ?>
                     </div>
                     <div class="card-body">
-                        <div class="mb-2"><span class="text-muted">Nome DB:</span> <code class="ms-2"><?= esc($db1->db_name) ?></code></div>
-                        <div class="mb-2"><span class="text-muted">Connection Group:</span> <code class="ms-2"><?= esc($db1_connection_group) ?></code></div>
-                        <div class="mb-2"><span class="text-muted">Encoding:</span> <span class="badge bg-success"><?= esc($db1->encoding) ?></span></div>
-                        <div class="mb-2"><span class="text-muted">Collation:</span> <code class="ms-2"><?= esc($db1->collation) ?></code></div>
-                        <div class="mb-2"><span class="text-muted">CType:</span> <code class="ms-2"><?= esc($db1->ctype) ?></code></div>
-                        <div class="mb-3"><span class="text-muted">Driver:</span> <code class="ms-2"><?= esc($db1_driver) ?></code></div>
-
+                        <div class="mb-2"><span class="text-muted">Nome DB:</span> <code class="ms-2"><?= esc($dbInfo['db_name']) ?></code></div>
+                        <div class="mb-2"><span class="text-muted">Connection Group:</span> <code class="ms-2"><?= esc($dbInfo['connection_group']) ?></code></div>
+                        <div class="mb-2"><span class="text-muted">Encoding:</span> <span class="badge bg-success"><?= esc($dbInfo['encoding']) ?></span></div>
+                        <div class="mb-2"><span class="text-muted">Collation:</span> <code class="ms-2"><?= esc($dbInfo['collation']) ?></code></div>
+                        <div class="mb-2"><span class="text-muted">CType:</span> <code class="ms-2"><?= esc($dbInfo['ctype']) ?></code></div>
+                        <div class="mb-3"><span class="text-muted">Driver:</span> <code class="ms-2"><?= esc($dbInfo['driver']) ?></code></div>
                         <!-- Pulsanti -->
                         <div class="d-flex justify-content-center gap-2 mt-3">
-                            <a href="<?= base_url('database/info/' . $db1_connection_group) ?>" class="btn btn-outline-primary">
+                            <a href="<?= base_url('database/info/' . $dbInfo['connection_group']) ?>" class="btn btn-outline-primary">
                                 <i class="bi bi-info-circle"></i> Info DB e Tabelle
                             </a>
 
@@ -37,31 +37,8 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Database 2 Card -->
-            <div class="col-md-6">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-header">
-                        <i class="bi bi-database-check"></i> Connessione a PostgreSQL
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-2"><span class="text-muted">Nome DB:</span> <code class="ms-2"><?= esc($db2->db_name) ?></code></div>
-                        <div class="mb-2"><span class="text-muted">Connection Group:</span> <code class="ms-2"><?= esc($db2_connection_group) ?></code></div>
-                        <div class="mb-2"><span class="text-muted">Encoding:</span> <span class="badge bg-success"><?= esc($db2->encoding) ?></span></div>
-                        <div class="mb-2"><span class="text-muted">Collation:</span> <code class="ms-2"><?= esc($db2->collation) ?></code></div>
-                        <div class="mb-2"><span class="text-muted">CType:</span> <code class="ms-2"><?= esc($db2->ctype) ?></code></div>
-                        <div class="mb-3"><span class="text-muted">Driver:</span> <code class="ms-2"><?= esc($db2_driver) ?></code></div>
-
-                        <!-- Pulsanti -->
-                        <div class="d-flex justify-content-center gap-2 mt-3">
-                            <a href="<?= base_url('database/info/' . $db2_connection_group) ?>" class="btn btn-outline-success">
-                                <i class="bi bi-info-circle"></i> Info DB e Tabelle
-                            </a>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <?php endforeach; ?>
+        
         </div>
 
         <!-- Footer Actions -->

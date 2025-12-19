@@ -13,7 +13,7 @@ class DatabaseInfoController extends BaseController
         $enableMultiDB = $config->enableMultiDB ?? false;
         log_message('info', 'Connessione a doppio database: ' . ($enableMultiDB ? 'abilitata' : 'disabilitata') . '.');
 
-        // Connessione al primo DB (Default)
+        // Connessione al primo DB (MySQLi)
         $connectionGroup1 = 'default';
         $db1 = db_connect($connectionGroup1, false);
         $driver1 = $db1->DBDriver;
@@ -38,11 +38,10 @@ class DatabaseInfoController extends BaseController
         $databases = [
             $datadbDefault,
         ];
-        $connectionGroup2 = 'external';
-        $db2 = db_connect($connectionGroup2, false);
-        if ($db2) {
+        if ($enableMultiDB) {
             log_message('info', 'Connessione a doppio database abilitata, procedo con il secondo database.');
             // Connessione al DB esterno  (PostgreSQL)
+            $connectionGroup2 = 'external';
             $db2 = db_connect($connectionGroup2, false);
             $driver2 = $db2->DBDriver;
             log_message('info', 'Driver del secondo database: ' . $driver2);
