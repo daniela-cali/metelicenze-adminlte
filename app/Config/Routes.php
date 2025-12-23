@@ -32,6 +32,11 @@ $routes->group('clienti', ['filter' => 'notpending'], function($routes) {
     $routes->post('filters', 'ClientiController::clientiFilters');
     $routes->get('/', 'ClientiController::index');
     $routes->get('schedaCliente/(:num)', 'ClientiController::schedaCliente/$1');
+    $routes->get('crea/', 'ClientiController::crea'); // Nuovo cliente con ID interno
+    $routes->get('modifica/(:num)', 'ClientiController::modifica/$1');
+    $routes->get('elimina/(:num)', 'ClientiController::elimina/$1');
+    $routes->post('salva/', 'ClientiController::salva/'); // Salva cliente nuovo
+    $routes->post('salva/(:num)', 'ClientiController::salva/$1'); // Salva cliente esistente by ID
  });
 
 $routes->group('licenze', ['filter' => 'notpending'], function($routes) {
@@ -45,7 +50,7 @@ $routes->group('licenze', ['filter' => 'notpending'], function($routes) {
 });
 
 $routes->group('aggiornamenti',['filter' => 'notpending'], function($routes) {
-    $routes->get('index/(:num)', 'AggiornamentiController::getByLicenza/$1');
+    $routes->get('byLicenza/(:num)', 'AggiornamentiController::getByLicenza/$1');
     $routes->get('crea/(:num)/(:segment)', 'AggiornamentiController::crea/$1/$2'); // Crea aggiornamento per IDLicenza e tipo
     $routes->get('modifica/(:num)', 'AggiornamentiController::modifica/$1');
     $routes->get('visualizza/(:num)', 'AggiornamentiController::visualizza/$1'); // Visualizza aggiornamento per ID
