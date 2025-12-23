@@ -20,6 +20,21 @@ class AggiornamentiController extends BaseController
 
     public function getByLicenza($idLicenza)
     {
+        $rows = $this->AggiornamentiModel->getByLicenza($idLicenza);
+        //Formatto le date in d/m/Y
+        foreach ($rows as $row) {
+            $row->dt_agg = date('d/m/Y', strtotime($row->dt_agg));
+        }
+        log_message('info', 'AggiornamentiController::getByLicenza - Risultato query: ' . print_r($rows, true));
+        $result = $this->response->setJSON([
+            'data' => $rows
+        ]);
+        log_message('info', 'AggiornamentiController::getByLicenza - Risposta JSON: ' . $result->getBody());
+        return $result;
+    }
+
+    public function __getByLicenza($idLicenza)
+    {
         log_message('info', 'AggiornamentiController::getByLicenza - ID Licenza: ' . $idLicenza);
         $aggiornamenti = $this->AggiornamentiModel->getByLicenza($idLicenza);
 
@@ -27,10 +42,10 @@ class AggiornamentiController extends BaseController
         $data['aggiornamenti'] = $aggiornamenti;
         $data['title'] = 'Aggiornamenti per Licenza ' . esc($idLicenza);
         //log_message('info', 'Data prima della view ' . print_r($data, true));
-        return view('aggiornamenti/tabAggiornamenti', $data);
+        return view('aggiornamenti/index', $data);
     }
-    
-   public function visualizza($idAggiornamento)
+
+    public function visualizza($idAggiornamento)
     {
         // Logica per visualizzare i dettagli di una licenza
         $aggiornamento = $this->AggiornamentiModel->getById($idAggiornamento);
@@ -39,8 +54,8 @@ class AggiornamentiController extends BaseController
         $data['aggiornamento'] = $aggiornamento;
         $data['title'] = 'Dettagli aggiornamento del ' . date('d/m/Y', strtotime($aggiornamento->dt_agg));
         $data['versioni'] = $versioni;
-        $data['action'] = '' ; // Non c'è azione di salvataggio in visualizzazione
-        $data['mode'] = 'view'; 
+        $data['action'] = ''; // Non c'è azione di salvataggio in visualizzazione
+        $data['mode'] = 'view';
         $data['backTo'] = $this->backTo; // Aggiungo il path di provenienza per il bottone indietro 
 
         return view('aggiornamenti/form', $data);
@@ -67,7 +82,8 @@ class AggiornamentiController extends BaseController
         return view('aggiornamenti/form', $data);
     }
 
-    public function salva($idLicenza = null) {
+    public function salva($idLicenza = null)
+    {
         log_message('info', 'AggiornamentiController::salva - ID Licenza: ' . $idLicenza);
         $data = $this->request->getPost(); // Prende tutti i campi del form
         log_message('info', 'AggiornamentiController::salva - Dati ricevuti: ' . print_r($data, true));
@@ -78,18 +94,19 @@ class AggiornamentiController extends BaseController
         }
         $data['licenze_id'] = $idLicenza; // Associa l'aggiornamento alla licenza
         $data['stato'] = $stato; // Aggiungo lo stato 
-        
 
-  
+
+
         log_message('info', 'AggiornamentiController::salva - Dati ricevuti e modificato lo stato: ' . print_r($data, true));
 
         // Salvataggio dell'aggiornamento
         $this->AggiornamentiModel->save($data);
-        return redirect()->redirect($this->backTo)->with('success', 'Aggiornamento salvato con successo!');    
+        return redirect()->redirect($this->backTo)->with('success', 'Aggiornamento salvato con successo!');
     }
 
 
-    public function modifica($idAggiornamento) {
+    public function modifica($idAggiornamento)
+    {
 
         $aggiornamento = $this->AggiornamentiModel->getById($idAggiornamento);
         $versioni = $this->VersioniModel->getVersioni();
@@ -98,11 +115,10 @@ class AggiornamentiController extends BaseController
         $data['title'] = 'Modifica aggiornamento del ' . date('d/m/Y', strtotime($aggiornamento->dt_agg));
         $data['versioni'] = $versioni;
         $data['action'] = base_url('/aggiornamenti/salva/' . $idAggiornamento);
-        $data['mode'] = 'edit'; 
+        $data['mode'] = 'edit';
         $data['backTo'] = $this->backTo; // Aggiungo il path di provenienza per il bottone indietro 
 
         return view('aggiornamenti/form', $data);
-
     }
 
 
