@@ -51,6 +51,7 @@
 </head>
 
 <body>
+
   <!-- Navbar -->
   <?= $this->include('partials/navbar') ?>
 
@@ -103,6 +104,14 @@
   <!-- baseUrl per i file locali -->
   <script>
     const baseUrl = "<?= base_url() ?>";
+  </script>
+  
+  <!-- Inizializzazione tooltip Bootstrap -->
+  <script>
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+    });
   </script>
 
   <!-- Defaults: bottoni con classi Bootstrap -->

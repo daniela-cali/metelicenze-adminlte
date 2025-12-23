@@ -2,28 +2,34 @@
 
 
 .navbar .logo-navbar {
-    max-height: 50px;   /* Limite massimo per non sforare */
-    width: auto;        /* Mantiene le proporzioni */
+    max-height: 50px;
+    /* Limite massimo per non sforare */
+    width: auto;
+    /* Mantiene le proporzioni */
 }
 
 /* Card bianche con shadow leggero */
 .card {
-    background-color: #ffffff; /* sfondo standard BS5 */
-    color: #495057; /* testo principale grigio scuro */
+    background-color: #ffffff;
+    /* sfondo standard BS5 */
+    color: #495057;
+    /* testo principale grigio scuro */
     border-radius: 0.75rem;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
 .status-connection {
-    background: linear-gradient(135deg, #a8e6a3, #4caf50); /* verde chiaro -> verde scuro */
+    background: linear-gradient(135deg, #a8e6a3, #4caf50);
+    /* verde chiaro -> verde scuro */
     font-weight: 600;
-    color: #495057; /* testo grigio scuro */
+    color: #495057;
+    /* testo grigio scuro */
     margin-bottom: 0.5rem;
 }
 
@@ -38,7 +44,8 @@
 
 /* Testo secondario leggibile */
 .text-muted {
-    color: #868e96 !important; /* grigio medio pastello */
+    color: #868e96 !important;
+    /* grigio medio pastello */
 }
 
 /* Pulsanti pastello */
@@ -119,6 +126,7 @@
     }
 }
 
+/* DataTables Button styling overrides */
 /* Rimuove eventuale sfondo grigio residuo */
 .dt-button {
     background: transparent !important;
@@ -132,4 +140,50 @@
     background-color: transparent !important;
 }
 
-tr { cursor: pointer; }
+tr.licenza-row {
+    cursor: pointer;
+}
+
+/* Evidenziazione riga al passaggio del mouse */
+tr.licenza-row:hover {
+    background-color: #f1f3f5;
+    /* Colore di sfondo leggero al passaggio del mouse */
+}
+
+/* Navbar per ancore interne */
+.anchor-nav .nav-link {
+    border-bottom: 4px solid transparent;
+    padding: 6px 0;
+    transition: border-color 0.2s ease;
+}
+
+.anchor-nav .nav-link:hover {
+    border-bottom-color: rgb(6, 6, 6);
+}
+
+.anchor-nav .nav-link.active {
+    border-bottom-color: rgb(6, 6, 6);
+    border-top-color: rgb(6, 6, 6);
+    font-weight: 500;
+}
+/*.anchor-nav {
+    margin-top: 40px;
+    padding: 24px;
+    text-align: center;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    margin-bottom: 1rem;
+}
+
+.anchor-nav .nav-link {
+    transition: 0.3s ease;
+    text-decoration: none;
+    margin: 0 5px;
+}
+
+.anchor-nav .nav-link:hover {
+
+    border-bottom: 4px solid white;
+    padding: 6px 0;
+}*/
