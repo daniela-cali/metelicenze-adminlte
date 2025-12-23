@@ -2,142 +2,220 @@
 
 <?php $this->section('content'); ?>
 
-<div class="container mt-4"> <!-- Limita la larghezza -->
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary  d-flex justify-content-between align-items-center">
-            <h5 class="mb-0"><i class="bi bi-person-badge"></i> Dettaglio Cliente</h5>
+<div class="container mt-4 mb-4" id="scheda-cliente">
 
-            <a href="/clienti" id="navigation" class="btn btn-light btn-outline-secondary btn-sm">
-                <i class="bi bi-arrow-left-circle"></i> Torna all’elenco clienti
+    <div class="container-fluid mt-4 p-0">
+        <h1 class="display-6 mb-0"><i class="bi bi-people-fill"></i> Scheda Cliente</h1>
+        <p class="lead mb-0">Dettagli e gestione del cliente</p>
+        <nav id="anchor-nav" class="navbar navbar-expand-lg navbar-light bg-light anchor-nav rounded shadow-sm mt-3 mb-3 p-2">
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="#anagrafica">Anagrafica</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#licenze">Licenze</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#aggiornamenti">Aggiornamenti</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li>
+                        <a href="/clienti" id="navigation" class="btn btn-light btn-outline-secondary btn-sm">
+                            <i class="bi bi-arrow-left-circle"></i> Torna all’elenco clienti
+                        </a>
+                    </li>
+                </ul>
+
+            </div>
+        </nav>
+    </div>
+
+</div>
+
+<!--Card Anagrafica-->
+<div class="container-fluid mt-4 p-0" id="anagrafica">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-person-badge"></i> Dati Anagrafici</h5>
+            <a href="<?= base_url("/clienti/modifica/" . $cliente->id) ?>" class="btn btn-light btn-outline-secondary btn-sm" title="Modifica">
+                Modifica <i class="bi bi-pencil"></i>
             </a>
         </div>
-
         <div class="card-body">
-            <!-- Nav tabs -->
-            <ul class="nav nav-tabs" id="clienteTab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="anagrafica-tab" data-bs-toggle="tab" data-bs-target="#anagrafica" type="button" role="tab" aria-controls="anagrafica" aria-selected="true">
-                        <i class="bi bi-file-person"></i> Anagrafica
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="licenze-tab" data-bs-toggle="tab" data-bs-target="#licenze" type="button" role="tab" aria-controls="licenze" aria-selected="false">
-                        <i class="bi bi-key"></i> Licenze
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="aggiornamenti-tab" data-bs-toggle="tab" data-bs-target="#aggiornamenti" type="button" role="tab" aria-controls="aggiornamenti" aria-selected="false">
-                        <i class="bi bi-clock-history"></i> Aggiornamenti
-                    </button>
-                </li>
-            </ul>
+            <dl class="row">
+                <dt class="col-sm-3">Codice Cliente</dt>
+                <dd class="col-sm-9"><?= esc($cliente->codice) ?></dd>
 
-            <!-- Tab panes -->
-            <div class="tab-content mt-3" id="clienteTabContent">
-                <!-- ANAGRAFICA -->
-                <div class="tab-pane fade show active" id="anagrafica" role="tabpanel" aria-labelledby="anagrafica-tab">
-                    <dl class="row">
-                        <dt class="col-sm-3">Codice Cliente</dt>
-                        <dd class="col-sm-9"><?= esc($cliente->codice) ?></dd>
+                <dt class="col-sm-3">Nome</dt>
+                <dd class="col-sm-9"><?= esc($cliente->nome) ?></dd>
 
-                        <dt class="col-sm-3">Nome</dt>
-                        <dd class="col-sm-9"><?= esc($cliente->nome) ?></dd>
+                <dt class="col-sm-3">Email</dt>
+                <dd class="col-sm-9"><?= esc($cliente->email) ?></dd>
 
-                        <dt class="col-sm-3">Email</dt>
-                        <dd class="col-sm-9"><?= esc($cliente->email) ?></dd>
+                <dt class="col-sm-3">Telefono</dt>
+                <dd class="col-sm-9"><?= esc($cliente->telefono) ?></dd>
 
-                        <dt class="col-sm-3">Telefono</dt>
-                        <dd class="col-sm-9"><?= esc($cliente->telefono) ?></dd>
+                <dt class="col-sm-3">Città</dt>
+                <dd class="col-sm-9"><?= esc($cliente->citta) ?></dd>
 
-                        <dt class="col-sm-3">Città</dt>
-                        <dd class="col-sm-9"><?= esc($cliente->citta) ?></dd>
+                <dt class="col-sm-3">Indirizzo</dt>
+                <dd class="col-sm-9"><?= esc($cliente->indirizzo) ?></dd>
+            </dl>
+            <a href="#scheda-cliente" id="navigation" class="btn btn-light btn-outline-secondary btn-sm">
+                <i class="bi bi-arrow-up-square"></i> Torna in cima
+            </a>
+        </div>
+    </div>
+</div> <!--Fine Card Anagrafica-->
 
-                        <dt class="col-sm-3">Indirizzo</dt>
-                        <dd class="col-sm-9"><?= esc($cliente->indirizzo) ?></dd>
-                    </dl>
-                </div>
-
-                <!-- LICENZE -->
-                <div class="tab-pane fade" id="licenze" role="tabpanel" aria-labelledby="licenze-tab">
-                    <div class="mb-3">
-                        <a href="/licenze/crea/<?= esc($cliente->id) ?>" class="btn btn-light btn-outline-secondary btn-sm text-end mb-3" title="Nuova Licenza per il cliente">
-                            <i class="bi bi-key-fill"></i> Nuova Licenza
-                        </a>
-                    </div>
-                    <?php if (!empty($licenze)): ?>
-                        <table class="table table-bordered table-hover align-middle datatable" id="tabella-licenze">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Codice</th>
-                                    <th>Tipo</th>
-                                    <th>Modello</th>
-                                    <th>Stato</th>
-                                    <th class="notexport">Azioni</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($licenze as $licenza): ?>
-                                    <tr class="licenza-row" data-id="<?= esc($licenza->id) ?>" style="cursor:pointer;">
-                                        <td><?= esc($licenza->id) ?></td>
-                                        <td><?= $licenza->codice ? esc($licenza->codice) :esc($licenza->ambiente) ?></td>
-                                        <td><?= esc($licenza->tipo) ?></td>
-                                        <td><?= esc($licenza->modello) ?></td>
-                                        <td>
-                                            <span class="badge <?= $licenza->stato ? 'bg-success' : 'bg-secondary' ?>">
-                                                <?= $licenza->stato ? 'Attiva' : 'Inattiva' ?>
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <a href="/aggiornamenti/crea/<?= $licenza->id ?>/<?= $licenza->tipo ?> " class="btn btn-sm btn-outline-primary" title="Crea Aggiornamento">
-                                                <i class="bi bi-clock-history"></i>
-                                                <a href="/licenze/modifica/<?= $licenza->id ?>" class="btn btn-sm btn-outline-secondary" title="Modifica">
-                                                    <i class="bi bi-pencil"></i>
-                                                </a>
-                                                <a href="/licenze/elimina/<?= $licenza->id ?>" class="btn btn-sm btn-outline-danger" title="Elimina" onclick=" return confirm('Sei sicuro di voler eliminare questa licenza?');">
-                                                    <i class="bi bi-trash"></i>
-                                                </a>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    <?php else: ?>
-                        <div class="alert alert-warning">
-                            <i class="bi bi-exclamation-triangle"></i> Nessuna licenza associata a questo cliente.
-                        </div>
-                    <?php endif; ?>
-                </div>
-
-                <!-- AGGIORNAMENTI -->
-                <div class="tab-pane fade" id="aggiornamenti" role="tabpanel" aria-labelledby="aggiornamenti-tab">
-                    <table class="table" id="tabella-aggiornamenti">
-                        <!-- PHP per caricare gli aggiornamenti tramite fetch -->
-
-
-                        <tbody>
-                            <tr>
-                                <td colspan="2" class="text-center class=" table-warning"">HTML Seleziona una licenza per vedere gli aggiornamenti</td>
+<!--Card Licenze-->
+<div class="container-fluid mt-4 p-0" id="licenze">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-key-fill"></i> Licenze</h5>
+            <a href="<?= base_url("/licenze/crea/" . $cliente->id) ?>" class="btn btn-light btn-outline-secondary btn-sm" title="Nuova Licenza per il cliente">
+                <i class="bi bi-key-fill"></i> Nuova Licenza
+            </a>
+        </div>
+        <div class="card-body">
+            <?php if (!empty($licenze)): ?>
+                <table class="table table-bordered table-striped table-hover align-middle datatable" id="tabella-licenze">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Codice</th>
+                            <th>Tipo</th>
+                            <th>Modello</th>
+                            <th>Stato</th>
+                            <th class="notexport">Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($licenze as $licenza): ?>
+                            <tr class="licenza-row" data-id="<?= esc($licenza->id) ?>" style="cursor:pointer;">
+                                <td><?= esc($licenza->id) ?></td>
+                                <td><?= $licenza->codice ? esc($licenza->codice) : esc($licenza->ambiente) ?></td>
+                                <td><?= esc($licenza->tipo) ?></td>
+                                <td><?= esc($licenza->modello) ?></td>
+                                <td>
+                                    <span class="badge <?= $licenza->stato ? 'bg-success' : 'bg-secondary' ?>">
+                                        <?= $licenza->stato ? 'Attiva' : 'Inattiva' ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <a href="/aggiornamenti/crea/<?= $licenza->id ?>/<?= $licenza->tipo ?> " class="btn btn-sm btn-outline-primary" title="Crea Aggiornamento">
+                                        <i class="bi bi-clock-history"></i>
+                                        <a href="/licenze/modifica/<?= $licenza->id ?>" class="btn btn-sm btn-outline-secondary" title="Modifica">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="/licenze/elimina/<?= $licenza->id ?>" class="btn btn-sm btn-outline-danger" title="Elimina" onclick=" return confirm('Sei sicuro di voler eliminare questa licenza?');">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                </td>
                             </tr>
-                        </tbody>
-                    </table>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php else: ?>
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle"></i> Nessuna licenza associata a questo cliente.
                 </div>
-            </div> <!-- tab-content -->
-        </div> <!-- card-body -->
-    </div> <!-- card -->
-</div> <!-- container -->
+            <?php endif; ?>
+            <a href="#scheda-cliente" id="navigation" class="btn btn-light btn-outline-secondary btn-sm">
+                <i class="bi bi-arrow-up-square"></i> Torna in cima
+            </a>
+        </div>
+    </div>
+</div> <!--Fine Card Licenze-->
+
+<!--Card Aggiornamenti-->
+<div class="container-fluid mt-4 p-0" id="aggiornamenti">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0"><i class="bi bi-person-badge"></i> Aggiornamenti</h5>
+
+        </div>
+        <div class="card-body">
+
+            <table class="table table-bordered table-striped table-hover align-middle datatable" id="tabella-aggiornamenti">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Data aggiornamento</th>
+                        <th>Versione</th>
+                        <th>Note</th>
+                        <th>Azioni</th>
+                    </tr>
+                <tbody>
+
+                </tbody>
+            </table>
+            <a href="#scheda-cliente" id="navigation" class="btn btn-light btn-outline-secondary btn-sm">
+                <i class="bi bi-arrow-up-square"></i> Torna in cima
+            </a>
+        </div>
+    </div>
+</div> <!--Fine Card Aggiornamenti-->
+
+
+
 
 <?php $this->endSection(); ?>
 
 
 <?php $this->section('scripts'); ?>
 <script>
-    // Event listener per il click sui tab
+    function actionButtons(id) {
+        return `
+            <a href="/aggiornamenti/visualizza/${id}" class="btn btn-sm btn-outline-primary" title="Visualizza">
+                <i class="bi bi-eye"></i>       
+            </a>
+            <a href="/aggiornamenti/modifica/${id}" class="btn btn-sm btn-outline-secondary" title="Modifica">
+                <i class="bi bi-pencil"></i>        
+            </a>
+            <a href="/aggiornamenti/elimina/${id}" class="btn btn-sm btn-outline-danger" title="Elimina" onclick=" return confirm('Sei sicuro di voler eliminare questo aggiornamento?');">
+                <i class="bi bi-trash"></i>     
+            </a>
+            `;
+    }
     document.addEventListener("DOMContentLoaded", function() {
+
+        const MSG_SELECT = "Seleziona una licenza per visualizzare gli aggiornamenti associati.";
+        const MSG_EMPTY = "Non ci sono aggiornamenti per questa licenza.";
+
+        const tabellaAggiornamenti = $('#tabella-aggiornamenti').DataTable({
+            paging: false,
+            info: false,
+            searching: false,
+            ordering: false,
+            processing: true,
+
+        });
+
+        function setEmptyMessage(msg) {
+            tabellaAggiornamenti.settings()[0].oLanguage.sEmptyTable = msg;
+            tabellaAggiornamenti.draw(false);
+        }
+
+        // all’avvio: “Seleziona…”
+        setEmptyMessage(MSG_SELECT);
+
+        $('#tabella-aggiornamenti')
+            .on('xhr.dt', function(e, settings, json, xhr) {
+                const rows = (json && Array.isArray(json.data)) ? json.data : [];
+                if (rows.length === 0) setEmptyMessage(MSG_EMPTY);
+                else setEmptyMessage(MSG_SELECT);
+
+            })
+            .on('error.dt', function(e, settings, techNote, message) {
+                console.error('DT error:', message);
+            });
+        // Event listener per il click sulle righe delle licenze
         const licenzeRows = document.querySelectorAll('.licenza-row');
         //console.log('Licenze Rows:', licenzeRows);
-        const tabs = document.querySelectorAll('[data-bs-toggle="tab"]');
-        //console.log('Tabs:', tabs);
         let selectedLicenzaId = null;
         // Selezione licenza
         licenzeRows.forEach(row => {
@@ -146,7 +224,62 @@
                 this.classList.add('table-primary', 'selected'); // Aggiungo classe selected alla riga selezionata per renderla univoca
                 selectedLicenzaId = this.getAttribute('data-id');
                 console.log('Licenza selezionata ID:', selectedLicenzaId);
+                // Effettuo la chiamata AJAX per ottenere gli aggiornamenti della licenza selezionata
+                if (selectedLicenzaId) {
+                    console.log('Caricamento aggiornamenti per licenza ID:', selectedLicenzaId);
+                    fetch(`<?= base_url('aggiornamenti/byLicenza') ?>/${selectedLicenzaId}`)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Errore recupero aggiornamenti ' + response.status + ' ' + response.statusText);
+                            }
+                            return response.json();
+                        })
+                        .then(payload => {
+                            console.log('Aggiornamenti ricevuti (payload):', payload);
+                            console.log('Tipo payload:', typeof payload);
+                            console.log('Dati aggiornamenti:', payload.data.length);
 
+                            const rows = payload.data ?? []; // <-- array di oggetti
+
+                            tabellaAggiornamenti.clear();
+
+                            rows.forEach(aggiornamento => {
+
+                                const rowNode = tabellaAggiornamenti.row.add([
+                                    aggiornamento.id,
+                                    aggiornamento.dt_agg,
+                                    aggiornamento.versione,
+                                    aggiornamento.note,
+                                    actionButtons(aggiornamento.id)
+                                ]).draw(false).node();
+                                rowNode.classList.add('aggiornamento-row');
+                                rowNode.dataset.id = aggiornamento.id;
+
+                            });
+                            if (rows.length === 0) {
+                                setEmptyMessage(MSG_EMPTY);
+                            }
+                            tabellaAggiornamenti.draw();
+                        })
+                        .catch(error => {
+                            console.error('Errore nel recupero degli aggiornamenti:', error);
+                        });
+
+                } else {
+                    // Nessuna licenza selezionata, svuoto la tabella
+                    tabellaAggiornamenti.clear().draw();
+                    setEmptyMessage(MSG_SELECT);
+                }
+            });
+
+            $('#tabella-aggiornamenti').on('dblclick', '.aggiornamento-row', function(e) {
+                // evita che il click sui bottoni scatti anche sulla riga
+                if (e.target.closest('button')) return;
+
+                const selectedAggiornamento = this.dataset.id;
+                console.log('Click riga aggiornamento', selectedAggiornamento);
+                const baseUrl = "<?= base_url() ?>";
+                window.location.href = `${baseUrl}/aggiornamenti/modifica/${selectedAggiornamento}`;
             });
             row.addEventListener('dblclick', function() {
                 const baseUrl = "<?= base_url() ?>";
@@ -155,52 +288,7 @@
 
             });
         });
-        tabs.forEach(tab => {
-            tab.addEventListener('click', function() {
-                let tabActive = this.id;
-                //console.log('Tab attivo:', tabActive);
-                switch (tabActive) {
-                    /*case 'anagrafica-tab':
-                        //console.log('Tab Anagrafica selezionato');
-                        document.getElementById('navigation').setAttribute('href', '/clienti');
-                        document.getElementById('navigation').innerHTML = '<i class="bi bi-arrow-left-circle"></i> Torna all’elenco clienti';
-                        break;
-                    case 'licenze-tab':
-                        console.log('Tab Licenze selezionato');
-                        document.getElementById('navigation').setAttribute('href', '/licenze/crea/<?= esc($cliente->id) ?>');
-                        document.getElementById('navigation').innerHTML = '<i class="bi bi-key-fill"></i> Crea Licenza per il cliente';
-                        break;*/
-                    case 'aggiornamenti-tab':
-                        /*console.log('Tab Aggiornamenti selezionato');
-                        document.getElementById('navigation').setAttribute('href', '/aggiornamenti/crea/' + selectedLicenzaId);
-                        document.getElementById('navigation').innerHTML = '<i class="bi bi-clock-history"></i> Aggiungi Aggiornamento per la licenza';*/
-                        let tabAggContentBody = document.querySelector('#tabella-aggiornamenti tbody');
-                        tabAggContentBody.innerHTML = ''; // Pulisce il contenuto della tabella
-                        if (!selectedLicenzaId) {
-                            document.querySelector('#tabella-aggiornamenti tbody').innerHTML = '<tr><td colspan="2" class="text-center bg-alert bg-gradient table-warning"> Seleziona una licenza per vederne gli aggiornamenti.</td></tr>';
-                            return;
-                        } else {
-                            fetch(`/aggiornamenti/index/${selectedLicenzaId}`)
-                                .then(response => {
-                                    if (!response.ok) {
-                                        throw new Error('Errore nel caricamento degli aggiornamenti');
-                                    }
-                                    return response.text(); //Ricevo il contenuto HTML
-                                })
-                                .then(html => {
-                                    tabAggContentBody.innerHTML = html; // Inserisco direttamente il contenuto HTML nel tbody
-                                })
-                                .catch(err => { //Intercetto errori
-                                    tabAggContentBody.innerHTML = '<tr><td colspan="2" class="text-danger text-center">Errore nel caricamento aggiornamenti.</td></tr>';
-                                    console.error(err);
-                                });
-                        }
-                        break;
-                    default:
-                        console.log('Tab sconosciuto selezionato');
-                }
-            });
-        });
+
     });
 </script>
 <?php $this->endSection(); ?>
