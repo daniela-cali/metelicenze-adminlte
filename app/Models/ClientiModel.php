@@ -29,6 +29,8 @@ class ClientiModel extends Model
         'created_at',
         'updated_at',
         'utente_import',
+        'figlio_sn',
+        'padre_id',
     ];
     protected $returnType       = 'object';
 
@@ -68,6 +70,14 @@ class ClientiModel extends Model
         return $this->orderBy('nome', 'ASC')
             ->where('id', $id)
             ->first();
+    }
+    public function getClientiPadre()
+    {   
+        return $this->select([
+            'clienti.id as value', 
+            'CONCAT_WS(\' - \', clienti.nome, clienti.codice) AS content'])
+            ->where('figlio_sn', 0)
+            ->findAll();
     }
 
     public function salva($data)

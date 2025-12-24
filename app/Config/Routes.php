@@ -100,3 +100,5 @@ $routes->group('admin', ['filter' => 'group:superadmin,admin'], function($routes
     $routes->post('settings/save', 'Admin\SettingsController::save'); 
 });
 $routes->get('admin/test-settings', 'Admin\TestSettings::index');
+
+// $routes->get('padri', 'ClientiController::getClientiPadre', ['filter' => 'session']);

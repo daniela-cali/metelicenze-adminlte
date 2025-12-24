@@ -68,6 +68,7 @@
                         class="form-check-label form-label">
                         Cliente interno 
                     </label>
+                    <input type="hidden" name="figlio_sn" value="0" />
                     <input
                         type="checkbox"
                         class="form-check-input"
@@ -76,8 +77,21 @@
                         title="Cliente non presente nel gestionale esterno"
                         id="figlio_sn"
                         name="figlio_sn"
+                                                value="1"
                         <?= ((isset($cliente) && $cliente->figlio_sn) || ($mode == 'create')) ? 'checked' : '' ?>>
                     </input>
+                </div>
+                <div class="mb-3">
+                    <label for="padre_id" class="form-label">Cliente Padre</label>
+                    <select name="padre_id" id="padre_id" class="form-select">
+                        <option value="">-- Seleziona --</option>
+                        <?php foreach ($selectValues as $option): ?>
+                            <option value="<?= esc($option->value) ?>"
+                                <?= (isset($cliente) && $cliente->padre_id == $option->value) ? 'selected' : '' ?>>
+                                <?= esc($option->content) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
                 <div class=" mb-3 form-group">
                     <label for="note">Note cliente</label>
@@ -135,42 +149,24 @@
             });
         }
 
-        // Funzione per aggiornare la visibilità in base al tipo selezionato
-        function aggiornaCampi() {
-            const tipoSelezionato = selectTipo.value;
-            console.log("Tipo selezionato:", tipoSelezionato);
-
-            document.querySelectorAll("[data-cliente]").forEach(wrapper => {
-                const valoreWrapper = wrapper.getAttribute("data-cliente");
-                console.log("Wrapper con data-cliente:", valoreWrapper);
-
-                if (valoreWrapper.includes(tipoSelezionato) || valoreWrapper === "Common") {
-                    wrapper.classList.remove("");
-
-                    // Rendo i campi all'interno del wrapper obbligatori (se non in view)
-                    if (mode !== "view") {
-                        wrapper.querySelectorAll("input, select, textarea").forEach(campo => {});
-                    }
+        // Aggancio eventi alla checkbox figlio_sn
+        const figlio_sn = document.getElementById("figlio_sn");
+        console.log("Elemento figlio_sn:", figlio_sn);
+        ["change", "load"].forEach(event => {
+            figlio_sn.addEventListener(event, fn=> {
+                if (figlio_sn.checked) {
+                    console.log("Checkbox figlio_sn selezionata valore:", figlio_sn.value);
+                    // Se è selezionato, abilito il padre_id
+                    document.getElementById("padre_id").disabled = false;
                 } else {
-                    wrapper.classList.add("");
-                    // Rimuovo obbligatorietà e resetto i valori
-                    wrapper.querySelectorAll("input, select, textarea").forEach(campo => {
-                        campo.required = false;
-                        campo.value = "";
-                    });
+                    // Altrimenti lo disabilito
+                    figlio_sn.value = 0; // Ripristino a 0 il valore
+                    console.log("Checkbox figlio_sn deselezionata valore:", figlio_sn.value);
+                    document.getElementById("padre_id").disabled = true;
                 }
             });
-        }
-
-        // Aggancio eventi al select
-        const selectTipo = document.getElementById("tipo");
-        ["change", "load"].forEach(event => {
-            console.log("Aggiungo event listener per:", event);
-            selectTipo.addEventListener(event, aggiornaCampi);
         });
-
-        // Eseguo subito una prima volta per lo stato iniziale
-        aggiornaCampi();
+        
     });
 </script>
 

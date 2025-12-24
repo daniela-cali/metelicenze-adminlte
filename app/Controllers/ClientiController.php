@@ -79,24 +79,28 @@ class ClientiController extends BaseController
          */
         $prefix = 'IN';
         $internal_code = $prefix . str_pad(random_int(1, 99999), 5, '0', STR_PAD_LEFT);
-        $this->ClientiModel = new ClientiModel();
+        // Recupero i clienti padre per la select
+        $selectValues = $this->ClientiModel->getClientiPadre();
+
         return view('clienti/form', [
             'mode' => 'create',
             'action' => '/clienti/salva',
             'title' => 'Crea Nuovo Cliente Interno [' . esc($internal_code) . ']',
             'internal_code' => $internal_code,
+            'selectValues' => $selectValues,
         ]);
     }
 
     public function modifica($id)
     {
-        $this->ClientiModel = new ClientiModel();
         $cliente = $this->ClientiModel->getClientiById($id);
+        $selectValues = $this->ClientiModel->getClientiPadre();
         return view('clienti/form', [
             'mode' => 'edit',
             'cliente' => $cliente,
             'action' => '/clienti/salva/' . $id,
-            'title' => 'Modifica Cliente ' . esc($cliente->nome),
+            'title' => 'Modifica Cliente ' .$cliente->nome,
+            'selectValues' => $selectValues,
         ]);
     }
 
@@ -162,6 +166,7 @@ class ClientiController extends BaseController
         log_message('info', 'tipoLicenzaPerCliente: ' . print_r($result, true));
         return $result;
     }
+
 }
 
 /*
