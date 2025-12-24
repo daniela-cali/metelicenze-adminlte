@@ -46,9 +46,9 @@ class ClientiController extends BaseController
         $data['clienti'] = $this->ClientiModel->getClienti();
         $licenzeCount = $this->countLicenzeByCliente();
         $licenzeTipo = $this->getTipoLicenzeByCliente();
-        log_message('info', 'Clienti: ' . print_r($data['clienti'], true));
+        /*log_message('info', 'Clienti: ' . print_r($data['clienti'], true));
         log_message('info', 'Licenze per tipo: ' . print_r($licenzeTipo, true));
-        log_message('info', 'Conteggio licenze per cliente: ' . print_r($licenzeCount, true));
+        log_message('info', 'Conteggio licenze per cliente: ' . print_r($licenzeCount, true));*/
 
 
         foreach ($data['clienti'] as $cliente) {
@@ -72,7 +72,59 @@ class ClientiController extends BaseController
 
         return view('clienti/schedaCliente', $data);
     }
+    public function crea()
+    {
+        /**
+         * Creo un nuovo codice distintivo per il cliente interno
+         */
+        $prefix = 'IN';
+        $internal_code = $prefix . str_pad(random_int(1, 99999), 5, '0', STR_PAD_LEFT);
+        $this->ClientiModel = new ClientiModel();
+        return view('clienti/form', [
+            'mode' => 'create',
+            'action' => '/clienti/salva',
+            'title' => 'Crea Nuovo Cliente Interno [' . esc($internal_code) . ']',
+            'internal_code' => $internal_code,
+        ]);
+    }
 
+    public function modifica($id)
+    {
+        $this->ClientiModel = new ClientiModel();
+        $cliente = $this->ClientiModel->getClientiById($id);
+        return view('clienti/form', [
+            'mode' => 'edit',
+            'cliente' => $cliente,
+            'action' => '/clienti/salva/' . $id,
+            'title' => 'Modifica Cliente ' . esc($cliente->nome),
+        ]);
+    }
+
+    public function elimina($id)
+    {
+        $this->ClientiModel->delete($id);
+        // Redirect o mostra un messaggio di successo
+        return redirect()->back()->with('success', 'Cliente eliminato con successo.');
+    }
+    public function salva($id = null)
+    {
+        log_message('info', 'ClientiController::salva - ');
+        log_message('info', 'ID ricevuto ' . $id);
+        $data = $this->request->getPost();
+
+        if ($id == null) {
+            log_message('info', 'ID nullo ' . $id);
+            $clienteID = $this->ClientiModel->salva($data);
+        } else {
+            $data['id'] = $clienteID = $id; // Aggiungo l'ID per la modifica
+            log_message('info', 'ID NON nullo ' . $id);
+            $this->ClientiModel->salva($data);
+        }
+        log_message('info', 'Ricevo questi dati nel CONTROLLER: ' . print_r($data, true) . ' - ClienteID: ' . $clienteID);
+        // Redirect o mostra un messaggio di successo
+        return redirect()->to('clienti/schedaCliente/' . $clienteID)->with('success', 'Cliente salvato con successo.');
+
+    }
     public function __clientiFilters()
     {
         $tipoLicenza = $this->request->getPost('tipoLicenza');

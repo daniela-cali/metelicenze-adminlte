@@ -51,9 +51,7 @@ class ClientiModel extends Model
         return $this->whereIn('id', $idClienti)->findAll();
     }
 
-    /**
-     * Recupera un cliente dato il suo ID
-     */
+
     public function getInfoClienti()
     {
         return $this->select('id, nome')
@@ -61,12 +59,24 @@ class ClientiModel extends Model
             ->findAll();
     }
 
+    /**
+     * Recupera un cliente dato il suo ID
+     */
     public function getClientiById($id)
     {
 
         return $this->orderBy('nome', 'ASC')
             ->where('id', $id)
             ->first();
+    }
+
+    public function salva($data)
+    {
+
+        //log_message('info', 'Ricevo i seguenti dati nel MODEL: ' . print_r($data, true));
+        $this->save($data); 
+        log_message('info', 'Dopo il salvataggio, l\'ID del cliente è: ' . $this->insertID);
+        return $this->insertID;// Restituisce l'ID del nuovo cliente
     }
 
 }

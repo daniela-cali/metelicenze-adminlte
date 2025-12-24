@@ -117,6 +117,7 @@ class LicenzeController extends BaseController
         // Redirect o mostra un messaggio di successo
         return redirect()->to('clienti/schedaCliente/' . $idCliente);
     }
+    
     /**
      * 
      * Salva una licenza, sia che sia nuova o modificata
