@@ -167,7 +167,7 @@
         });
         // inizializza la DataTable 
         const table = $('#clientiTable').DataTable($.extend(true, {}, datatableDefaults, {
-            order: []
+            order: [],
         }));
 
         // filtro custom: licenze + tipi

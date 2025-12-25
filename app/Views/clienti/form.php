@@ -77,13 +77,13 @@
                         title="Cliente non presente nel gestionale esterno"
                         id="figlio_sn"
                         name="figlio_sn"
-                                                value="1"
+                        value="1"
                         <?= ((isset($cliente) && $cliente->figlio_sn) || ($mode == 'create')) ? 'checked' : '' ?>>
                     </input>
                 </div>
                 <div class="mb-3">
                     <label for="padre_id" class="form-label">Cliente Padre</label>
-                    <select name="padre_id" id="padre_id" class="form-select">
+                    <select name="padre_id" id="padre_id" class="form-select" <?= ((isset($cliente) && $cliente->figlio_sn) || ($mode == 'create')) ? '' : 'disabled' ?> >
                         <option value="">-- Seleziona --</option>
                         <?php foreach ($selectValues as $option): ?>
                             <option value="<?= esc($option->value) ?>"

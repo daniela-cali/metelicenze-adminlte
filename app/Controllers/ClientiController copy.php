@@ -66,14 +66,6 @@ class ClientiController extends BaseController
         $session = session();
         $session->set('backTo', current_url()); // Salvo il path di provenienza nella sessione
         $data['cliente'] = $this->ClientiModel->getClientiById($id);
-        //Salvo i dati del cliente corrente nella sessione per usi futuri (nel form delle licenze ad esempio)
-        $session->set('current_cliente_id', $data['cliente']->id); 
-        $session->set('current_padre_id', $data['cliente']->padre_id);
-
-        if ($data['cliente']->padre_id) {
-            $data['cliente']->padre_nome = $this->ClientiModel->getClientiById($data['cliente']->padre_id)->nome;
-        }
-
         $data['licenze'] = $this->LicenzeModel->getLicenzeByCliente($id);
 
         $data['title'] = 'Scheda Cliente';
@@ -87,28 +79,24 @@ class ClientiController extends BaseController
          */
         $prefix = 'IN';
         $internal_code = $prefix . str_pad(random_int(1, 99999), 5, '0', STR_PAD_LEFT);
-        // Recupero i clienti padre per la select
-        $selectValues = $this->ClientiModel->getClientiPadre();
-
+        $this->ClientiModel = new ClientiModel();
         return view('clienti/form', [
             'mode' => 'create',
             'action' => '/clienti/salva',
             'title' => 'Crea Nuovo Cliente Interno [' . esc($internal_code) . ']',
             'internal_code' => $internal_code,
-            'selectValues' => $selectValues,
         ]);
     }
 
     public function modifica($id)
     {
+        $this->ClientiModel = new ClientiModel();
         $cliente = $this->ClientiModel->getClientiById($id);
-        $selectValues = $this->ClientiModel->getClientiPadre();
         return view('clienti/form', [
             'mode' => 'edit',
             'cliente' => $cliente,
             'action' => '/clienti/salva/' . $id,
-            'title' => 'Modifica Cliente ' .$cliente->nome,
-            'selectValues' => $selectValues,
+            'title' => 'Modifica Cliente ' . esc($cliente->nome),
         ]);
     }
 
@@ -174,7 +162,6 @@ class ClientiController extends BaseController
         log_message('info', 'tipoLicenzaPerCliente: ' . print_r($result, true));
         return $result;
     }
-
 }
 
 /*

@@ -42,7 +42,7 @@ class VersioniModel extends Model
 
     public function getVersioniByTipo($tipo)
     {
-        return $this->where('tipo', $tipo)->orderBy('dt_rilascio', 'DESC')
+        return $this->select(['id', 'codice', 'dt_rilascio','release'])->where('tipo', $tipo)->orderBy('dt_rilascio', 'DESC')
             ->findAll();    
     }
 

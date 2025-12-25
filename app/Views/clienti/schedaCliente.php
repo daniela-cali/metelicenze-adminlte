@@ -45,25 +45,53 @@
             </a>
         </div>
         <div class="card-body">
-            <dl class="row">
-                <dt class="col-sm-3">Codice Cliente</dt>
-                <dd class="col-sm-9"><?= esc($cliente->codice) ?></dd>
+            <div class="row row-cols-2">
+                <dl class="col dl-kv">
+                    <dt class="col-sm-3">Codice Cliente</dt>
+                    <dd class="col-sm-9"><?= esc($cliente->codice) ?></dd>
 
-                <dt class="col-sm-3">Nome</dt>
-                <dd class="col-sm-9"><?= esc($cliente->nome) ?></dd>
+                    <dt class="col-sm-3">Nome</dt>
+                    <dd class="col-sm-9"><?= esc($cliente->nome) ?></dd>
 
-                <dt class="col-sm-3">Email</dt>
-                <dd class="col-sm-9"><?= esc($cliente->email) ?></dd>
+                    <dt class="col-sm-3">Partita IVA</dt>
+                    <dd class="col-sm-9"><?= esc($cliente->piva) ?></dd>
 
-                <dt class="col-sm-3">Telefono</dt>
-                <dd class="col-sm-9"><?= esc($cliente->telefono) ?></dd>
+                    <dt class="col-sm-3">Indirizzo</dt>
+                    <dd class="col-sm-9"><?= esc($cliente->indirizzo) ?></dd>
 
-                <dt class="col-sm-3">Città</dt>
-                <dd class="col-sm-9"><?= esc($cliente->citta) ?></dd>
+                    <dt class="col-sm-3">CAP</dt>
+                    <dd class="col-sm-9"><?= esc($cliente->cap) ?></dd>
 
-                <dt class="col-sm-3">Indirizzo</dt>
-                <dd class="col-sm-9"><?= esc($cliente->indirizzo) ?></dd>
-            </dl>
+                    <dt class="col-sm-3">Città</dt>
+                    <dd class="col-sm-9"><?= esc($cliente->citta) ?></dd>
+
+                    <dt class="col-sm-3">Provincia</dt>
+                    <dd class="col-sm-9"><?= esc($cliente->provincia) ?></dd>
+                </dl>
+
+                <dl class="col dl-kv">
+
+                    <dt class="col-sm-3">Email</dt>
+                    <dd class="col-sm-9"><?= esc($cliente->email) ?></dd>
+
+                    <dt class="col-sm-3">Telefono</dt>
+                    <dd class="col-sm-9"><?= esc($cliente->telefono) ?></dd>
+
+                    <dt class="col-sm-3">Contatti</dt>
+                    <dd class="col-sm-9"><?= esc($cliente->contatti) ?></dd>
+
+                    <dt class="col-sm-3">Note</dt>
+                    <dd class="col-sm-9"><?= esc($cliente->note) ?></dd>
+
+
+                    <dt class="col-sm-3">Cliente Interno</dt>
+                    <dd class="col-sm-9"><?= $cliente->figlio_sn ? 'Sì' : 'No' ?></dd>
+
+                    <dt class="col-sm-3">Cliente Padre</dt>
+                    <dd class="col-sm-9 pointer" id="cliente-padre" data-id="<?= $cliente->padre_id ? $cliente->padre_id : '' ?>">
+                        <?= $cliente->padre_id ? esc($cliente->padre_nome) . ' [ID: ' . esc($cliente->padre_id) . ']' : '-' ?>
+                    </dd>
+            </div>
             <a href="#scheda-cliente" id="navigation" class="btn btn-light btn-outline-secondary btn-sm">
                 <i class="bi bi-arrow-up-square"></i> Torna in cima
             </a>
@@ -95,7 +123,7 @@
                     </thead>
                     <tbody>
                         <?php foreach ($licenze as $licenza): ?>
-                            <tr class="licenza-row" data-id="<?= esc($licenza->id) ?>" style="cursor:pointer;">
+                            <tr class="licenza-row" data-id="<?= esc($licenza->padre_lic_id) //linko il padre per il fetch aggiornamenti ?>" style="cursor:pointer;">
                                 <td><?= esc($licenza->id) ?></td>
                                 <td><?= $licenza->codice ? esc($licenza->codice) : esc($licenza->ambiente) ?></td>
                                 <td><?= esc($licenza->tipo) ?></td>
@@ -106,12 +134,12 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <a href="/aggiornamenti/crea/<?= $licenza->id ?>/<?= $licenza->tipo ?> " class="btn btn-sm btn-outline-primary" title="Crea Aggiornamento">
+                                    <a href="/aggiornamenti/crea/<?= $licenza->padre_lic_id ?>/<?= $licenza->tipo ?> " class="btn btn-sm btn-outline-primary" title="Crea Aggiornamento">
                                         <i class="bi bi-clock-history"></i>
-                                        <a href="/licenze/modifica/<?= $licenza->id ?>" class="btn btn-sm btn-outline-secondary" title="Modifica">
+                                        <a href="/licenze/modifica/<?= $licenza->id //Modifico la licenza stessa?>" class="btn btn-sm btn-outline-secondary" title="Modifica">
                                             <i class="bi bi-pencil"></i>
                                         </a>
-                                        <a href="/licenze/elimina/<?= $licenza->id ?>" class="btn btn-sm btn-outline-danger" title="Elimina" onclick=" return confirm('Sei sicuro di voler eliminare questa licenza?');">
+                                        <a href="/licenze/elimina/<?= $licenza->id //Elimino la licenza stessa?>" class="btn btn-sm btn-outline-danger" title="Elimina" onclick=" return confirm('Sei sicuro di voler eliminare questa licenza?');">
                                             <i class="bi bi-trash"></i>
                                         </a>
                                 </td>
@@ -182,6 +210,17 @@
             `;
     }
     document.addEventListener("DOMContentLoaded", function() {
+
+        const cliente_padre = document.querySelector('#cliente-padre');
+
+        cliente_padre.addEventListener('dblclick', function() {
+            const padreId = this.getAttribute('data-id');
+            <?php log_message('info', 'View schedaCliente: doppio click cliente padre ID: ' . $cliente->padre_id); 
+            log_message('info', 'Attuale URL: ' . current_url()); ?>
+            if (!padreId) return;
+            const baseUrl = "<?= base_url() ?>";
+            window.location.href = `${baseUrl}/clienti/schedaCliente/${padreId}`;
+        });
 
         const MSG_SELECT = "Seleziona una licenza per visualizzare gli aggiornamenti associati.";
         const MSG_EMPTY = "Non ci sono aggiornamenti per questa licenza.";

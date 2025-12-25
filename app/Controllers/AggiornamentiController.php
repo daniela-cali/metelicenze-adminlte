@@ -62,6 +62,7 @@ class AggiornamentiController extends BaseController
     }
     public function crea($idLicenza = null, $tipo = null)
     {
+        log_message('info', 'AggiornamentiController::crea - Tipo: ' . $tipo);
         log_message('info', 'AggiornamentiController::crea - ID Licenza: ' . $idLicenza);
         // Se non è fornito un ID licenza, non posso creare un aggiornamento
         if ($idLicenza === null) {

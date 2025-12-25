@@ -187,3 +187,42 @@ tr.licenza-row:hover {
     border-bottom: 4px solid white;
     padding: 6px 0;
 }*/
+
+dl.dl-kv {
+  display: grid;
+  grid-template-columns: minmax(180px, 220px) 1fr;
+  row-gap: .3rem;
+  column-gap: 1rem;
+
+  padding: .75rem .9rem;
+  background: rgba(255,255,255,.65);
+  margin: 0;
+}
+
+dl.dl-kv dt {
+  font-size: .75rem;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: rgba(0,0,0,.6);
+  border-bottom: 2px dashed rgba(0,0,0,.08);
+  white-space: nowrap;   /* niente a capo */
+  overflow: visible;    
+  text-overflow: unset; 
+}
+
+dl.dl-kv dd {
+  font-size: .95rem;
+  margin: 0;
+  padding-bottom: .4rem;
+  border-bottom: 1px dashed rgba(0,0,0,.08);
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+dl.dl-kv dd:last-of-type {
+  border-bottom: 0;
+}
+
+

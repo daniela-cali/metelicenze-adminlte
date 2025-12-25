@@ -30,8 +30,10 @@ class LicenzeModel extends Model
         'invii',
         'giga',
     ];
+    protected $afterInsert = ['setPadreSelfIfMissing'];
     protected $useTimestamps    = true;
     protected $returnType       = 'object';
+
     /**
      * Genera l'elenco delle licenze
      */
@@ -53,7 +55,7 @@ class LicenzeModel extends Model
 
     public function getLicenzeByCliente($idCliente)
     {
-        log_message('info', 'Recupero le licenze per il cliente con ID: ' . $idCliente . 'e ottengo: ' . print_r($this->where('clienti_id', $idCliente)->findAll(), true));
+        //log_message('info', 'Recupero le licenze per il cliente con ID: ' . $idCliente . 'e ottengo: ' . print_r($this->where('clienti_id', $idCliente)->findAll(), true));
         return $this->where('clienti_id', $idCliente)->findAll();
     }
 
@@ -83,11 +85,35 @@ class LicenzeModel extends Model
     }
     public function salva($data)
     {
-
         log_message('info', 'Ricevo i seguenti dati nel MODEL: ' . print_r($data, true));
-
         return $this->save($data); // Restituisce l'ID della nuova licenza
 
-
     }
+
+     protected function setPadreSelfIfMissing(array $data)
+    {
+        // Dopo l'inserimento, prenso l'ID appena creato
+        $newId = $data['id'] ?? null;
+        if (!$newId) {
+            return $data; //Altrimenti non faccio nulla se non c'è un nuovo ID
+        }
+
+        // Se nel POST/insert è già arrivato padre_lic_id (figlio), NON tocco niente.
+        // Se manca / è vuoto / è 0, lo imposto a se stessa.
+        $insertData = $data['data'] ?? [];
+        $padre = $insertData['padre_lic_id'] ?? null;
+        
+        // Normalizzo il valore di padre_lic_id
+        $padre = (is_numeric($padre) && (int)$padre > 0) ? (int)$padre : null;
+
+        if ($padre === null) {
+            // update diretto per evitare loop/callback ricorsivi
+            $this->builder()
+                ->where($this->primaryKey, $newId)
+                ->update(['padre_lic_id' => $newId]);
+        }
+
+        return $data;
+    }
+    
 }

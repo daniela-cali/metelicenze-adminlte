@@ -74,16 +74,41 @@ class LicenzeController extends BaseController
          * Pertanto si può creare una licenza solo dalla scheda cliente
          * */
 
+        //log_message('info', 'LicenzeController::crea - Padre corrente dalla sessione ID: ' . $padre_id);
+
         if ($idCliente === null) {
             return redirect()->back()->with('error', 'Selezionare un cliente!.');
         }
 
-            $data['mode'] = 'create';
-            $data['action'] = base_url('/licenze/salva/' . $idCliente); //Essendo nel crea la licenza non ha ancora ID
-            $data['id_cliente'] = $idCliente;
-            $data['cliente'] = $this->ClientiModel->getClientiById($idCliente);
-            $data['licenza'] = null; 
-            $data['title'] = 'Crea Licenza per Cliente ' . esc($data['cliente']->nome) . ' [ID: ' . esc($idCliente) . ']';
+        $cliente = $this->ClientiModel->getClientiById($idCliente);
+        if (!$cliente) {
+            return redirect()->back()->with('error', 'Cliente non trovato!.');
+        } elseif ($cliente->padre_id) {
+            log_message('info', 'LicenzeController::crea Cliente selezionato è un figlio, prendo il padre ID: ' . $cliente->padre_id);
+            // Se è figlio allora prendo le licenze del padre messe in un array con 3 elementi (Sigla, VariHub, SKNT) per poterle mostrare nel form
+            $licenzePadre = $this->LicenzeModel->getLicenzeByCliente($cliente->padre_id);
+            //log_message('info', 'LicenzeController::crea Licenze del padre trovate: ' . print_r($licenzePadre, true));
+            foreach ($licenzePadre as $licenza) {
+                if ($licenza->tipo === 'Sigla') {
+                    $data['licenzePadre']['Sigla'] = $licenza;
+                } elseif ($licenza->tipo === 'VarHub') {
+                    $data['licenzePadre']['VarHub'] = $licenza;
+                } elseif ($licenza->tipo === 'SKNT') {
+                    $data['licenzePadre']['SKNT'] = $licenza;
+                }
+            }
+            //log_message('info', 'LicenzeController::crea Licenze del padre organizzate: ' . print_r($data, true));
+
+        }
+
+
+        $data['mode'] = 'create';
+        $data['action'] = base_url('/licenze/salva/' . $idCliente); //Essendo nel crea la licenza non ha ancora ID
+        $data['id_cliente'] = $idCliente;
+        $data['cliente'] = $cliente;
+        $data['licenza'] = null; 
+        $data['title'] = 'Crea Licenza per Cliente ' . $data['cliente']->nome . ' [ID: ' . $idCliente . ']';
+        log_message('info', 'LicenzeController::crea - Creazione licenza per Cliente ID: ' . $idCliente . ' con questi dati inviati alla view: ' . print_r($data, true));
 
 
         return view('licenze/form', $data);
@@ -134,6 +159,8 @@ class LicenzeController extends BaseController
         } else {
             $data['clienti_id'] = $idCliente; // Associa la licenza al cliente
         }
+        //Imposto il padre della licenza come quello selezionato nel form, altrimenti se nullo lo imposto come la licenza stessa
+        $data['padre_lic_id'] = $data['padre_lic_id'] !== null ? $data['padre_lic_id'] : $idLicenza;
         if ($idLicenza !== null) {
             $data['id'] = $idLicenza; // Se sto modificando, aggiungo l'ID della licenza
         }
@@ -143,6 +170,7 @@ class LicenzeController extends BaseController
         }
         log_message('info', 'Ricevo questo idcliente: ' . $idCliente . ' e idlicenza: ' . $idLicenza);
         log_message('info', 'Data contiene questo prima di inviare al model ->salva: ' . print_r($data, true));
+
         // Salvo la licenza nel database
         $this->LicenzeModel->salva($data);
 
@@ -157,4 +185,6 @@ class LicenzeController extends BaseController
         // Redirect o mostra un messaggio di successo
         return redirect()->back()->with('success', 'Licenza eliminata con successo.');
     }
+
+
 }
