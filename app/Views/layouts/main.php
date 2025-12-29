@@ -39,7 +39,9 @@
   <link rel="stylesheet" href="https://cdn.datatables.net/searchpanes/2.3.5/css/searchPanes.bootstrap5.min.css">
 
   <!-- CSS personalizzato -->
-  <link rel="stylesheet" href="<?= base_url('assets/css/custom.css') ?>">
+   <?php use Config\SiteConfig; 
+   $theme = config('SiteConfig')->siteTheme; ?>
+  <link rel="stylesheet" href="<?= base_url('assets/css/themes/' . $theme . '-style.css') ?>">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" sizes="32x32" href="<?= base_url('assets/icons/favicon-32x32.png') ?>">

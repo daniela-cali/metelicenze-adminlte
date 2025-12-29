@@ -23,8 +23,8 @@
                 </ul>
                 <ul class="navbar-nav ms-auto">
                     <li>
-                        <a href="/clienti" id="navigation" class="btn btn-light btn-outline-secondary btn-sm">
-                            <i class="bi bi-arrow-left-circle"></i> Torna all’elenco clienti
+                        <a href="<?= previous_url() ?>" id="navigation" class="btn btn-light btn-outline-secondary btn-sm">
+                            <i class="bi bi-arrow-left-circle"></i> Torna indietro
                         </a>
                     </li>
                 </ul>
@@ -45,59 +45,73 @@
             </a>
         </div>
         <div class="card-body">
-            <div class="row row-cols-2">
-                <dl class="col dl-kv">
-                    <dt class="col-sm-3">Codice Cliente</dt>
-                    <dd class="col-sm-9"><?= esc($cliente->codice) ?></dd>
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <!-- COLONNA SINISTRA -->
+                    <dl class="dl-kv">
+                        <dt>Codice Cliente</dt>
+                        <dd><?= esc($cliente->codice) ?></dd>
 
-                    <dt class="col-sm-3">Nome</dt>
-                    <dd class="col-sm-9"><?= esc($cliente->nome) ?></dd>
+                        <dt>Ragione Sociale</dt>
+                        <dd><?= esc($cliente->nome) ?></dd>
 
-                    <dt class="col-sm-3">Partita IVA</dt>
-                    <dd class="col-sm-9"><?= esc($cliente->piva) ?></dd>
+                        <dt>Codice Cliente</dt>
+                        <dd class=><?= esc($cliente->codice) ?></dd>
 
-                    <dt class="col-sm-3">Indirizzo</dt>
-                    <dd class="col-sm-9"><?= esc($cliente->indirizzo) ?></dd>
+                        <dt>Nome</dt>
+                        <dd class=><?= esc($cliente->nome) ?></dd>
 
-                    <dt class="col-sm-3">CAP</dt>
-                    <dd class="col-sm-9"><?= esc($cliente->cap) ?></dd>
+                        <dt>Partita IVA</dt>
+                        <dd class=><?= esc($cliente->piva) ?></dd>
 
-                    <dt class="col-sm-3">Città</dt>
-                    <dd class="col-sm-9"><?= esc($cliente->citta) ?></dd>
+                        <dt>Indirizzo</dt>
+                        <dd class=><?= esc($cliente->indirizzo) ?></dd>
 
-                    <dt class="col-sm-3">Provincia</dt>
-                    <dd class="col-sm-9"><?= esc($cliente->provincia) ?></dd>
-                </dl>
+                        <dt>CAP</dt>
+                        <dd class=><?= esc($cliente->cap) ?></dd>
 
-                <dl class="col dl-kv">
+                        <dt>Città</dt>
+                        <dd class=><?= esc($cliente->citta) ?></dd>
 
-                    <dt class="col-sm-3">Email</dt>
-                    <dd class="col-sm-9"><?= esc($cliente->email) ?></dd>
+                        <dt>Provincia</dt>
+                        <dd class=><?= esc($cliente->provincia) ?></dd>
 
-                    <dt class="col-sm-3">Telefono</dt>
-                    <dd class="col-sm-9"><?= esc($cliente->telefono) ?></dd>
+                    </dl>
+                </div>
+                <!-- COLONNA DESTRA -->
+                <div class="col-12 col-md-6">
+                    <dl class="dl-kv">
+                        <dt>Email</dt>
+                        <dd class=><?= esc($cliente->email) ?></dd>
 
-                    <dt class="col-sm-3">Contatti</dt>
-                    <dd class="col-sm-9"><?= esc($cliente->contatti) ?></dd>
+                        <dt>Telefono</dt>
+                        <dd class=><?= esc($cliente->telefono) ?></dd>
 
-                    <dt class="col-sm-3">Note</dt>
-                    <dd class="col-sm-9"><?= esc($cliente->note) ?></dd>
+                        <dt>Contatti</dt>
+                        <dd class=><?= esc($cliente->contatti) ?></dd>
+
+                        <dt>Note</dt>
+                        <dd class=><?= esc($cliente->note) ?></dd>
 
 
-                    <dt class="col-sm-3">Cliente Interno</dt>
-                    <dd class="col-sm-9"><?= $cliente->figlio_sn ? 'Sì' : 'No' ?></dd>
+                        <dt>Cliente Interno</dt>
+                        <dd class=><?= $cliente->figlio_sn ? 'Sì' : 'No' ?></dd>
 
-                    <dt class="col-sm-3">Cliente Padre</dt>
-                    <dd class="col-sm-9 pointer" id="cliente-padre" data-id="<?= $cliente->padre_id ? $cliente->padre_id : '' ?>">
-                        <?= $cliente->padre_id ? esc($cliente->padre_nome) . ' [ID: ' . esc($cliente->padre_id) . ']' : '-' ?>
-                    </dd>
+                        <dt>Cliente Padre</dt>
+                        <dd class="pointer" id="cliente-padre" data-id="<?= $cliente->padre_id ? $cliente->padre_id : '' ?>">
+                            <?= $cliente->padre_id ? esc($cliente->padre_nome) . ' [ID: ' . esc($cliente->padre_id) . ']' : '-' ?>
+                        </dd>
+                </div>
+
             </div>
             <a href="#scheda-cliente" id="navigation" class="btn btn-light btn-outline-secondary btn-sm">
                 <i class="bi bi-arrow-up-square"></i> Torna in cima
             </a>
-        </div>
-    </div>
-</div> <!--Fine Card Anagrafica-->
+        </div> <!--Fine Card Body Anagrafica-->
+    </div> <!--Fine Card Anagrafica-->
+</div> <!--Fine Container Anagrafica-->
+
+
 
 <!--Card Licenze-->
 <div class="container-fluid mt-4 p-0" id="licenze">
@@ -123,7 +137,8 @@
                     </thead>
                     <tbody>
                         <?php foreach ($licenze as $licenza): ?>
-                            <tr class="licenza-row" data-id="<?= esc($licenza->padre_lic_id) //linko il padre per il fetch aggiornamenti ?>" style="cursor:pointer;">
+                            <tr class="licenza-row" data-id="<?= esc($licenza->padre_lic_id) //linko il padre per il fetch aggiornamenti 
+                                                                ?>" style="cursor:pointer;">
                                 <td><?= esc($licenza->id) ?></td>
                                 <td><?= $licenza->codice ? esc($licenza->codice) : esc($licenza->ambiente) ?></td>
                                 <td><?= esc($licenza->tipo) ?></td>
@@ -136,10 +151,12 @@
                                 <td>
                                     <a href="/aggiornamenti/crea/<?= $licenza->padre_lic_id ?>/<?= $licenza->tipo ?> " class="btn btn-sm btn-outline-primary" title="Crea Aggiornamento">
                                         <i class="bi bi-clock-history"></i>
-                                        <a href="/licenze/modifica/<?= $licenza->id //Modifico la licenza stessa?>" class="btn btn-sm btn-outline-secondary" title="Modifica">
+                                        <a href="/licenze/modifica/<?= $licenza->id //Modifico la licenza stessa
+                                                                    ?>" class="btn btn-sm btn-outline-secondary" title="Modifica">
                                             <i class="bi bi-pencil"></i>
                                         </a>
-                                        <a href="/licenze/elimina/<?= $licenza->id //Elimino la licenza stessa?>" class="btn btn-sm btn-outline-danger" title="Elimina" onclick=" return confirm('Sei sicuro di voler eliminare questa licenza?');">
+                                        <a href="/licenze/elimina/<?= $licenza->id //Elimino la licenza stessa
+                                                                    ?>" class="btn btn-sm btn-outline-danger" title="Elimina" onclick=" return confirm('Sei sicuro di voler eliminare questa licenza?');">
                                             <i class="bi bi-trash"></i>
                                         </a>
                                 </td>
@@ -215,7 +232,7 @@
 
         cliente_padre.addEventListener('dblclick', function() {
             const padreId = this.getAttribute('data-id');
-            <?php log_message('info', 'View schedaCliente: doppio click cliente padre ID: ' . $cliente->padre_id); 
+            <?php log_message('info', 'View schedaCliente: doppio click cliente padre ID: ' . $cliente->padre_id);
             log_message('info', 'Attuale URL: ' . current_url()); ?>
             if (!padreId) return;
             const baseUrl = "<?= base_url() ?>";

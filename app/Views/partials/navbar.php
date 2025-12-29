@@ -7,7 +7,8 @@ $siteName = $config->siteName ?? 'MeTe Licenze';
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="<?= base_url() ?>">
-            <img src="<?= base_url('assets/icons/logo.png') ?>" alt="logo" class="logo-navbar me-2">
+            <img src="<?=  config('SiteConfig')->logoPath;
+            //log_message('debug', 'Logo path: ' . config('SiteConfig')->logoPath) ?>" alt="logo" class="logo-navbar me-2">
             <span><?= esc($siteName) ?></span>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">

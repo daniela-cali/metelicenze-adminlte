@@ -5,7 +5,7 @@
     <div class="card shadow-sm">
         <div class="card-header bg-primary  d-flex justify-content-between align-items-center">
             <h5 class="mb-0"><i class="bi bi-key-fill"></i> <?= esc($title) ?> </h5>
-            <a href="<?= $backTo ?>" class="btn btn-light btn-sm">
+            <a href="<?= $backTo ?>" class="btn btn-light btn-outline-secondary btn-sm">
                 <i class="bi bi-arrow-left"></i> Indietro
             </a>
         </div>

@@ -74,6 +74,16 @@
     background-color: #aad9aa;
     color: #495057;
 }
+.btn-secondary {
+    background-color: #76818c;
+    color: #ffffff;     
+}
+
+.btn-secondary:hover {
+    background-color: #4f5357;
+    color: #ffffff;     
+
+}
 
 .btn-warning {
     background-color: #ffe5a5;
@@ -193,7 +203,6 @@ dl.dl-kv {
   grid-template-columns: minmax(180px, 220px) 1fr;
   row-gap: .3rem;
   column-gap: 1rem;
-
   padding: .75rem .9rem;
   background: rgba(255,255,255,.65);
   margin: 0;
@@ -214,7 +223,7 @@ dl.dl-kv dd {
   font-size: .95rem;
   margin: 0;
   padding-bottom: .4rem;
-  border-bottom: 1px dashed rgba(0,0,0,.08);
+  border-bottom: 2px dashed rgba(0,0,0,.08);
 }
 
 .pointer {
@@ -224,5 +233,9 @@ dl.dl-kv dd {
 dl.dl-kv dd:last-of-type {
   border-bottom: 0;
 }
-
-
+.card-img-logo {        
+    max-height: 100px !important;
+    /* Limite massimo per non sforare */
+    width: auto;
+    /* Mantiene le proporzioni */
+}

@@ -68,7 +68,7 @@
                             <tbody>
                                 <?php foreach ($licenze as $licenza): ?>
                                     <?php $trClass = $licenza->stato == 0 ? 'class="table-danger"' : ''; ?>
-                                    <tr <?= $trClass ?>>
+                                    <tr <?= $trClass ?> class = "licenza-row" data-id="<?= esc($licenza->id) ?>" style="cursor:pointer;">
                                         <td><?= esc($licenza->id) ?></td>
                                         <td><?= esc($licenza->codice) ?></td>
                                         <td><?= esc($licenza->tipo) ?></td>
@@ -184,6 +184,13 @@
                 }
                 //console.log('Filtro tipi: ' + passTipi + ', filtro stato: ' + passStato);
                 return passTipi && passStato;
+            });
+            document.querySelectorAll('.licenza-row').forEach(function(input) {
+                input.addEventListener('dblclick', function() {
+                    const licenzaId = this.getAttribute('data-id');
+                   console.log('Doppio click sulla licenza ID: ' + licenzaId);
+                    window.location.href = '/licenze/visualizza/' + licenzaId;
+                });
             });
 
             // quando cambia un filtro, ridisegna la tabella 

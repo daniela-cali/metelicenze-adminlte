@@ -7,7 +7,10 @@
     <div class="container d-flex justify-content-center p-5">
         <div class="card col-12 col-md-5 shadow-sm">
             <div class="card-body">
-                <h5 class="card-title mb-5"><?= lang('Auth.login') ?></h5>
+                <div class="card-header bg-dark text-white mb-4">
+                    <img src="<?=  config('SiteConfig')->logoPath ?>" alt="MeTe Licenze" class="img-fluid" style="max-height: 60px;">
+                    <h5 class="card-title mt-2 float-end"> <?=  config('SiteConfig')->siteName ?> Login</h5>
+                </div>
 
                 <?php if (session('error') !== null) : ?>
                     <div class="alert alert-danger" role="alert"><?= esc(session('error')) ?></div>
@@ -54,7 +57,7 @@
                     <?php endif; ?>
 
                     <div class="d-grid col-12 col-md-8 mx-auto m-3">
-                        <button type="submit" class="btn btn-primary btn-block"><?= lang('Auth.login') ?></button>
+                        <button type="submit" class="btn btn-dark btn-block"><?= lang('Auth.login') ?></button>
                     </div>
 
                     <?php if (setting('Auth.allowMagicLinkLogins')) : ?>

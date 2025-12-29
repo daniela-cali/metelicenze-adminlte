@@ -1,0 +1,243 @@
+/* Custom CSS - MeTe Licenze (pagine secondarie, toni pastello) */
+
+
+.navbar .logo-navbar {
+    max-height: 50px;
+    /* Limite massimo per non sforare */
+    width: auto;
+    /* Mantiene le proporzioni */
+}
+
+/* Card bianche con shadow leggero */
+.card {
+    background-color: #ffffff;
+    /* sfondo standard BS5 */
+    color: #495057;
+    /* testo principale grigio scuro */
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.status-connection {
+    background: linear-gradient(135deg, #a8e6a3, #4caf50);
+    /* verde chiaro -> verde scuro */
+    font-weight: 600;
+    color: #495057;
+    /* testo grigio scuro */
+    margin-bottom: 0.5rem;
+}
+
+/* Card headers (manteniamo la versione originale) */
+.card-header {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    color: #212529;
+    font-weight: 600;
+    border-radius: 0.75rem 0.75rem 0 0 !important;
+    border: none;
+}
+
+/* Testo secondario leggibile */
+.text-muted {
+    color: #868e96 !important;
+    /* grigio medio pastello */
+}
+
+/* Pulsanti pastello */
+.btn {
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-primary {
+    background-color: #a8dadc;
+    color: #495057;
+}
+
+.btn-primary:hover {
+    background-color: #8ec5c7;
+    color: #495057;
+}
+
+.btn-success {
+    background-color: #c1e1c1;
+    color: #495057;
+}
+
+.btn-success:hover {
+    background-color: #aad9aa;
+    color: #495057;
+}
+.btn-secondary {
+    background-color: #76818c;
+    color: #ffffff;     
+}
+
+.btn-secondary:hover {
+    background-color: #4f5357;
+    color: #ffffff;     
+
+}
+
+.btn-warning {
+    background-color: #ffe5a5;
+    color: #495057;
+}
+
+.btn-warning:hover {
+    background-color: #ffdb7d;
+    color: #495057;
+}
+
+/* Scrollable containers (liste tabelle, ecc.) */
+.tables-list-container {
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 8px;
+}
+
+/* Custom scrollbar styling */
+.tables-list-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.tables-list-container::-webkit-scrollbar-track {
+    background: #f8f9fa;
+    border-radius: 3px;
+}
+
+.tables-list-container::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+    transition: background 0.3s ease;
+}
+
+.tables-list-container::-webkit-scrollbar-thumb:hover {
+    background: #a0aec0;
+}
+
+/* Firefox scrollbar */
+.tables-list-container {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f8f9fa;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .card {
+        margin-bottom: 1rem;
+    }
+}
+
+/* DataTables Button styling overrides */
+/* Rimuove eventuale sfondo grigio residuo */
+.dt-button {
+    background: transparent !important;
+    background-image: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Usa le classi Bootstrap */
+.dt-button.btn {
+    background-color: transparent !important;
+}
+
+tr.licenza-row {
+    cursor: pointer;
+}
+
+/* Evidenziazione riga al passaggio del mouse */
+tr.licenza-row:hover {
+    background-color: #f1f3f5;
+    /* Colore di sfondo leggero al passaggio del mouse */
+}
+
+/* Navbar per ancore interne */
+.anchor-nav .nav-link {
+    border-bottom: 4px solid transparent;
+    padding: 6px 0;
+    transition: border-color 0.2s ease;
+}
+
+.anchor-nav .nav-link:hover {
+    border-bottom-color: rgb(6, 6, 6);
+}
+
+.anchor-nav .nav-link.active {
+    border-bottom-color: rgb(6, 6, 6);
+    border-top-color: rgb(6, 6, 6);
+    font-weight: 500;
+}
+/*.anchor-nav {
+    margin-top: 40px;
+    padding: 24px;
+    text-align: center;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    margin-bottom: 1rem;
+}
+
+.anchor-nav .nav-link {
+    transition: 0.3s ease;
+    text-decoration: none;
+    margin: 0 5px;
+}
+
+.anchor-nav .nav-link:hover {
+
+    border-bottom: 4px solid white;
+    padding: 6px 0;
+}*/
+
+dl.dl-kv {
+  display: grid;
+  grid-template-columns: minmax(180px, 220px) 1fr;
+  row-gap: .3rem;
+  column-gap: 1rem;
+
+  padding: .75rem .9rem;
+  background: rgba(255,255,255,.65);
+  margin: 0;
+}
+
+dl.dl-kv dt {
+  font-size: .75rem;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: rgba(0,0,0,.6);
+  border-bottom: 2px dashed rgba(0,0,0,.08);
+  white-space: nowrap;   /* niente a capo */
+  overflow: visible;    
+  text-overflow: unset; 
+}
+
+dl.dl-kv dd {
+  font-size: .95rem;
+  margin: 0;
+  padding-bottom: .4rem;
+  border-bottom: 1px dashed rgba(0,0,0,.08);
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+dl.dl-kv dd:last-of-type {
+  border-bottom: 0;
+}
+.card-img-logo {        
+    max-height: 100px !important;
+    /* Limite massimo per non sforare */
+    width: auto;
+    /* Mantiene le proporzioni */
+}
+

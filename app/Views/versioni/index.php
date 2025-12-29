@@ -4,7 +4,7 @@
     <div class="card shadow-sm">
         <div class="card-header bg-primary d-flex justify-content-between align-items-center">
             <h5 class="mb-0"><i class="bi bi-people"></i> Elenco Versioni</h5>
-            <a href="/versioni/crea" class="btn btn-secondary btn-sm">
+            <a href="/versioni/crea" class="btn btn-light btn-outline-secondary btn-sm">
                 <i class="bi bi-plus-circle"></i> Aggiungi versione
             </a>
         </div>
