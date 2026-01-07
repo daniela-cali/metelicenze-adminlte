@@ -26,7 +26,10 @@ class LicenzeController extends BaseController
         foreach ($licenze as $licenza) {
             // Trova il cliente corrispondente per ogni licenza
             $cliente = array_filter($clienti, fn($c) => $c->id === $licenza->clienti_id);
-            $ultimo_agg = array_filter($aggiornamenti, fn($a) => $a->licenza_id === $licenza->id);
+            /*Vado a recuperare l'id del padre che normalmente è la licenza stessa, ma per i figli fa riferimento al padre direttamente, 
+            in modo da vedere il corretto stato della licenza*/
+            $ultimo_agg = array_filter($aggiornamenti, fn($a) => $a->licenza_id === $licenza->padre_lic_id);
+
             $licenza->clienteNome = $cliente ? array_values($cliente)[0]->nome : 'Cliente non trovato';
             $licenza->clienteId = $cliente ? array_values($cliente)[0]->id : null;           
             //$licenza->ultimoAggiornamento = $ultimo_agg ? array_values($ultimo_agg)[0]->ultimo_aggiornamento : 'N/A';

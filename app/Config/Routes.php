@@ -53,6 +53,7 @@ $routes->group('aggiornamenti',['filter' => 'notpending'], function($routes) {
     $routes->get('byLicenza/(:num)', 'AggiornamentiController::getByLicenza/$1');
     $routes->get('crea/(:num)/(:segment)', 'AggiornamentiController::crea/$1/$2'); // Crea aggiornamento per IDLicenza e tipo
     $routes->get('modifica/(:num)', 'AggiornamentiController::modifica/$1');
+    $routes->get('elimina/(:num)', 'AggiornamentiController::elimina/$1');
     $routes->get('visualizza/(:num)', 'AggiornamentiController::visualizza/$1'); // Visualizza aggiornamento per ID
     $routes->post('salva/(:num)', 'AggiornamentiController::salva/$1'); // Salva aggiornamento per ID
 });
