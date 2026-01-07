@@ -29,14 +29,14 @@ $routes->group('filters', ['filter' => 'notpending'], function($routes) {
  });
 
 $routes->group('clienti', ['filter' => 'notpending'], function($routes) {
-    $routes->post('filters', 'ClientiController::clientiFilters');
-    $routes->get('/', 'ClientiController::index');
-    $routes->get('schedaCliente/(:num)', 'ClientiController::schedaCliente/$1');
-    $routes->get('crea/', 'ClientiController::crea'); // Nuovo cliente con ID interno
-    $routes->get('modifica/(:num)', 'ClientiController::modifica/$1');
-    $routes->get('elimina/(:num)', 'ClientiController::elimina/$1');
-    $routes->post('salva/', 'ClientiController::salva/'); // Salva cliente nuovo
-    $routes->post('salva/(:num)', 'ClientiController::salva/$1'); // Salva cliente esistente by ID
+    //$routes->post('filters', 'ClientiController::clientiFilters');
+    $routes->get('/', 'ClientiController::index', ['as' => 'clienti_index']);
+    $routes->get('schedaCliente/(:num)', 'ClientiController::schedaCliente/$1', ['as' => 'clienti_scheda']);
+    $routes->get('crea/', 'ClientiController::crea', ['as' => 'clienti_crea']); // Nuovo cliente con ID interno
+    $routes->get('modifica/(:num)', 'ClientiController::modifica/$1', ['as' => 'clienti_modifica']);
+    $routes->get('elimina/(:num)', 'ClientiController::elimina/$1', ['as' => 'clienti_elimina']);
+    $routes->post('salva/', 'ClientiController::salva/', ['as' => 'clienti_nuovo']); // Salva cliente nuovo
+    $routes->post('salva/(:num)', 'ClientiController::salva/$1', ['as' => 'clienti_salva']); // Salva cliente esistente by ID
  });
 
 $routes->group('licenze', ['filter' => 'notpending'], function($routes) {

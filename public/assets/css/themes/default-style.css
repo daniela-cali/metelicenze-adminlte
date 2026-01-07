@@ -230,9 +230,6 @@ dl.dl-kv dd {
     cursor: pointer;
 }
 
-dl.dl-kv dd:last-of-type {
-  border-bottom: 0;
-}
 .card-img-logo {        
     max-height: 100px !important;
     /* Limite massimo per non sforare */
