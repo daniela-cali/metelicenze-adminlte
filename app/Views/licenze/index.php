@@ -36,6 +36,12 @@
                             <div class="form-check">
                                 
                                 <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="statoLicenze" value="Tutte"
+                                         checked
+                                        id="Tutte">
+                                    <label class="form-check-label" for="Tutte">Tutte</label>
+                                </div>
+                                <div class="form-check">
                                     <input class="form-check-input" type="radio" name="statoLicenze" value="Aggiornato"
                                         id="aggiornate">
                                     <label class="form-check-label" for="aggiornate">Aggiornate</label>
@@ -80,6 +86,11 @@
                                                 <span class="badge bg-success">
                                                     <i class="bi bi-check"></i>
                                                     Aggiornato
+                                                </span>
+                                            <?php elseif ($licenza->stato == 0): ?>
+                                                <span class="badge bg-danger text-white">
+                                                    <i class="bi bi-x-circle"></i>
+                                                    Scaduta
                                                 </span>
                                             <?php else: ?>
                                                 <span class="badge bg-warning text-dark">
@@ -169,7 +180,7 @@
 
                 // ---- filtro STATO (colonna 6)
                 const selectedStati = $('input[name="statoLicenze"]:checked').map(function() {
-                    return $(this).val(); // es: "Aggiornato" / "Da aggiornare"
+                    return $(this).val(); // es: "Aggiornato" / "Da aggiornare" / "Tutte"
                 }).get();
 
                 let passStato = true;
@@ -179,8 +190,11 @@
                         .replace(/<[^>]*>/g, '')
                         .replace(/\s+/g, ' ')
                         .trim();
-
-                    passStato = selectedStati.includes(statoText);
+                    if (selectedStati.includes('Tutte')) { // nessun filtro e passo true
+                        passStato = true;
+                    } else {
+                        passStato = selectedStati.includes(statoText); //filtro attivo e passo il tipo letto
+                    }
                 }
                 //console.log('Filtro tipi: ' + passTipi + ', filtro stato: ' + passStato);
                 return passTipi && passStato;
