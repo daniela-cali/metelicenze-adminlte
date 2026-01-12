@@ -15,7 +15,7 @@ class AggiornamentiController extends BaseController
     {
         $this->VersioniModel = new \App\Models\VersioniModel();
         $this->AggiornamentiModel = new \App\Models\AggiornamentiModel();
-        $this->backTo = session()->get('backTo') ?? base_url('/clienti'); // Recupera il path di provenienza dalla sessione o usa un default
+        //$this->backTo = session()->get('backTo') ?? base_url('/clienti'); // Recupera il path di provenienza dalla sessione o usa un default
     }
 
     public function getByLicenza($idLicenza)

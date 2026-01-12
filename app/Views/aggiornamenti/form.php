@@ -42,7 +42,7 @@
                     <button type="submit" class="btn btn-success">
                         <i class="bi bi-check-circle"></i> Salva
                     </button>
-                    <a href="<?= $backTo ?>" class="btn btn-secondary">Annulla</a>
+                    <a href="<?= previous_url() ?>" class="btn btn-secondary">Annulla</a>
                 </div>
             </form>
         </div>
