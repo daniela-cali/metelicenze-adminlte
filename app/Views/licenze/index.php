@@ -189,7 +189,7 @@
                 input.addEventListener('dblclick', function() {
                     const licenzaId = this.getAttribute('data-id');
                    console.log('Doppio click sulla licenza ID: ' + licenzaId);
-                    window.location.href = '/licenze/visualizza/' + licenzaId;
+                    window.location.href = '/licenze/modifica/' + licenzaId;
                 });
             });
 
