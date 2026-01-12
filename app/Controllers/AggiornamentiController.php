@@ -15,7 +15,7 @@ class AggiornamentiController extends BaseController
     {
         $this->VersioniModel = new \App\Models\VersioniModel();
         $this->AggiornamentiModel = new \App\Models\AggiornamentiModel();
-        //$this->backTo = session()->get('backTo') ?? base_url('/clienti'); // Recupera il path di provenienza dalla sessione o usa un default
+        $this->backTo = session()->get('backTo') ?? base_url('/licenze'); // Recupera il path di provenienza dalla sessione o usa un default
     }
 
     public function getByLicenza($idLicenza)
@@ -102,7 +102,7 @@ class AggiornamentiController extends BaseController
 
         // Salvataggio dell'aggiornamento
         $this->AggiornamentiModel->save($data);
-        return redirect()->redirect($this->backTo)->with('success', 'Aggiornamento salvato con successo!');
+        return redirect()->redirect(previous_url())->with('success', 'Aggiornamento salvato con successo!');
     }
 
 
