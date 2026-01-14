@@ -10,6 +10,8 @@ class ClientiModel extends Model
 
     protected $table            = 'clienti';
     protected $primaryKey       = 'id';
+    protected $useSoftDeletes   =  true;
+
 
     protected $allowedFields = [
         'codice',
@@ -25,14 +27,43 @@ class ClientiModel extends Model
         'contatti',
         'id_external',
         'dt_import',
-        'stato',
-        'created_at',
-        'updated_at',
         'utente_import',
         'figlio_sn',
         'padre_id',
+        'stato',
+        'created_at',
+        'created_by',
+        'updated_at',
+        'updated_by',
+        'deleted_at',
+        'deleted_by',
     ];
     protected $returnType       = 'object';
+    protected $beforeInsert = ['created_by'];
+    protected $beforeUpdate = ['updated_by'];
+
+
+    protected function created_by(array $data)
+    {
+        $user = auth()->user(); 
+
+        if ($user) {
+            $data['data']['created_by'] = $user->id ?? null;
+            $data['data']['updated_by'] = $user->id ?? null;
+        } 
+        return $data;
+    }
+
+    protected function updated_by(array $data)
+    {
+        $user = auth()->user(); 
+
+        if ($user) {
+            $data['data']['updated_by'] = $user->id ?? null;
+        } 
+        return $data;
+    }
+
 
 
 

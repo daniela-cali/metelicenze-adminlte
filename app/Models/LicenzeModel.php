@@ -8,6 +8,12 @@ class LicenzeModel extends Model
 {
     protected $table            = 'licenze';
     protected $primaryKey       = 'id';
+    protected $useSoftDeletes   =  true;
+    protected $beforeInsert = ['created_by'];
+    protected $afterInsert = ['setPadreSelfIfMissing'];
+    protected $beforeUpdate = ['updated_by'];
+    protected $useTimestamps    = true;
+    protected $returnType       = 'object';
     protected $allowedFields = [
         'clienti_id',
         'codice',
@@ -29,11 +35,35 @@ class LicenzeModel extends Model
         'nodo',
         'invii',
         'giga',
+        'created_at',
+        'created_by',
+        'updated_at',
+        'updated_by',
+        'deleted_at',
+        'deleted_by',
     ];
-    protected $afterInsert = ['setPadreSelfIfMissing'];
-    protected $useTimestamps    = true;
-    protected $returnType       = 'object';
 
+
+    protected function created_by(array $data)
+    {
+        $user = auth()->user();
+
+        if ($user) {
+            $data['data']['created_by'] = $user->id ?? null;
+            $data['data']['updated_by'] = $user->id ?? null;
+        }
+        return $data;
+    }
+
+    protected function updated_by(array $data)
+    {
+        $user = auth()->user();
+
+        if ($user) {
+            $data['data']['updated_by'] = $user->id ?? null;
+        }
+        return $data;
+    }
     /**
      * Genera l'elenco delle licenze
      */
@@ -49,7 +79,7 @@ class LicenzeModel extends Model
 
         return $this->select('*')
             ->orderBy('codice', 'ASC')
-            
+
             ->findAll();
     }
 
@@ -80,7 +110,7 @@ class LicenzeModel extends Model
         $tipoLicenzaPerCliente = $this->select('clienti_id, tipo')
             ->distinct()
             ->findAll();
-        log_message('info', 'tipoLicenzaPerCliente: ' . print_r($tipoLicenzaPerCliente, true));
+        //log_message('info', 'tipoLicenzaPerCliente: ' . print_r($tipoLicenzaPerCliente, true));
         return $tipoLicenzaPerCliente;
     }
     public function salva($data)
@@ -90,7 +120,7 @@ class LicenzeModel extends Model
 
     }
 
-     protected function setPadreSelfIfMissing(array $data)
+    protected function setPadreSelfIfMissing(array $data)
     {
         // Dopo l'inserimento, prenso l'ID appena creato
         $newId = $data['id'] ?? null;
@@ -102,7 +132,7 @@ class LicenzeModel extends Model
         // Se manca / è vuoto / è 0, lo imposto a se stessa.
         $insertData = $data['data'] ?? [];
         $padre = $insertData['padre_lic_id'] ?? null;
-        
+
         // Normalizzo il valore di padre_lic_id
         $padre = (is_numeric($padre) && (int)$padre > 0) ? (int)$padre : null;
 
@@ -115,5 +145,4 @@ class LicenzeModel extends Model
 
         return $data;
     }
-    
 }

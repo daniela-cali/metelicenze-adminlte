@@ -10,7 +10,7 @@ class VersioniModel extends Model
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'object';
-    protected $useSoftDeletes   = false;
+    protected $useSoftDeletes   = true;
     protected $protectFields    = true;
     protected $allowedFields = [
         'codice',
@@ -19,7 +19,13 @@ class VersioniModel extends Model
         'dt_rilascio',
         'stato',
         'ultima',
-        'tipo'
+        'tipo',
+        'created_at',
+        'created_by',
+        'updated_at',
+        'updated_by',
+        'deleted_at',
+        'deleted_by',
 ];
 
     protected bool $allowEmptyInserts = false;
