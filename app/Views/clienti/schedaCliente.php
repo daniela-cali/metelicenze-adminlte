@@ -4,9 +4,22 @@
 
 <div class="container mt-4 mb-4" id="scheda-cliente">
 
-    <div class="container-fluid mt-4 p-0">
-        <h1 class="display-6 mb-0"><i class="bi bi-people-fill"></i> Scheda Cliente</h1>
-        <p class="lead mb-0">Dettagli e gestione del cliente</p>
+<div class="container-fluid mt-4 p-0">
+    <h1 class="display-6 mb-2">
+        <i class="bi bi-people-fill"></i> Scheda Cliente
+    </h1>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <p class="lead mb-0">
+            Dettagli e gestione del cliente
+        </p>
+
+        <a href="<?= base_url("/clienti") ?>"
+           class="btn btn-light btn-outline-secondary btn-sm">
+            <i class="bi bi-arrow-left-circle"></i> Torna all'elenco clienti
+        </a>
+    </div>
+</div>
         <nav id="anchor-nav" class="navbar navbar-expand-lg navbar-light bg-light anchor-nav rounded shadow-sm mt-3 mb-3 p-2">
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -40,7 +53,7 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0"><i class="bi bi-person-badge"></i> Dati Anagrafici</h5>
-            <a href="<?= base_url("/clienti/modifica/" . $cliente->id) ?>" class="btn btn-light btn-outline-secondary btn-sm" title="Modifica">
+            <a href="<?= base_url("/clienti/modifica/" . $cliente["id"]) ?>" class="btn btn-light btn-outline-secondary btn-sm" title="Modifica">
                 Modifica <i class="bi bi-pencil"></i>
             </a>
         </div>
@@ -50,56 +63,53 @@
                     <!-- COLONNA SINISTRA -->
                     <dl class="dl-kv">
                         <dt>Codice Cliente</dt>
-                        <dd><?= esc($cliente->codice) ?></dd>
+                        <dd><?= esc($cliente["codice"]) ?></dd>
 
                         <dt>Ragione Sociale</dt>
-                        <dd><?= esc($cliente->nome) ?></dd>
+                        <dd><?= esc($cliente["nome"]) ?></dd>
 
                         <dt>Codice Cliente</dt>
-                        <dd class=><?= esc($cliente->codice) ?></dd>
+                        <dd class=><?= esc($cliente["codice"]) ?></dd>
 
                         <dt>Nome</dt>
-                        <dd class=><?= esc($cliente->nome) ?></dd>
+                        <dd class=><?= esc($cliente["nome"]) ?></dd>
 
                         <dt>Partita IVA</dt>
-                        <dd class=><?= esc($cliente->piva) ?></dd>
-
+                        <dd class=><?= esc($cliente["piva"]) ?></dd>
                         <dt>Indirizzo</dt>
-                        <dd class=><?= esc($cliente->indirizzo) ?></dd>
+                        <dd class=><?= esc($cliente["indirizzo"]) ?></dd>
 
                         <dt>CAP</dt>
-                        <dd class=><?= esc($cliente->cap) ?></dd>
+                        <dd class=><?= esc($cliente["cap"]) ?></dd>
 
                         <dt>Città</dt>
-                        <dd class=><?= esc($cliente->citta) ?></dd>
+                        <dd class=><?= esc($cliente["citta"]) ?></dd>
 
                         <dt>Provincia</dt>
-                        <dd class=><?= esc($cliente->provincia) ?></dd>
-
+                        <dd class=><?= esc($cliente["provincia"]) ?></dd>
                     </dl>
                 </div>
                 <!-- COLONNA DESTRA -->
                 <div class="col-12 col-md-6">
                     <dl class="dl-kv">
                         <dt>Email</dt>
-                        <dd class=><?= esc($cliente->email) ?></dd>
+                        <dd class=><?= esc($cliente["email"]) ?></dd>
 
                         <dt>Telefono</dt>
-                        <dd class=><?= esc($cliente->telefono) ?></dd>
+                        <dd class=><?= esc($cliente["telefono"]) ?></dd>
 
                         <dt>Contatti</dt>
-                        <dd class=><?= esc($cliente->contatti) ?></dd>
+                        <dd class=><?= esc($cliente["contatti"]) ?></dd>
 
                         <dt>Note</dt>
-                        <dd class=><?= esc($cliente->note) ?></dd>
-
+                        <dd class=><?= esc($cliente["note"]) ?></dd>
 
                         <dt>Cliente Interno</dt>
-                        <dd class=><?= $cliente->figlio_sn ? 'Sì' : 'No' ?></dd>
+                        <dd class=><?= $cliente["figlio_sn"] ? 'Sì' : 'No' ?></dd>
 
                         <dt>Cliente Padre</dt>
-                        <dd class="pointer" id="cliente-padre" data-id="<?= $cliente->padre_id ? $cliente->padre_id : '' ?>">
-                            <?= $cliente->padre_id ? esc($cliente->padre_nome) . ' [ID: ' . esc($cliente->padre_id) . ']' : '-' ?>
+                        <dd class="pointer" id="cliente-padre" data-id="<?= $cliente["padre_id"] ? $cliente["padre_id"] : '' ?>">
+                            <?= $cliente["padre_id"] ? esc($cliente["padre_nome"]) . ' [ID: ' . esc($cliente["padre_id"]) . ']' : '-' ?>
                         </dd>
                 </div>
 
@@ -118,7 +128,7 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0"><i class="bi bi-key-fill"></i> Licenze</h5>
-            <a href="<?= base_url("/licenze/crea/" . $cliente->id) ?>" class="btn btn-light btn-outline-secondary btn-sm" title="Nuova Licenza per il cliente">
+            <a href="<?= base_url("/licenze/crea/" . $cliente["id"]) ?>" class="btn btn-light btn-outline-secondary btn-sm" title="Nuova Licenza per il cliente">
                 <i class="bi bi-key-fill"></i> Nuova Licenza
             </a>
         </div>
@@ -137,25 +147,25 @@
                     </thead>
                     <tbody>
                         <?php foreach ($licenze as $licenza): ?>
-                            <tr class="licenza-row" data-id="<?= esc($licenza->padre_lic_id) //linko il padre per il fetch aggiornamenti 
+                            <tr class="licenza-row" data-id="<?= esc($licenza["padre_lic_id"]) //linko il padre per il fetch aggiornamenti 
                                                                 ?>" style="cursor:pointer;">
-                                <td><?= esc($licenza->id) ?></td>
-                                <td><?= $licenza->codice ? esc($licenza->codice) : esc($licenza->ambiente) ?></td>
-                                <td><?= esc($licenza->tipo) ?></td>
-                                <td><?= esc($licenza->modello) ?></td>
+                                <td><?= esc($licenza["id"]) ?></td>
+                                <td><?= $licenza["codice"] ? esc($licenza["codice"]) : esc($licenza["ambiente"]) ?></td>
+                                <td><?= esc($licenza["tipo"]) ?></td>
+                                <td><?= esc($licenza["modello"]) ?></td>
                                 <td>
-                                    <span class="badge <?= $licenza->stato ? 'bg-success' : 'bg-secondary' ?>">
-                                        <?= $licenza->stato ? 'Attiva' : 'Inattiva' ?>
+                                    <span class="badge <?= $licenza["stato"] ? 'bg-success' : 'bg-secondary' ?>">
+                                        <?= $licenza["stato"] ? 'Attiva' : 'Inattiva' ?>
                                     </span>
                                 </td>
                                 <td>
-                                    <a href="/aggiornamenti/crea/<?= $licenza->padre_lic_id ?>/<?= $licenza->tipo ?> " class="btn btn-sm btn-outline-primary" title="Crea Aggiornamento">
+                                    <a href="/aggiornamenti/crea/<?= $licenza["padre_lic_id"] ?>/<?= $licenza["tipo"] ?> " class="btn btn-sm btn-outline-primary" title="Crea Aggiornamento">
                                         <i class="bi bi-clock-history"></i>
-                                        <a href="/licenze/modifica/<?= $licenza->id //Modifico la licenza stessa
+                                        <a href="/licenze/modifica/<?= $licenza["id"] //Modifico la licenza stessa
                                                                     ?>" class="btn btn-sm btn-outline-secondary" title="Modifica">
                                             <i class="bi bi-pencil"></i>
                                         </a>
-                                        <a href="/licenze/elimina/<?= $licenza->id //Elimino la licenza stessa
+                                        <a href="/licenze/elimina/<?= $licenza["id"]     //Elimino la licenza stessa
                                                                     ?>" class="btn btn-sm btn-outline-danger" title="Elimina" onclick=" return confirm('Sei sicuro di voler eliminare questa licenza?');">
                                             <i class="bi bi-trash"></i>
                                         </a>
@@ -232,8 +242,7 @@
 
         cliente_padre.addEventListener('dblclick', function() {
             const padreId = this.getAttribute('data-id');
-            <?php log_message('info', 'View schedaCliente: doppio click cliente padre ID: ' . $cliente->padre_id);
-            log_message('info', 'Attuale URL: ' . current_url()); ?>
+
             if (!padreId) return;
             const baseUrl = "<?= base_url() ?>";
             window.location.href = `${baseUrl}/clienti/schedaCliente/${padreId}`;

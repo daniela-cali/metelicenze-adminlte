@@ -21,9 +21,11 @@ class AggiornamentiController extends BaseController
     public function getByLicenza($idLicenza)
     {
         $rows = $this->AggiornamentiModel->getByLicenza($idLicenza);
+
         //Formatto le date in d/m/Y
-        foreach ($rows as $row) {
-            $row->dt_agg = date('d/m/Y', strtotime($row->dt_agg));
+        foreach ($rows as &$row) {
+            $date = new \DateTime($row["dt_agg"]);
+            $row["dt_agg"] = $date->format('d/m/Y');
         }
         log_message('info', 'AggiornamentiController::getByLicenza - Risultato query: ' . print_r($rows, true));
         $result = $this->response->setJSON([

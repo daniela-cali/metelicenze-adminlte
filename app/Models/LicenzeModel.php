@@ -4,16 +4,13 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class LicenzeModel extends Model
+class LicenzeModel extends AuditModel
 {
     protected $table            = 'licenze';
     protected $primaryKey       = 'id';
-    protected $useSoftDeletes   =  true;
-    protected $beforeInsert = ['created_by'];
+
     protected $afterInsert = ['setPadreSelfIfMissing'];
-    protected $beforeUpdate = ['updated_by'];
-    protected $useTimestamps    = true;
-    protected $returnType       = 'object';
+
     protected $allowedFields = [
         'clienti_id',
         'codice',
@@ -144,5 +141,32 @@ class LicenzeModel extends Model
         }
 
         return $data;
+    }
+    public function countLicenzeByCliente()
+    {
+        $rows = $this
+            ->select('clienti_id, COUNT(id) AS numLicenze')
+            ->groupBy('clienti_id')
+            ->findAll();
+        $result = array_column($rows, 'numLicenze', 'clienti_id');
+        //dd($result);
+        log_message('debug', 'LicenzeModel class: ' . get_class($this->LicenzeModel));
+        log_message('debug', 'LicenzeModel parent: ' . get_parent_class($this->LicenzeModel));
+        log_message('debug', 'afterFind: ' . json_encode($this->LicenzeModel->afterFind ?? null));
+        return $result;
+    }
+    public function getTipoLicenzeByCliente()
+    {
+        $rows = $this->select('clienti_id, tipo')
+            ->groupBy('clienti_id, tipo')
+            ->get()
+            ->getResultArray(); // array normale, nessuna indicizzazione su PK come in findAll()
+        // Estraggo un array associativo con clienti_id come chiave e tipo come valore 
+        $result = [];
+        foreach ($rows as $row) {
+            $result[$row['clienti_id']][] = $row['tipo'];
+        }
+        //log_message('info', 'tipoLicenzaPerCliente: ' . print_r($result, true));
+        return $result;
     }
 }

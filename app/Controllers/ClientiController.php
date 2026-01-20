@@ -12,10 +12,12 @@ class ClientiController extends BaseController
 
     protected $ClientiModel;
     protected $LicenzeModel;
+    protected $backTo;
     public function __construct()
     {
         $this->ClientiModel = new ClientiModel();
         $this->LicenzeModel = new LicenzeModel();
+        $this->backTo = session()->get('backTo') ?? base_url('/clienti');
     }
 
     public function __index()
@@ -42,36 +44,50 @@ class ClientiController extends BaseController
     }
     public function index(): string
     {
+        //Imposto il suo stesso indirizzo come backTo
+        session()->set('backTo', base_url('/clienti') );
+
 
         $data['clienti'] = $this->ClientiModel->getClienti();
         $licenzeCount = $this->countLicenzeByCliente();
         $licenzeTipo = $this->getTipoLicenzeByCliente();
-        /*log_message('info', 'Clienti: ' . print_r($data['clienti'], true));
-        log_message('info', 'Licenze per tipo: ' . print_r($licenzeTipo, true));
-        log_message('info', 'Conteggio licenze per cliente: ' . print_r($licenzeCount, true));*/
 
+        //log_message('info', 'Conteggio licenze per cliente: ' . print_r($licenzeCount, true));
+        //dd($licenzeCount);
 
-        foreach ($data['clienti'] as $cliente) {
-            $cliente->numLicenze = $licenzeCount[$cliente->id] ?? 0;
-            $cliente->tipiLicenze = isset($licenzeTipo[$cliente->id]) ? $licenzeTipo[$cliente->id] : [];
+        //dd($data['clienti']);
+        foreach ($data['clienti'] as &$cliente) {    
+            $id = $cliente["id"];    log_message('info', '==============Elaboro il cliente con ID: ' . $id . ' - Nome: ' . $cliente["nome"]);    
+            //log_message('info', 'Numero di licenze trovate: ' . ($licenzeCount[$id] ?? 0));    
+            $cliente["numLicenze"] = $licenzeCount[$id] ?? 0;    
+            $cliente["tipiLicenze"] = isset($licenzeTipo[$id]) ? $licenzeTipo[$id] : [];    
+            //log_message('info', '==============Cliente ID elaboranto con successo: ' . $cliente["id"] . ' - Nome: ' . $cliente["nome"] . ' - NumLicenze: ' . $cliente["numLicenze"] . ' - TipiLicenze: ' . print_r($cliente["tipiLicenze"], true));
         }
+        unset ($cliente); // Termina la referenza
         $data['title'] = 'Elenco Clienti';
+        //session()->set(['route'=>'clienti']);
 
         return view('clienti/index', $data);
     }
 
     public function schedaCliente($id)
     {
-        log_message('info', 'Path di provenienza:' . current_url());
+        $this->backTo = base_url('/clienti/schedaCliente/'. $id);
+        
+        //log_message('info', 'ClientiController::schedaCliente - Path di provenienza: ' . previous_url());
+        //log_message('info', 'ClientiController::schedaCliente - Path attuale: ' . current_url());
         $session = session();
-        $session->set('backTo', current_url()); // Salvo il path di provenienza nella sessione
+        //$session->set('backTo', current_url()); // Salvo il path di provenienza nella sessione
         $data['cliente'] = $this->ClientiModel->getClientiById($id);
         //Salvo i dati del cliente corrente nella sessione per usi futuri (nel form delle licenze ad esempio)
-        $session->set('current_cliente_id', $data['cliente']->id); 
-        $session->set('current_padre_id', $data['cliente']->padre_id);
+        //dd($data['cliente']);
+        //Uso indice 0 perchè getClientiById ritorna un array con un solo elemento
+        $session->set('current_cliente_id', $data['cliente']["id"]); 
+        $session->set('current_padre_id', $data['cliente']["padre_id"]);
 
-        if ($data['cliente']->padre_id) {
-            $data['cliente']->padre_nome = $this->ClientiModel->getClientiById($data['cliente']->padre_id)->nome;
+        if ($data['cliente']["padre_id"]) {
+            $padre = $this->ClientiModel->getClientiById($data['cliente']['padre_id']);
+            $data['cliente']['padre_nome'] = $padre['nome'] ?? null;
         }
 
         $data['licenze'] = $this->LicenzeModel->getLicenzeByCliente($id);
@@ -158,6 +174,10 @@ class ClientiController extends BaseController
             ->groupBy('clienti_id')
             ->findAll();
         $result = array_column($rows, 'numLicenze', 'clienti_id');
+        //dd($result);
+        log_message('debug', 'LicenzeModel class: ' . get_class($this->LicenzeModel));
+        log_message('debug', 'LicenzeModel parent: ' . get_parent_class($this->LicenzeModel));
+        log_message('debug', 'afterFind: ' . json_encode($this->LicenzeModel->afterFind ?? null));
         return $result;
     }
     public function getTipoLicenzeByCliente()
@@ -171,7 +191,7 @@ class ClientiController extends BaseController
         foreach ($rows as $row) {
             $result[$row['clienti_id']][] = $row['tipo'];
         }
-        log_message('info', 'tipoLicenzaPerCliente: ' . print_r($result, true));
+        //log_message('info', 'tipoLicenzaPerCliente: ' . print_r($result, true));
         return $result;
     }
 

@@ -20,53 +20,53 @@
                     <label for="tipo" class="form-label">Tipo</label>
                     <select name="tipo" id="tipo" class="form-select" required>
                         <option value="Common">-- Seleziona --</option>
-                        <option value="Sigla" <?= (isset($licenza) && $licenza->tipo === 'Sigla') ? 'selected' : '' ?>>Sigla</option>
-                        <option value="VarHub" <?= (isset($licenza) && $licenza->tipo === 'VarHub') ? 'selected' : '' ?>>VarHub</option>
-                        <option value="SKNT" <?= (isset($licenza) && $licenza->tipo === 'SKNT') ? 'selected' : '' ?>>SKTN</option>
+                        <option value="Sigla" <?= (isset($licenza) && $licenza["tipo"] === 'Sigla') ? 'selected' : '' ?>>Sigla</option>
+                        <option value="VarHub" <?= (isset($licenza) && $licenza["tipo"] === 'VarHub') ? 'selected' : '' ?>>VarHub</option>
+                        <option value="SKNT" <?= (isset($licenza) && $licenza["tipo"] === 'SKNT') ? 'selected' : '' ?>>SKTN</option>
                     </select>
                 </div>
 
-                <input type="hidden" name="padre_lic_id" id="padre_lic_id" value="<?= isset($licenza->padre_lic_id) ? esc($licenza->padre_lic_id) : '' ?>">
+                <input type="hidden" name="padre_lic_id" id="padre_lic_id" value="<?= isset($licenza["padre_lic_id"]) ? esc($licenza["padre_lic_id"]) : '' ?>">
                 
                 <div class="mb-3 d-none" data-licenza="Sigla,SKNT">
                     <label for="codice" class="form-label">Codice Licenza</label>
                     <input type="text" name="codice" id="codice" class="form-control" required placeholder="Es. ABC12345"
-                        value="<?= isset($licenza) ? esc($licenza->codice) : '' ?>">
+                        value="<?= isset($licenza) ? esc($licenza["codice"]) : '' ?>">
                 </div>
                 <div class="mb-3 d-none" data-licenza="VarHub">
                     <label for="ambiente" class="form-label">Ambiente</label>
                     <input type="text" name="ambiente" id="ambiente" class="form-control" required placeholder="Es. usr_12345"
-                        value="<?= isset($licenza) ? esc($licenza->ambiente) : '' ?>">
+                        value="<?= isset($licenza) ? esc($licenza["ambiente"]) : '' ?>">
                 </div>
                 <div class="mb-3 d-none" data-licenza="VarHub">
                     <label for="nodo" class="form-label">Nodo</label>
                     <input type="text" name="nodo" id="nodo" class="form-control" required placeholder="CLNT_12345XYZ"
-                        value="<?= isset($licenza) ? esc($licenza->nodo) : '' ?>">
+                        value="<?= isset($licenza) ? esc($licenza["nodo"]) : '' ?>">
                 </div>
                 <div class="mb-3 d-none" data-licenza="VarHub">
                     <label for="invii" class="form-label">Invii</label>
                     <input type="text" name="invii" id="invii" class="form-control" required placeholder="500"
-                        value="<?= isset($licenza) ? esc($licenza->invii) : 500 ?>">
+                        value="<?= isset($licenza) ? esc($licenza["invii"]) : 500 ?>">
                 </div>
                 <div class="mb-3 d-none" data-licenza="VarHub">
                     <label for="giga" class="form-label">Giga</label>
                     <input type="text" name="giga" id="giga" class="form-control" required placeholder="Invii * 2"
-                        value="<?= isset($licenza) ? esc($licenza->giga) : '' ?>">
+                        value="<?= isset($licenza) ? esc($licenza["giga"]) : '' ?>">
                 </div>
                 <div class="mb-3 d-none" data-licenza="Sigla">
                     <label for="modello" class="form-label" data-licenza="Sigla">Modello</label>
                     <select name="modello" id="modello" class="form-select" required>
                         <option value="Common">-- Seleziona --</option>
-                        <option value="Start" <?= (isset($licenza) && $licenza->modello === 'Start') ? 'selected' : '' ?>>Start</option>
-                        <option value="Ultimate" <?= (isset($licenza) && $licenza->modello === 'Ultimate') ? 'selected' : '' ?>>Ultimate</option>
-                        <option value="Cloud" <?= (isset($licenza) && $licenza->modello === 'Cloud') ? 'selected' : '' ?>>Cloud</option>
-                        <option value="N/A" <?= (isset($licenza) && empty($licenza->modello)) ? 'selected' : '' ?>>Nessun tipo di modello</option>
+                        <option value="Start" <?= (isset($licenza) && $licenza["modello"] === 'Start') ? 'selected' : '' ?>>Start</option>
+                        <option value="Ultimate" <?= (isset($licenza) && $licenza["modello"] === 'Ultimate') ? 'selected' : '' ?>>Ultimate</option>
+                        <option value="Cloud" <?= (isset($licenza) && $licenza["modello"] === 'Cloud') ? 'selected' : '' ?>>Cloud</option>
+                        <option value="N/A" <?= (isset($licenza) && empty($licenza["modello"])) ? 'selected' : '' ?>>Nessun tipo di modello</option>
                     </select>
                 </div>
                 <div class="mb-3 d-none" data-licenza="Sigla">
                     <label for="postazioni" class="form-label">Postazioni Licenza</label>
                     <input type="text" name="postazioni" id="postazioni" class="form-control" required placeholder="1"
-                        value="<?= isset($licenza) ? esc($licenza->postazioni) : 1 ?>" />
+                        value="<?= isset($licenza) ? esc($licenza["postazioni"]) : 1 ?>" />
                 </div>
                 <div class="mb-3 form-check d-none" data-licenza="Sigla">
                     <input type="hidden" name="figlio_sn" value="0" />
@@ -77,25 +77,25 @@
                         id="figlio_sn"
                         name="figlio_sn"
                         value = "1"
-                        <?= (isset($licenza) && $licenza->figlio_sn) ? 'checked' : '' ?>>
+                        <?= (isset($licenza) && $licenza["figlio_sn"]) ? 'checked' : '' ?>>
                     </input>
                 </div>
                 <div class=" mb-3 form-group d-none" data-licenza="Common">
                     <label for="server">Server</label>
-                    <input type="text" class="form-control" id="server" name="server" placeholder="192.168.0.1, localhost, ecc." value="<?= isset($licenza) ? esc($licenza->server) : '' ?>">
+                    <input type="text" class="form-control" id="server" name="server" placeholder="192.168.0.1, localhost, ecc." value="<?= isset($licenza) ? esc($licenza["server"]) : '' ?>">
                     </input>
                 </div>
                 <div class=" mb-3 form-group d-none" data-licenza="Sigla">
                     <label for="conn">Connessioni</label>
                     <textarea class="form-control" id="conn" name="conn" rows="3"><?=
-                        isset($licenza) ? esc($licenza->conn) : ''
+                        isset($licenza) ? esc($licenza["conn"]) : ''
                     ?></textarea>
                 </div>
 
                 <div class=" mb-3 form-group" data-licenza="Common">
                     <label for="note">Note Licenza</label>
                     <textarea class="form-control" id="note" name="note" rows="3"><?=
-                        isset($licenza) ? esc($licenza->note) : ''
+                        isset($licenza) ? esc($licenza["note"]) : ''
                     ?></textarea>
                 </div>
                 <div class="mb-3 form-check" data-licenza="Common">
@@ -108,7 +108,7 @@
                         id="stato"
                         name="stato"
                         value="1"
-                        <?php if (!isset($licenza) || $licenza->stato) echo 'checked'; ?> />
+                        <?php if (!isset($licenza) || $licenza["stato"]) echo 'checked'; ?> />
                 </div>
 
                 <div class="mt-4 " data-licenza="Common">

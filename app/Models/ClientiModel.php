@@ -4,14 +4,12 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class ClientiModel extends Model
+class ClientiModel extends AuditModel
 {
 
 
     protected $table            = 'clienti';
     protected $primaryKey       = 'id';
-    protected $useSoftDeletes   =  true;
-
 
     protected $allowedFields = [
         'codice',
@@ -38,31 +36,6 @@ class ClientiModel extends Model
         'deleted_at',
         'deleted_by',
     ];
-    protected $returnType       = 'object';
-    protected $beforeInsert = ['created_by'];
-    protected $beforeUpdate = ['updated_by'];
-
-
-    protected function created_by(array $data)
-    {
-        $user = auth()->user(); 
-
-        if ($user) {
-            $data['data']['created_by'] = $user->id ?? null;
-            $data['data']['updated_by'] = $user->id ?? null;
-        } 
-        return $data;
-    }
-
-    protected function updated_by(array $data)
-    {
-        $user = auth()->user(); 
-
-        if ($user) {
-            $data['data']['updated_by'] = $user->id ?? null;
-        } 
-        return $data;
-    }
 
 
 
@@ -73,6 +46,7 @@ class ClientiModel extends Model
 
     public function getClienti()
     {
+        
         return $this->orderBy('nome', 'ASC')->findAll();
     }
 
@@ -103,10 +77,11 @@ class ClientiModel extends Model
             ->first();
     }
     public function getClientiPadre()
-    {   
+    {
         return $this->select([
-            'clienti.id as value', 
-            'CONCAT_WS(\' - \', clienti.nome, clienti.codice) AS content'])
+            'clienti.id as value',
+            'CONCAT_WS(\' - \', clienti.nome, clienti.codice) AS content'
+        ])
             ->where('figlio_sn', 0)
             ->findAll();
     }
@@ -115,9 +90,8 @@ class ClientiModel extends Model
     {
 
         //log_message('info', 'Ricevo i seguenti dati nel MODEL: ' . print_r($data, true));
-        $this->save($data); 
+        $this->save($data);
         log_message('info', 'Dopo il salvataggio, l\'ID del cliente è: ' . $this->insertID);
-        return $this->insertID;// Restituisce l'ID del nuovo cliente
+        return $this->insertID; // Restituisce l'ID del nuovo cliente
     }
-
 }

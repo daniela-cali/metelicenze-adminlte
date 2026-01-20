@@ -4,13 +4,11 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class AggiornamentiModel extends Model
+class AggiornamentiModel extends AuditModel
 {
     protected $table            = 'aggiornamenti';
     protected $primaryKey       = 'id';
-    protected $returnType       = 'object';
-    protected $useSoftDeletes   = true;
-    protected $protectFields    = true;
+
     protected $allowedFields = [
         'licenze_id',
         'versioni_id',
@@ -26,32 +24,6 @@ class AggiornamentiModel extends Model
     ];
 
 
-    protected $useTimestamps = true;
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
-    protected $beforeInsert = ['created_by'];
-    protected $beforeUpdate = ['updated_by'];
-
-    protected function created_by(array $data)
-    {
-        $user = auth()->user();
-
-        if ($user) {
-            $data['data']['created_by'] = $user->id ?? null;
-            $data['data']['updated_by'] = $user->id ?? null;
-        }
-        return $data;
-    }
-
-    protected function updated_by(array $data)
-    {
-        $user = auth()->user();
-
-        if ($user) {
-            $data['data']['updated_by'] = $user->id ?? null;
-        }
-        return $data;
-    }
 
     function getByLicenza($id_licenza)
     {

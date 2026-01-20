@@ -58,6 +58,7 @@
                 </div> <!-- row filtri -->
 
                 <?php if (!empty($clienti)): ?>
+                    <?php //dd($clienti) ?>
 
                     <table class="table table-striped table-hover align-middle datatable" id="clientiTable">
                         <thead class="table-light">
@@ -75,18 +76,26 @@
                         </thead>
                         <tbody>
                             <?php foreach ($clienti as $cliente): ?>
-                                <tr class="cliente-row" data-id="<?= esc($cliente->id) ?>">
-                                    <td><?= esc($cliente->id) ?></td>
-                                    <td><?= esc($cliente->codice) ?></td>
-                                    <td><?= esc($cliente->nome) ?></td>
-                                    <td><?= esc($cliente->email) ?></td>
-                                    <td><?= esc($cliente->telefono) ?></td>
-                                    <td><?= esc($cliente->citta) ?></td>
+                                <tr class="cliente-row" 
+                                data-id="<?= esc($cliente["id"]) ?>"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement= "right"
+                                title="Creato da: <?= $cliente["created_by_name"] ?> il <?= date('d/m/Y H:i', strtotime($cliente["created_at"])) ?>
+                                <?php if ($cliente["updated_at"]): ?>
+                                    &#10;Ultima modifica da: <?= $cliente["updated_by_name"] ?> il <?= date('d/m/Y H:i', strtotime($cliente["updated_at"])) ?>
+                                <?php endif; ?> 
+                                ">
+                                    <td><?= esc($cliente["id"]) ?></td>
+                                    <td><?= esc($cliente["codice"]) ?></td>
+                                    <td><?= esc($cliente["nome"]) ?></td>
+                                    <td><?= esc($cliente["email"]) ?></td>
+                                    <td><?= esc($cliente["telefono"]) ?></td>
+                                    <td><?= esc($cliente["citta"]) ?></td>
                                     <td>
-                                        <?php if ($cliente->numLicenze > 0):
+                                        <?php if ($cliente["numLicenze"] > 0):
                                         ?>
                                             <span class="badge bg-success">
-                                                <?php echo $cliente->numLicenze ?> </span>
+                                                <?php echo $cliente["numLicenze"] ?> </span>
                                         <?php else:
                                         ?>
                                             <span class="badge bg-secondary">0</span>
@@ -95,7 +104,7 @@
                                     </td>
                                     <td>
                                         <?php // Visualizzo i tipi di licenze come lista
-                                        foreach ($cliente->tipiLicenze as $tipo): ?>
+                                        foreach ($cliente["tipiLicenze"] as $tipo): ?>
                                             <span class="badge bg-transparent text-dark mb-1"><?= esc($tipo) ?></span>
                                         <?php endforeach; ?>
                                     </td>
@@ -105,14 +114,14 @@
                                         </button>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                             <li>
-                                                <a class="dropdown-item" href="<?= site_url('/clienti/schedaCliente/' . $cliente->id) ?>">
+                                                <a class="dropdown-item" href="<?= site_url('/clienti/schedaCliente/' . $cliente["id"]) ?>">
                                                     <i class="bi bi-person-vcard"></i>
                                                     Scheda Cliente
                                                 </a>
                                             </li>
 
                                             <li>
-                                                <a class="dropdown-item" href="<?= site_url('clienti/modifica/' . $cliente->id) ?>">
+                                                <a class="dropdown-item" href="<?= site_url('clienti/modifica/' . $cliente["id"]) ?>">
                                                     <i class="bi bi-pencil"></i>
                                                     Modifica
                                                 </a>
@@ -122,7 +131,7 @@
                                             </li>
 
                                             <li class="">
-                                                <a class="dropdown-item text-danger" href="<?= site_url('clienti/elimina/' . $cliente->id) ?>">
+                                                <a class="dropdown-item text-danger" href="<?= site_url('clienti/elimina/' . $cliente["id"]) ?>">
                                                     <i class="bi bi-trash"></i>
                                                     Elimina
                                                 </a>

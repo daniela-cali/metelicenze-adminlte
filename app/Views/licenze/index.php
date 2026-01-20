@@ -73,21 +73,21 @@
                             </thead>
                             <tbody>
                                 <?php foreach ($licenze as $licenza): ?>
-                                    <?php $trClass = $licenza->stato == 0 ? 'class="table-danger"' : ''; ?>
-                                    <tr <?= $trClass ?> class = "licenza-row" data-id="<?= esc($licenza->id) ?>" style="cursor:pointer;">
-                                        <td><?= esc($licenza->id) ?></td>
-                                        <td><?= esc($licenza->codice) ?></td>
-                                        <td><?= esc($licenza->tipo) ?></td>
-                                        <td><?= esc($licenza->clienteNome) ?></td>
-                                        <td><?= esc($licenza->ultimoAggiornamento) ?></td>
-                                        <td><?= esc($licenza->versioneUltimoAggiornamento) ?></td>
+                                    <?php $trClass = $licenza["stato"] == 0 ? 'class="table-danger"' : ''; ?>
+                                    <tr <?= $trClass ?> class = "licenza-row" data-id="<?= esc($licenza["id"]) ?>" style="cursor:pointer;">
+                                        <td><?= esc($licenza["id"]) ?></td>
+                                        <td><?= esc($licenza["codice"]) ?></td>
+                                        <td><?= esc($licenza["tipo"]) ?></td>
+                                        <td><?= esc($licenza["clienteNome"]) ?></td>
+                                        <td><?= esc($licenza["ultimoAggiornamento"]) ?></td>
+                                        <td><?= esc($licenza["versioneUltimoAggiornamento"]) ?></td>
                                         <td>
-                                            <?php if ($licenza->ultimaVersione): ?>
+                                            <?php if ($licenza["ultimaVersione"]): ?>
                                                 <span class="badge bg-success">
                                                     <i class="bi bi-check"></i>
                                                     Aggiornato
                                                 </span>
-                                            <?php elseif ($licenza->stato == 0): ?>
+                                            <?php elseif ($licenza["stato"] == 0): ?>
                                                 <span class="badge bg-danger text-white">
                                                     <i class="bi bi-x-circle"></i>
                                                     Scaduta
@@ -106,19 +106,19 @@
                                                 </button>
                                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                                     <li>
-                                                        <a class="dropdown-item" href="<?= site_url('aggiornamenti/crea/' . $licenza->id . '/' . $licenza->tipo) ?>">
+                                                        <a class="dropdown-item" href="<?= site_url('aggiornamenti/crea/' . $licenza["id"] . '/' . $licenza["tipo"]) ?>">
                                                             <i class="bi bi-clock-history"></i>
                                                             Aggiornamento
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <a class="dropdown-item" href="<?= site_url('licenze/visualizza/' . $licenza->id) ?>">
+                                                        <a class="dropdown-item" href="<?= site_url('licenze/visualizza/' . $licenza["id"]) ?>">
                                                             <i class="bi bi-eye"></i>
                                                             Visualizza
                                                         </a>
                                                     </li>
                                                     <li>
-                                                        <a class="dropdown-item" href="<?= site_url('licenze/modifica/' . $licenza->id) ?>">
+                                                        <a class="dropdown-item" href="<?= site_url('licenze/modifica/' . $licenza["id"]) ?>">
                                                             <i class="bi bi-pencil"></i>
                                                             Modifica
                                                         </a>
@@ -128,7 +128,7 @@
                                                     </li>
 
                                                     <li class="">
-                                                        <a class="dropdown-item text-danger" href="<?= site_url('licenze/elimina/' . $licenza->id) ?>">
+                                                        <a class="dropdown-item text-danger" href="<?= site_url('licenze/elimina/' . $licenza["id"]) ?>">
                                                             <i class="bi bi-trash"></i>
                                                             Elimina
                                                         </a>
