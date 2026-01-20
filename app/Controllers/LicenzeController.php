@@ -23,26 +23,26 @@ class LicenzeController extends BaseController
         $licenze = $this->LicenzeModel->getLicenze();
         $clienti = $this->ClientiModel->getInfoClienti();
         $aggiornamenti = $this->AggiornamentiModel->getLastAggiornamenti();
-        foreach ($licenze as $licenza) {
+        foreach ($licenze as &$licenza) {
             // Trova il cliente corrispondente per ogni licenza
-            $cliente = array_filter($clienti, fn($c) => $c->id === $licenza->clienti_id);
+            $cliente = array_filter($clienti, fn($c) => $c["id"] === $licenza["clienti_id"]);
             /*Vado a recuperare l'id del padre che normalmente è la licenza stessa, ma per i figli fa riferimento al padre direttamente, 
             in modo da vedere il corretto stato della licenza*/
-            $ultimo_agg = array_filter($aggiornamenti, fn($a) => $a->licenza_id === $licenza->padre_lic_id);
+            $ultimo_agg = array_filter($aggiornamenti, fn($a) => $a->licenza_id === $licenza["padre_lic_id"]);
 
-            $licenza->clienteNome = $cliente ? array_values($cliente)[0]->nome : 'Cliente non trovato';
-            $licenza->clienteId = $cliente ? array_values($cliente)[0]->id : null;           
-            //$licenza->ultimoAggiornamento = $ultimo_agg ? array_values($ultimo_agg)[0]->ultimo_aggiornamento : 'N/A';
+            $licenza["clienteNome"] = $cliente ? array_values($cliente)["nome"] : 'Cliente non trovato';
+            $licenza["clienteId"] = $cliente ? array_values($cliente)["id"] : null;           
+            //$licenza->ultimoAggiornamento = $ultimo_agg ? array_values($ultimo_agg)->ultimo_aggiornamento : 'N/A';
             if ($ultimo_agg) {
                 $ultimo_agg_data = array_values($ultimo_agg)[0]->ultimo_aggiornamento;
                 //Formatto la data in d/m/Y e la tolgo dalla view per mostrare anche N/A altrimenti esce 01/01/1970
-                $licenza->ultimoAggiornamento = date('d/m/Y', strtotime($ultimo_agg_data));
-                $licenza->ultimaVersione = array_values($ultimo_agg)[0]->ultima ? true : false;
+                $licenza["ultimoAggiornamento"] = date('d/m/Y', strtotime($ultimo_agg_data));
+                $licenza["ultimaVersione"] = array_values($ultimo_agg)[0]->ultima ? true : false;
             } else {
-                $licenza->ultimaVersione = false;
-                $licenza->ultimoAggiornamento = 'N/A';
+                $licenza["ultimaVersione"] = false;
+                $licenza["ultimoAggiornamento"] = 'N/A';
             }
-            $licenza->versioneUltimoAggiornamento = $ultimo_agg ? array_values($ultimo_agg)[0]->versione_codice : 'N/A';          
+            $licenza["versioneUltimoAggiornamento"] = $ultimo_agg ? array_values($ultimo_agg)[0]->versione_codice : 'N/A';          
             /**
              * Commento in quanto ho cambiato il tipo in enum nel database
              */
@@ -65,7 +65,7 @@ class LicenzeController extends BaseController
             'mode' => 'view',
             'licenza' => $licenza,
             'action' => '',
-            'title' => 'Dettagli Licenza ' . esc($licenza->codice),
+            'title' => 'Dettagli Licenza ' . esc($licenza["codice"]),
         ]);
     }
 
@@ -86,10 +86,10 @@ class LicenzeController extends BaseController
         $cliente = $this->ClientiModel->getClientiById($idCliente);
         if (!$cliente) {
             return redirect()->back()->with('error', 'Cliente non trovato!.');
-        } elseif ($cliente->padre_id) {
-            log_message('info', 'LicenzeController::crea Cliente selezionato è un figlio, prendo il padre ID: ' . $cliente->padre_id);
+        } elseif ($cliente["padre_id"]) {
+            log_message('info', 'LicenzeController::crea Cliente selezionato è un figlio, prendo il padre ID: ' . $cliente["padre_id"]);
             // Se è figlio allora prendo le licenze del padre messe in un array con 3 elementi (Sigla, VariHub, SKNT) per poterle mostrare nel form
-            $licenzePadre = $this->LicenzeModel->getLicenzeByCliente($cliente->padre_id);
+            $licenzePadre = $this->LicenzeModel->getLicenzeByCliente($cliente["padre_id"]);
             //log_message('info', 'LicenzeController::crea Licenze del padre trovate: ' . print_r($licenzePadre, true));
             foreach ($licenzePadre as $licenza) {
                 if ($licenza->tipo === 'Sigla') {
@@ -110,7 +110,7 @@ class LicenzeController extends BaseController
         $data['id_cliente'] = $idCliente;
         $data['cliente'] = $cliente;
         $data['licenza'] = null; 
-        $data['title'] = 'Crea Licenza per Cliente ' . $data['cliente']->nome . ' [ID: ' . $idCliente . ']';
+        $data['title'] = 'Crea Licenza per Cliente ' . $data['cliente']['nome'] . ' [ID: ' . $idCliente . ']';
         log_message('info', 'LicenzeController::crea - Creazione licenza per Cliente ID: ' . $idCliente . ' con questi dati inviati alla view: ' . print_r($data, true));
 
 
@@ -123,8 +123,8 @@ class LicenzeController extends BaseController
 
 
         $licenza = $this->LicenzeModel->getLicenzeById($idLicenza);
-        $idCliente = $licenza->clienti_id; // Ottengo l'ID del cliente associato alla licenza
-        $codice =  $licenza->codice;
+        $idCliente = $licenza["clienti_id"]; // Ottengo l'ID del cliente associato alla licenza
+        $codice =  $licenza["codice"];
         //$backTo = 
         $data = [
             'licenza' => $licenza,
