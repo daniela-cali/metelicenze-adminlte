@@ -20,7 +20,7 @@ class ClientiController extends BaseController
         $this->backTo = session()->get('backTo') ?? base_url('/clienti');
     }
 
-    public function __index()
+    /*public function __index()
     {
         $tipoLicenza = $this->request->getGet('tipoLicenza');
         if ($tipoLicenza) {
@@ -41,11 +41,11 @@ class ClientiController extends BaseController
         $data['title'] = 'Elenco Clienti';
 
         return view('clienti/index', $data);
-    }
+    }*/
     public function index(): string
     {
-        //Imposto il suo stesso indirizzo come backTo
-        session()->set('backTo', base_url('/clienti') );
+
+        //setHistory(base_url('/clienti'));
 
 
         $data['clienti'] = $this->ClientiModel->getClienti();
@@ -123,7 +123,7 @@ class ClientiController extends BaseController
             'mode' => 'edit',
             'cliente' => $cliente,
             'action' => '/clienti/salva/' . $id,
-            'title' => 'Modifica Cliente ' .$cliente->nome,
+            'title' => 'Modifica Cliente ' .$cliente["nome"],
             'selectValues' => $selectValues,
         ]);
     }
@@ -153,19 +153,19 @@ class ClientiController extends BaseController
         return redirect()->to('clienti/schedaCliente/' . $clienteID)->with('success', 'Cliente salvato con successo.');
 
     }
-    public function __clientiFilters()
+    /*public function __clientiFilters()
     {
         $tipoLicenza = $this->request->getPost('tipoLicenza');
         echo "Tipo licenza selezionato: " . $tipoLicenza;
-        /*if ($tipoLicenza) {
+        if ($tipoLicenza) {
         }
         return view('clienti/form', [
             'mode' => 'view',
             'cliente' => $cliente,
             'action' => '',
             'title' => 'Dettagli Cliente ' . esc($cliente->nome),
-        ]);*/
-    }
+        ]);
+    }*/
 
     public function countLicenzeByCliente()
     {

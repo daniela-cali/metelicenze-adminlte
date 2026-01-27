@@ -28,7 +28,7 @@ class VersioniController extends BaseController
             'mode' => 'view',
             'action' => '', // Nessuna azione in visualizzazione
             'versione' => $versione, // Non abbiamo una versione esistente da modificare
-            'title' => 'Dettagli Versione ' . esc($versione->codice),
+            'title' => 'Dettagli Versione ' . esc($versione["codice"]),
         ]);
     }
 
@@ -53,7 +53,7 @@ class VersioniController extends BaseController
             'mode' => 'edit',
             'action' => base_url('/versioni/salva/' . $idVersione),
             'versione' => $versione,
-            'title' => 'Modifica Versione ' . esc($versione->codice),
+            'title' => 'Modifica Versione ' . esc($versione["codice"]),
         ]);
     }
 

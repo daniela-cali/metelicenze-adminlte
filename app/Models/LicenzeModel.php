@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use CodeIgniter\Model;
+
 
 class LicenzeModel extends AuditModel
 {

@@ -8,11 +8,9 @@
             </a>
         </div>
         <div class="card-body">
-            <div class="container">
-
-
-                <div class="row"> <!-- row filtri -->
-                    <div class="col">
+            <div class="container"><!-- FILTRI -->
+                <div class="row">  
+                    <div class="col"> <!--TIPO-->
                         <div class="d-flex justify-content-end align-items-center gap-3" id="tipi">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="tipi" value="Sigla"
@@ -31,7 +29,7 @@
                         </div>
                     </div>
                     <hr>
-                    <div class="col">
+                    <div class="col"> <!--STATO-->
                         <div class="d-flex justify-content-end align-items-center gap-3" id="statoLicenze">
                             <div class="form-check">
                                 
@@ -53,9 +51,9 @@
                                 </div>
                             </div>
                         </div>
-                        <hr>
                     </div>
-                </div> <!-- row filtri -->
+                </div> <!-- END FILTRI -->
+                <hr>
                 <?php if (!empty($licenze)): ?>
                     <div class="table-responsive">
                         <table class="table table-striped table-hover align-middle" id="licenzeTable">
@@ -74,7 +72,7 @@
                             <tbody>
                                 <?php foreach ($licenze as $licenza): ?>
                                     <?php $trClass = $licenza["stato"] == 0 ? 'class="table-danger"' : ''; ?>
-                                    <tr <?= $trClass ?> class = "licenza-row" data-id="<?= esc($licenza["id"]) ?>" style="cursor:pointer;">
+                                    <tr <?= $trClass ?> class = "clickable" data-id="<?= esc($licenza["id"]) ?>" >
                                         <td><?= esc($licenza["id"]) ?></td>
                                         <td><?= esc($licenza["codice"]) ?></td>
                                         <td><?= esc($licenza["tipo"]) ?></td>
@@ -199,11 +197,11 @@
                 //console.log('Filtro tipi: ' + passTipi + ', filtro stato: ' + passStato);
                 return passTipi && passStato;
             });
-            document.querySelectorAll('.licenza-row').forEach(function(input) {
+            document.querySelectorAll('.clickable').forEach(function(input) {
                 input.addEventListener('dblclick', function() {
-                    const licenzaId = this.getAttribute('data-id');
-                   console.log('Doppio click sulla licenza ID: ' + licenzaId);
-                    window.location.href = '/licenze/modifica/' + licenzaId;
+                    const ID = this.getAttribute('data-id');
+                   console.log('Doppio click sulla licenza ID: ' + ID);
+                    window.location.href = '/licenze/modifica/' + ID;
                 });
             });
 

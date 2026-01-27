@@ -16,14 +16,14 @@
                 <div class="mb-3">
                     <label for="dt_agg" class="form-label">Data Aggiornamento</label>
                     <input type="date" name="dt_agg" id="dt_agg" class="form-control" required 
-                    value="<?= isset($aggiornamento) ? esc($aggiornamento->dt_agg) : '' ?>">
+                    value="<?= isset($aggiornamento) ? esc($aggiornamento['dt_agg']) : '' ?>">
                 </div>
                 <div class="mb-3">
                     <label for="versioni_id" class="form-label">Versione</label>
                     <select name="versioni_id" id="versioni_id" class="form-select" required>
                         <option value="">-- Seleziona --</option>
                         <?php foreach ($versioni as $v): ?>
-                            <option value="<?= esc($v->id) ?>" <?= (isset($aggiornamento) && $aggiornamento->versioni_id === $v->id) ? 'selected' : '' ?>>
+                            <option value="<?= esc($v->id) ?>" <?= (isset($aggiornamento) && $aggiornamento['versioni_id'] === $v->id) ? 'selected' : '' ?>>
                                 <?= esc($v->codice) ?> - <?= esc($v->release) ?>
                             </option>
                         <?php endforeach; ?>
@@ -32,7 +32,7 @@
                 <div class="mb-3">
                     <label for="note" class="form-label">Note sull'aggiornamento</label>
                     <textarea name="note" id="note" class="form-control" rows="10"><?= 
-                        isset($aggiornamento) ? esc($aggiornamento->note) : '' 
+                        isset($aggiornamento) ? esc($aggiornamento['note']) : '' 
                     ?></textarea>
                 </div>
                 <div class="mt-4">

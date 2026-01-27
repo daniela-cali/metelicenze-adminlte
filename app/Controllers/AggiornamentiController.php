@@ -54,7 +54,7 @@ class AggiornamentiController extends BaseController
         $versioni = $this->VersioniModel->getVersioni();
 
         $data['aggiornamento'] = $aggiornamento;
-        $data['title'] = 'Dettagli aggiornamento del ' . date('d/m/Y', strtotime($aggiornamento->dt_agg));
+        $data['title'] = 'Dettagli aggiornamento del ' . date('d/m/Y', strtotime($aggiornamento['dt_agg']));
         $data['versioni'] = $versioni;
         $data['action'] = ''; // Non c'è azione di salvataggio in visualizzazione
         $data['mode'] = 'view';
@@ -115,7 +115,7 @@ class AggiornamentiController extends BaseController
         $versioni = $this->VersioniModel->getVersioni();
 
         $data['aggiornamento'] = $aggiornamento;
-        $data['title'] = 'Modifica aggiornamento del ' . date('d/m/Y', strtotime($aggiornamento->dt_agg));
+        $data['title'] = 'Modifica aggiornamento del ' . date('d/m/Y', strtotime($aggiornamento['dt_agg']));
         $data['versioni'] = $versioni;
         $data['action'] = base_url('/aggiornamenti/salva/' . $idAggiornamento);
         $data['mode'] = 'edit';

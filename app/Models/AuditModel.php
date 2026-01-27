@@ -105,7 +105,7 @@ class AuditModel extends Model
             } else {
                 $users = array();
             }
-            // (3) - Assegnazione dei nomi degli utenti che hanno creato o modificato i clienti        
+            // (3) - Assegnazione dei nomi degli utenti che hanno creato o modificato i record        
             foreach ($rows as &$row) {
                 $created_by = array_key_exists('created_by', $row) ? $row['created_by'] : null;
                 $updated_by = array_key_exists('updated_by', $row) ? $row['updated_by'] : null;

@@ -9,7 +9,28 @@
             </a>
         </div>
         <div class="card-body">
-
+           <div class="container"><!-- FILTRI -->
+                <div class="row">  
+                    <div class="col"> <!--TIPO-->
+                        <div class="d-flex justify-content-end align-items-center gap-3" id="tipi">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="tipi" value="Sigla"
+                                    id="tipoSigla">
+                                <label class="form-check-label" for="tipoSigla">Sigla</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="tipi" value="VarHub"
+                                    id="tipoVarHub">
+                                <label class="form-check-label" for="tipoVarHub">VarHub</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" name="tipi" value="SKNT" id="tipoSKNT">
+                                <label class="form-check-label" for="tipoSKNT">SKNT</label>
+                            </div>
+                        </div>
+                    </div>
+                </div> <!-- END FILTRI -->
+                <hr>
             <?php if (!empty($versioni)): ?>
                 <div class="table-responsive">
                     <table class="table table-striped table-hover align-middle" id="versioniTable">
@@ -26,31 +47,31 @@
                         </thead>
                         <tbody>
                             <?php foreach ($versioni as $versione): ?>
-                                <tr>
-                                    <td><?= esc($versione->id) ?></td>
-                                    <td><?= esc($versione->tipo) ?></td>
-                                    <td><?= esc($versione->codice) ?></td>
-                                    <td><?= esc($versione->release) ?></td>
-                                    <td><?= date('d/m/Y', strtotime($versione->dt_rilascio)) ?></td>
+                                <tr class="clickable" data-id="<?= esc($versione["id"]) ?>">
+                                    <td><?= esc($versione["id"]) ?></td>
+                                    <td><?= esc($versione["tipo"]) ?></td>
+                                    <td><?= esc($versione["codice"]) ?></td>
+                                    <td><?= esc($versione["release"]) ?></td>
+                                    <td><?= date('d/m/Y', strtotime($versione["dt_rilascio"])) ?></td>
                                     <td>
-                                        <?php if ($versione->ultima): ?>
+                                        <?php if ($versione["ultima"]): ?>
                                             <span class="badge bg-success">Ultima</span>
                                         <?php else: ?>
                                             <span class="badge bg-secondary"><i>Superata</i></span>
                                         <?php endif; ?>
                                     </td>
                                     <td>
-                                        <a href="/versioni/visualizza/<?= $versione->id ?>" class="btn btn-sm btn-outline-primary" title="Scheda versione">
+                                        <a href="/versioni/visualizza/<?= $versione["id"] ?>" class="btn btn-sm btn-outline-primary" title="Scheda versione">
                                             <i class="bi bi-person-vcard"></i>
                                         </a>
-                                        <a href="/versioni/modifica/<?= $versione->id ?>" class="btn btn-sm btn-outline-secondary" title="Modifica versione">
+                                        <a href="/versioni/modifica/<?= $versione["id"] ?>" class="btn btn-sm btn-outline-secondary" title="Modifica versione">
                                             <i class="bi bi-pencil"></i>
                                         </a>
-                                        <a href="/versioni/elimina/<?= $versione->id ?>" class="btn btn-sm btn-outline-danger" title="Elimina versione" onclick="return confirm('Eliminare la versione?')">
+                                        <a href="/versioni/elimina/<?= $versione["id"] ?>" class="btn btn-sm btn-outline-danger" title="Elimina versione" onclick="return confirm('Eliminare la versione?')">
                                             <i class="bi bi-trash"></i>
                                         </a>
-                                    <td></td>
-                                    
+                                    </td>
+
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -67,29 +88,53 @@
 <?= $this->endSection() ?>
 <?= $this->section('scripts') ?>
 <script>
-    $(document).ready(function() {
-        var table = new DataTable('#versioniTable', {
-            language: {
-                url: 'https://cdn.datatables.net/plug-ins/2.3.2/i18n/it-IT.json',
-            },
-            responsive: true,
-            order: [],
-            columnDefs: [
-                {
-                    targets: 7,
-                    orderable: true,
-                    searchable: true
-                }       
-            ]
-            ,
-            paging: true,
-            lengthChange: false,
-            info: true, 
-            searching: true,
-            autoWidth: false,
-            
+   document.addEventListener("DOMContentLoaded", function() {
+            // inizializza la DataTable 
+            const table = $('#versioniTable').DataTable($.extend(true, {}, datatableDefaults, {
+                order: []
+            }));
+
+            // filtro custom: tipi + stato licenze
+            $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+                if (settings.nTable.id !== 'versioniTable') return true;
+
+                // ---- filtro TIPI (esempio: colonna 1)
+                const selectedTipi = $('input[name="tipi"]:checked').map(function() {
+                    return $(this).val();
+                }).get();
+
+                let passTipi = true;
+                if (selectedTipi.length > 0) {
+                    const tipiText = String(data[1] ?? '')
+                        .replace(/<[^>]*>/g, '') // toglie eventuale HTML
+                        .replace(/\s+/g, ' ') // compatta whitespace
+                        .trim();
+
+                    passTipi = selectedTipi.some(t => tipiText.includes(t));
+                }
+
+                
+                return passTipi;
+            });
+            document.querySelectorAll('.clickable').forEach(function(input) {
+                input.addEventListener('dblclick', function() {
+                    const ID = this.getAttribute('data-id');
+                   console.log('Doppio click ID: ' + ID);
+                    window.location.href = '/aggiornamenti/modifica/' + ID;
+                });
+            });
+
+            // quando cambia un filtro, ridisegna la tabella 
+
+            document.querySelectorAll('input[name="tipi"]').forEach(function(input) {
+                input.addEventListener('change', function() {
+                    //console.log('Ridisegno tabella per filtro tipi valore selezionato: ' + this.value);
+                    table.draw();
+                });
+            });
+
+
         });
-    });
 
 </script>
 <?= $this->endSection() ?>

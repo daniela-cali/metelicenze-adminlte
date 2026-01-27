@@ -19,47 +19,47 @@
                 <div class="mb-3">
                     <label for="codice" class="form-label">Codice Cliente</label>
                     <input type="text" name="codice" id="codice" class="form-control" required placeholder="Es. ABC12345"
-                        value="<?= isset($cliente) ? esc($cliente->codice) : esc($internal_code) ?>">
+                        value="<?= isset($cliente) ? esc($cliente["codice"]) : esc($internal_code) ?>">
                 </div>
                 <div class="mb-3">
                     <label for="nome" class="form-label">Ragione Sociale</label>
                     <input type="text" name="nome" id="nome" class="form-control" required placeholder="Rossi Srl"
-                        value="<?= isset($cliente) ? esc($cliente->nome) : '' ?>">
+                        value="<?= isset($cliente) ? esc($cliente["nome"]) : '' ?>">
                 </div>
                 <div class="mb-3">
                     <label for="piva" class="form-label">Partita IVA</label>
                     <input type="text" name="piva" id="piva" class="form-control" placeholder="IT12345678901"
-                        value="<?= isset($cliente) ? esc($cliente->piva) : '' ?>">
+                        value="<?= isset($cliente) ? esc($cliente["piva"]) : '' ?>">
                 </div>
                 <div class="mb-3">
                     <label for="indirizzo" class="form-label">Indirizzo</label>
                     <input type="text" name="indirizzo" id="indirizzo" class="form-control" required placeholder="Via Roma, 123"
-                        value="<?= isset($cliente) ? esc($cliente->indirizzo) : '' ?>">
+                        value="<?= isset($cliente) ? esc($cliente["indirizzo"]) : '' ?>">
                 </div>
                 <div class="mb-3">
                     <label for="citta" class="form-label">Città</label>
                     <input type="text" name="citta" id="citta" class="form-control" required placeholder="Milano"
-                        value="<?= isset($cliente) ? esc($cliente->citta) : '' ?>">
+                        value="<?= isset($cliente) ? esc($cliente["citta"]) : '' ?>">
                 </div>
                 <div class="mb-3">
                     <label for="cap" class="form-label">CAP</label>
                     <input type="text" name="cap" id="cap" class="form-control" required placeholder="20100"
-                        value="<?= isset($cliente) ? esc($cliente->cap) : '' ?>">
+                        value="<?= isset($cliente) ? esc($cliente["cap"]) : '' ?>">
                 </div>
                 <div class="mb-3">
                     <label for="provincia" class="form-label">Provincia</label>
                     <input type="text" name="provincia" id="provincia" class="form-control" required placeholder=""
-                        value="<?= isset($cliente) ? esc($cliente->provincia) : '' ?>">
+                        value="<?= isset($cliente) ? esc($cliente["provincia"]) : '' ?>">
                 </div>
                 <div class="mb-3">
                     <label for="telefono" class="form-label">Telefono</label>
                     <input type="text" name="telefono" id="telefono" class="form-control" placeholder="010.1234567"
-                        value="<?= isset($cliente) ? esc($cliente->telefono) : '' ?>">
+                        value="<?= isset($cliente) ? esc($cliente["telefono"]) : '' ?>">
                 </div>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
                     <input type="text" name="email" id="email" class="form-control" placeholder="email@example.com"
-                        value="<?= isset($cliente) ? esc($cliente->email) : '' ?>">
+                        value="<?= isset($cliente) ? esc($cliente["email"]) : '' ?>">
                 </div>
                 <div class="mb-3 form-check">
                     <input type="hidden" name="figlio_sn" value="0" />
@@ -78,17 +78,17 @@
                         id="figlio_sn"
                         name="figlio_sn"
                         value="1"
-                        <?= ((isset($cliente) && $cliente->figlio_sn) || ($mode == 'create')) ? 'checked' : '' ?>>
+                        <?= ((isset($cliente) && $cliente["figlio_sn"]) || ($mode == 'create')) ? 'checked' : '' ?>>
                     </input>
                 </div>
                 <div class="mb-3">
                     <label for="padre_id" class="form-label">Cliente Padre</label>
-                    <select name="padre_id" id="padre_id" class="form-select" <?= ((isset($cliente) && $cliente->figlio_sn) || ($mode == 'create')) ? '' : 'disabled' ?> >
+                    <select name="padre_id" id="padre_id" class="form-select" <?= ((isset($cliente) && $cliente["figlio_sn"]) || ($mode == 'create')) ? '' : 'disabled' ?> >
                         <option value="">-- Seleziona --</option>
                         <?php foreach ($selectValues as $option): ?>
-                            <option value="<?= esc($option->value) ?>"
-                                <?= (isset($cliente) && $cliente->padre_id == $option->value) ? 'selected' : '' ?>>
-                                <?= esc($option->content) ?>
+                            <option value="<?= esc($option["value"]) ?>"
+                                <?= (isset($cliente) && $cliente["padre_id"] == $option["value"]) ? 'selected' : '' ?>>
+                                <?= esc($option["content"]) ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
@@ -96,13 +96,13 @@
                 <div class=" mb-3 form-group">
                     <label for="note">Note cliente</label>
                     <textarea class="form-control" id="note" name="note" rows="3"><?=
-                    isset($cliente) ? esc($cliente->note) : ''
+                    isset($cliente) ? esc($cliente["note"]) : ''
                     ?></textarea>
                 </div>
                 <div class=" mb-3 form-group">
                     <label for="contatti">Contatti</label>
                     <textarea class="form-control" id="contatti" name="contatti" rows="3"><?=
-                    isset($cliente) ? esc($cliente->contatti) : ''
+                    isset($cliente) ? esc($cliente["contatti"]) : ''
                     ?></textarea>
                 </div>
                 <div class="mb-3 form-check">
@@ -115,7 +115,7 @@
                         id="stato"
                         name="stato"
                         value="1"
-                        <?php if (!isset($cliente) || $cliente->stato) echo 'checked'; ?> />
+                        <?php if (!isset($cliente) || $cliente["stato"]) echo 'checked'; ?> />
                 </div>
 
                 <div class="mt-4 " data-cliente="Common">

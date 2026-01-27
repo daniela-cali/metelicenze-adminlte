@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
-helper('decoding');
+helper(['array']);
 class LicenzeController extends BaseController
 {
     protected $LicenzeModel;
@@ -25,24 +25,25 @@ class LicenzeController extends BaseController
         $aggiornamenti = $this->AggiornamentiModel->getLastAggiornamenti();
         foreach ($licenze as &$licenza) {
             // Trova il cliente corrispondente per ogni licenza
-            $cliente = array_filter($clienti, fn($c) => $c["id"] === $licenza["clienti_id"]);
+            $cliente = array_find($clienti, fn($c) => $c["id"] === $licenza["clienti_id"]);
             /*Vado a recuperare l'id del padre che normalmente è la licenza stessa, ma per i figli fa riferimento al padre direttamente, 
             in modo da vedere il corretto stato della licenza*/
-            $ultimo_agg = array_filter($aggiornamenti, fn($a) => $a->licenza_id === $licenza["padre_lic_id"]);
-
-            $licenza["clienteNome"] = $cliente ? array_values($cliente)["nome"] : 'Cliente non trovato';
-            $licenza["clienteId"] = $cliente ? array_values($cliente)["id"] : null;           
+            //dd($aggiornamenti);
+            $ultimo_agg = array_find($aggiornamenti, fn($a) => $a["licenza_id"] === $licenza["padre_lic_id"]);
+            $licenza["clienteNome"] = $cliente ? $cliente["nome"] : 'Cliente non trovato';
+            $licenza["clienteId"] = $cliente ? $cliente["id"] : null;           
             //$licenza->ultimoAggiornamento = $ultimo_agg ? array_values($ultimo_agg)->ultimo_aggiornamento : 'N/A';
             if ($ultimo_agg) {
-                $ultimo_agg_data = array_values($ultimo_agg)[0]->ultimo_aggiornamento;
+                //dd($ultimo_agg);
+                $ultimo_agg_data = $ultimo_agg["ultimo_aggiornamento"];
                 //Formatto la data in d/m/Y e la tolgo dalla view per mostrare anche N/A altrimenti esce 01/01/1970
                 $licenza["ultimoAggiornamento"] = date('d/m/Y', strtotime($ultimo_agg_data));
-                $licenza["ultimaVersione"] = array_values($ultimo_agg)[0]->ultima ? true : false;
+                $licenza["ultimaVersione"] = $ultimo_agg["ultima"] ? true : false;
             } else {
                 $licenza["ultimaVersione"] = false;
                 $licenza["ultimoAggiornamento"] = 'N/A';
             }
-            $licenza["versioneUltimoAggiornamento"] = $ultimo_agg ? array_values($ultimo_agg)[0]->versione_codice : 'N/A';          
+            $licenza["versioneUltimoAggiornamento"] = $ultimo_agg ? $ultimo_agg["versione_codice"] : 'N/A';          
             /**
              * Commento in quanto ho cambiato il tipo in enum nel database
              */

@@ -12,9 +12,9 @@
             </a>
         </div>
         <div class="card-body">
-            <div class="container">
-                <div class="row"> <!-- row filtri -->
-                    <div class="col">
+            <div class="container"> <!-- CONTAINER FILTRI -->
+                <div class="row"> <!-- TIPO -->
+                    <div class="col"> 
                         <div class="d-flex justify-content-end align-items-center gap-3" id="tipi">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="tipi" value="Sigla"
@@ -32,7 +32,9 @@
                             </div>
                         </div>
                     </div>
-                    <hr>
+                </div> <!-- END TIPO -->
+                <hr>
+                <div class="row"> <!-- LICENZE -->
                     <div class="col">
                         <div class="d-flex justify-content-end align-items-center gap-3" id="licenze">
                             <div class="form-check">
@@ -53,9 +55,9 @@
                                 </div>
                             </div>
                         </div>
-                        <hr>
-                    </div>
-                </div> <!-- row filtri -->
+                    </div> <!-- END LICENZE -->
+                </div> <!-- END FILTRI -->
+                <hr>
 
                 <?php if (!empty($clienti)): ?>
                     <?php //dd($clienti) ?>

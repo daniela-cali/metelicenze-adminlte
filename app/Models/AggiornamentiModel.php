@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use CodeIgniter\Model;
+use CodeIgniter\Database\BaseBuilder;
 
 class AggiornamentiModel extends AuditModel
 {
@@ -57,7 +57,7 @@ class AggiornamentiModel extends AuditModel
         return $aggiornamento;
     }
 
-    function getLastAggiornamenti()
+    /*function getLastAggiornamenti()
     {
         $db = \Config\Database::connect();
         $subquery = $db->table('aggiornamenti a2')
@@ -72,8 +72,21 @@ class AggiornamentiModel extends AuditModel
             ->where("aggiornamenti.dt_agg = ($subquery)", null, false);
 
         $query = $builder->get();
-        $ultimiAggiornamenti = $query->getResult();
+        $ultimiAggiornamenti = $query->getResult('array');
+        //dd($ultimiAggiornamenti);
         //log_message('info', 'AggiornamentiModel::getLastAggiornamenti - Risultati: ' . print_r($ultimiAggiornamenti, true));
         return $ultimiAggiornamenti;
+    }*/
+    function getLastAggiornamenti()
+    {
+        return $this->select('aggiornamenti.id as aggiornamento_id, aggiornamenti.dt_agg as ultimo_aggiornamento, versioni.id AS versione_id, versioni.codice AS versione_codice, versioni.ultima AS ultima, licenze.codice AS licenza_codice, licenze.id AS licenza_id, licenze.clienti_id AS cliente_id ')
+            ->join('versioni', 'aggiornamenti.versioni_id = versioni.id')
+            ->join('licenze', 'aggiornamenti.licenze_id = licenze.id')
+            ->whereIn('aggiornamenti.dt_agg', static function (BaseBuilder $builder) {
+                $builder->selectMax('a2.dt_agg')
+                    ->from('aggiornamenti a2')
+                    ->where('a2.licenze_id = aggiornamenti.licenze_id');
+            })
+            ->findAll();
     }
 }

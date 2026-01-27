@@ -226,7 +226,7 @@ dl.dl-kv dd {
   border-bottom: 2px dashed rgba(0,0,0,.08);
 }
 
-.pointer {
+.clickable {
     cursor: pointer;
 }
 

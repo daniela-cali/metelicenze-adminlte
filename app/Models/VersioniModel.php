@@ -2,16 +2,11 @@
 
 namespace App\Models;
 
-use CodeIgniter\Model;
-
-class VersioniModel extends Model
+class VersioniModel extends AuditModel
 {
     protected $table            = 'versioni';
     protected $primaryKey       = 'id';
-    protected $useAutoIncrement = true;
-    protected $returnType       = 'object';
-    protected $useSoftDeletes   = true;
-    protected $protectFields    = true;
+
     protected $allowedFields = [
         'codice',
         'release',
@@ -28,14 +23,7 @@ class VersioniModel extends Model
         'deleted_by',
 ];
 
-    protected bool $allowEmptyInserts = false;
 
-
-    // Dates
-    protected $useTimestamps = true;
-    protected $dateFormat    = 'datetime';
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
 
     /**
      * Recupera tutte le versioni
