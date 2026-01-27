@@ -25,21 +25,21 @@
         <?php if (!empty($clienti) && is_array($clienti)): ?>
             <?php foreach ($clienti as $cliente): ?>
                 <tr>
-                    <td><?= esc($cliente->id_external) ?></td>
+                    <td><?= esc($cliente["id_external"]) ?></td>
                     <td>
-                        <?php if ($cliente->id): ?>
-                            <span class="badge bg-success"><?= esc($cliente->id) ?></span>
+                        <?php if ($cliente["id"]): ?>
+                            <span class="badge bg-success"><?= esc($cliente["id"]) ?></span>
                         <?php else: ?>
                             <span class="badge bg-primary">Nuovo</span>
                         <?php endif; ?>
                     </td>
-                    <td><?= esc($cliente->codice) ?></td>
-                    <td><?= esc($cliente->nome) ?></td>
-                    <td><?= esc($cliente->piva) ?></td>
-                    <td><?= esc($cliente->indirizzo) ?></td>
-                    <td><?= esc($cliente->provincia) ?></td>
-                    <td><?= esc($cliente->telefono) ?></td>
-                    <td><?= esc($cliente->email) ?></td>
+                    <td><?= esc($cliente["codice"]) ?></td>
+                    <td><?= esc($cliente["nome"]) ?></td>
+                    <td><?= esc($cliente["piva"]) ?></td>
+                    <td><?= esc($cliente["indirizzo"]) ?></td>
+                    <td><?= esc($cliente["provincia"]) ?></td>
+                    <td><?= esc($cliente["telefono"]) ?></td>
+                    <td><?= esc($cliente["email"]) ?></td>
                 </tr>
             <?php endforeach; ?>
         <?php else: ?>

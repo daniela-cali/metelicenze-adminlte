@@ -9,7 +9,7 @@ class ClientiImportModel extends Model
 
     protected $table            = 'clienti';
     protected $primaryKey       = 'id';
-    protected $returnType       = 'object';
+    protected $returnType       = 'array';
     protected $allowedFields = [
       'codice', 
        'nome', 
@@ -52,14 +52,14 @@ class ClientiImportModel extends Model
         $mapClienti = [];
 
         foreach ($clientiIDs as $value) {
-            $mapClienti[$value->id_external] = $value->id;
+            $mapClienti[$value["id_external"]] = $value["id"];
         }
         log_message('info', 'ClientiImportModel::getRecordsetForImport - mapClienti: ' . print_r($mapClienti, true));
         foreach ($clienti as $cliente) {
-            if (isset($mapClienti[$cliente->id_external])) {
-                $cliente->id = $mapClienti[$cliente->id_external]; //Asegno ID esistente
+            if (isset($mapClienti[$cliente["id_external"]])) {
+                $cliente["id"] = $mapClienti[$cliente["id_external"]]; //Asegno ID esistente
             } else {
-                $cliente->id = null; // Nuovo cliente da importare
+                $cliente["id"] = null; // Nuovo cliente da importare
             }
             log_message('info', 'ClientiImportModel::getRecordsetForImport - Verifico cliente: ' . print_r($cliente, true));
         }
@@ -76,23 +76,23 @@ class ClientiImportModel extends Model
 
         foreach ($clienti as $cliente) {
             //Imposto i valori di default per i campi mancanti a db sono not null
-            if (empty($cliente->id)) {
+            if (empty($cliente["id"])) {
                 $countImported++; // Se ID è vuoto, è un nuovo cliente                
             } else {
                 $countUpdated++; // Altrimenti è un aggiornamento
             }
             $data = [
-                'id' => $cliente->id, // Se esiste già, mantiene lo stesso ID
-                'codice' => $cliente->codice?: 'Mancante',
-                'nome' => $cliente->nome ?: 'Mancante',
-                'piva' => $cliente->piva,
-                'indirizzo' => $cliente->indirizzo ?: 'Mancante',
-                'citta' => $cliente->citta ?: 'Mancante',
-                'cap' => $cliente->cap ?: 'N/A',
-                'provincia' => $cliente->provincia ?: 'N/A',
-                'telefono' => $cliente->telefono,
-                'email' => $cliente->email,
-                'id_external' => $cliente->id_external,
+                'id' => $cliente["id"], // Se esiste già, mantiene lo stesso ID
+                'codice' => $cliente["codice"]?: 'Mancante',
+                'nome' => $cliente["nome"] ?: 'Mancante',
+                'piva' => $cliente["piva"],
+                'indirizzo' => $cliente["indirizzo"] ?: 'Mancante',
+                'citta' => $cliente["citta"] ?: 'Mancante',
+                'cap' => $cliente["cap"] ?: 'N/A',
+                'provincia' => $cliente["provincia"] ?: 'N/A',
+                'telefono' => $cliente["telefono"],
+                'email' => $cliente["email"],
+                'id_external' => $cliente["id_external"],
                 'dt_import' => date('Y-m-d H:i:s'),
                 'stato' => 1,
                 'created_at' => date('Y-m-d H:i:s'),

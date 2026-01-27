@@ -26,7 +26,7 @@ class ClientiExternalModel extends Model
     protected $table            = 'nrg.v_tbcf_tbana';
     protected $primaryKey       = 'tbana_id_pk';
 
-    protected $returnType       = 'object';
+    protected $returnType       = 'array';
 
     /**
      * Inizializza il modello e prepara i campi transcodificati
