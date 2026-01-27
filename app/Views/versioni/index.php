@@ -117,10 +117,15 @@
                 return passTipi;
             });
             document.querySelectorAll('.clickable').forEach(function(input) {
+                /*input.addEventListener('click', function() {
+                    const ID = this.getAttribute('data-id');
+                   console.log('Click singolo ID: ' + ID);
+                    window.location.href = '/versioni/visualizza/' + ID;
+                });*/
                 input.addEventListener('dblclick', function() {
                     const ID = this.getAttribute('data-id');
                    console.log('Doppio click ID: ' + ID);
-                    window.location.href = '/aggiornamenti/modifica/' + ID;
+                    window.location.href = '/versioni/modifica/' + ID;
                 });
             });
 
