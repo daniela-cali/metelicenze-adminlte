@@ -23,8 +23,8 @@
                     <select name="versioni_id" id="versioni_id" class="form-select" required>
                         <option value="">-- Seleziona --</option>
                         <?php foreach ($versioni as $v): ?>
-                            <option value="<?= esc($v->id) ?>" <?= (isset($aggiornamento) && $aggiornamento['versioni_id'] === $v->id) ? 'selected' : '' ?>>
-                                <?= esc($v->codice) ?> - <?= esc($v->release) ?>
+                            <option value="<?= esc($v["id"]) ?>" <?= (isset($aggiornamento) && $aggiornamento['versioni_id'] === $v["id"]) ? 'selected' : '' ?>>
+                                <?= esc($v["codice"]) ?> - <?= esc($v["release"]) ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
