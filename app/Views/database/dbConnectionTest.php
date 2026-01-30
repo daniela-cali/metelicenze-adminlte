@@ -14,6 +14,7 @@
 
         <div class="row g-4">
             <?php 
+            //dd($databases);
             foreach ($databases as $index => $dbInfo) : ?>
             <div class="col-md-6">
                 <div class="card h-100 shadow-sm">
@@ -27,6 +28,8 @@
                         <div class="mb-2"><span class="text-muted">Collation:</span> <code class="ms-2"><?= esc($dbInfo['collation']) ?></code></div>
                         <div class="mb-2"><span class="text-muted">CType:</span> <code class="ms-2"><?= esc($dbInfo['ctype']) ?></code></div>
                         <div class="mb-3"><span class="text-muted">Driver:</span> <code class="ms-2"><?= esc($dbInfo['driver']) ?></code></div>
+                        <div class="mb-3"><span class="text-muted">Hostname:</span> <code class="ms-2"><?= esc($dbInfo['hostname']) ?></code></div>
+                            
                         <!-- Pulsanti -->
                         <div class="d-flex justify-content-center gap-2 mt-3">
                             <a href="<?= base_url('database/info/' . $dbInfo['connection_group']) ?>" class="btn btn-outline-primary">
