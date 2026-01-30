@@ -36,7 +36,7 @@ class ClientiImportModel extends Model
     {
         $clientiExternalModel = new ClientiExternalModel();
         $clienti = $clientiExternalModel->getTranscodedClienti();
-        log_message('info', 'ClientiImportModel::getClientiOri - Clienti originali: ' . print_r($clienti, true));
+        //log_message('info', 'ClientiImportModel::getClientiOri - Clienti originali: ' . print_r($clienti, true));
         return $clienti;
     }
 
@@ -46,16 +46,17 @@ class ClientiImportModel extends Model
 
         $clientiIDs = $this->select(['id', 'id_external'])
             ->get()
-            ->getResult();
+            ->getResultArray();
         log_message('info', 'ClientiImportModel::getRecordsetForImport - clientiIDs: ' . print_r($clientiIDs, true));
 
         $mapClienti = [];
-
+        //Associo l'ID esterno con l'ID interno
         foreach ($clientiIDs as $value) {
+            log_message('info', 'ClientiImportModel::getRecordsetForImport - Mappo cliente ID esterno: ' . $value["id_external"] . ' con ID interno: ' . $value["id"]);
             $mapClienti[$value["id_external"]] = $value["id"];
         }
         log_message('info', 'ClientiImportModel::getRecordsetForImport - mapClienti: ' . print_r($mapClienti, true));
-        foreach ($clienti as $cliente) {
+        foreach ($clienti as &$cliente) {
             if (isset($mapClienti[$cliente["id_external"]])) {
                 $cliente["id"] = $mapClienti[$cliente["id_external"]]; //Asegno ID esistente
             } else {
@@ -71,10 +72,13 @@ class ClientiImportModel extends Model
     {
 
         $clienti = $this->getRecordsetForImport();
+        //dd($clienti);
         $countImported = 0;
         $countUpdated = 0;
 
         foreach ($clienti as $cliente) {
+            log_message('info', 'ClientiImportModel::importClienti - Importo/Aggiorno cliente: ' . print_r($cliente, true));
+            //dd($cliente);
             //Imposto i valori di default per i campi mancanti a db sono not null
             if (empty($cliente["id"])) {
                 $countImported++; // Se ID è vuoto, è un nuovo cliente                
@@ -83,11 +87,11 @@ class ClientiImportModel extends Model
             }
             $data = [
                 'id' => $cliente["id"], // Se esiste già, mantiene lo stesso ID
-                'codice' => $cliente["codice"]?: 'Mancante',
-                'nome' => $cliente["nome"] ?: 'Mancante',
+                'codice' => $cliente["codice"] ?: ' Valore Mancante',
+                'nome' => $cliente["nome"] ?: 'Valore Mancante',
                 'piva' => $cliente["piva"],
-                'indirizzo' => $cliente["indirizzo"] ?: 'Mancante',
-                'citta' => $cliente["citta"] ?: 'Mancante',
+                'indirizzo' => $cliente["indirizzo"] ?: 'Valore Mancante',
+                'citta' => $cliente["citta"] ?: 'Valore Mancante',
                 'cap' => $cliente["cap"] ?: 'N/A',
                 'provincia' => $cliente["provincia"] ?: 'N/A',
                 'telefono' => $cliente["telefono"],
