@@ -28,7 +28,8 @@ class ClientiImportModel extends Model
        'created_at', 
        'updated_at', 
        'utente_import', 
- ];
+    ];
+    protected $connectionGroup = 'external';
 
 
 

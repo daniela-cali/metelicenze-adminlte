@@ -84,7 +84,7 @@
                                 data-bs-placement= "right"
                                 title="Creato da: <?= $cliente["created_by_name"] ?> il <?= date('d/m/Y H:i', strtotime($cliente["created_at"])) ?>
                                 <?php if ($cliente["updated_at"]): ?>
-                                    &#10;Ultima modifica da: <?= $cliente["updated_by_name"] ?> il <?= date('d/m/Y H:i', strtotime($cliente["updated_at"])) ?>
+                                     Ultima modifica da: <?= $cliente["updated_by_name"] ?> il <?= date('d/m/Y H:i', strtotime($cliente["updated_at"])) ?>
                                 <?php endif; ?> 
                                 ">
                                     <td><?= esc($cliente["id"]) ?></td>

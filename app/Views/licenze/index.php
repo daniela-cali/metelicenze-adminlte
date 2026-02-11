@@ -74,8 +74,12 @@
                         </thead>
                         <tbody>
                             <?php foreach ($licenze as $licenza): ?>
-                                <?php $trClass = $licenza["stato"] == 0 ? 'class="table-danger"' : ''; ?>
-                                <tr <?= $trClass ?> class="clickable" data-id="<?= esc($licenza["id"]) ?>">
+                                <?php $trClass = $licenza["stato"] == 0 ? 'table-danger' : ''; ?>
+                                <tr class="clickable <?= $trClass ?>" 
+                                data-id="<?= esc($licenza["id"])?>" 
+                                data-bs-toggle="tooltip"
+                                data-bs-placement= "right"
+                                title="Creato da: <?= $licenza["created_by_name"] ?> il <?= date('d/m/Y H:i', strtotime($licenza["created_at"])) ?>">
                                     <td><?= esc($licenza["id"]) ?></td>
                                     <td><?= esc($licenza["codice"]) ?></td>
                                     <td><?= esc($licenza["tipo"]) ?></td>
