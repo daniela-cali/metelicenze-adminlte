@@ -79,13 +79,14 @@ Events::on('register', static function (User $user) {
 
     // Corpo HTML dell’email
     $content = "
+        <br>Nuovo utente registrato su MeTe Licenze</strong><br>
         <p>Un nuovo utente si è appena registrato su <strong>MeTe Licenze</strong>. Ecco i dettagli:</p>
         <p>Proviene da IP: " . esc($_SERVER['REMOTE_ADDR'] ?? 'N/A') . "</p>
         <p>Autorizzare utente se necessario.</p>
         <div class=\"details\">
-            <p><strong>Username:</strong> ' . esc($user->username) . '</p>
-            <p><strong>Email:</strong> ' . esc($user->email) . '</p>
-            <p><strong>Registrato il:</strong> ' . date('d/m/Y H:i') . '</p>
+            <p><strong>Username:</strong> " . $user->username . "</p>
+            <p><strong>Email:</strong> " . $user->email . "</p>
+            <p><strong>Registrato il:</strong> " . date('d/m/Y H:i') . "</p>
         </div>";
     $message = view('emails/layout', [
         'title'   => 'Nuova registrazione utente su MeTe Licenze',
