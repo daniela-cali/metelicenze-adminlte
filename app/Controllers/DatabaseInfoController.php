@@ -1,12 +1,32 @@
 <?php
 // app/Controllers/DatabaseInfoController.php
 namespace App\Controllers;
-use Config\Database;
-helper('db_status');
+
 class DatabaseInfoController extends BaseController
 {
     public function connectionTest()
     {
+        $profiles = array();
+        $database_config = config(\Config\Database::class);
+        $object_vars = get_object_vars($database_config);
+        log_message('info', 'Recuperati i profili di connessione al database: ' .print_r($object_vars, true));
+        foreach ($object_vars as $key => $value) {
+            if (is_array($value) && isset($value['DBDriver'])) {
+                $profiles[$key] = $value;
+                $dbConnection = db_connect($key, false);
+                log_message('info', "Connessione dbConnection $key: ". print_r($dbConnection, true));
+                log_message('info', "Profilo di connessione '$key' con driver: " . $dbConnection->DBDriver);
+                if ($dbConnection) {
+                    log_message('info', "Connessione: ". print_r($dbConnection, true));
+                    log_message('info', "Connessione al database '$key' riuscita.");
+                } else {
+                    log_message('info', "Connessione: ". print_r($dbConnection, true));
+                    log_message('error', "Connessione al database '$key' fallita.");
+                }
+            }
+        }
+        log_message('info', 'Profili di connessione trovati: ' . print_r($profiles, true));
+        //die();
         $datadbDefault = [];
         $datadbExternal = [];
         /*Commento perché sostituito da helper
@@ -32,8 +52,8 @@ class DatabaseInfoController extends BaseController
                 @@collation_database AS collation,
                 '' AS ctype
         ")->getRow();
-        $datadbDefault = [
-            'title'     => 'Connessione Database ' . $driver1,
+        $datadbDefault =[
+            'title'     => 'Connessione Database'.$driver1,
             'db_name'   => $query1->db_name,
             'connection_group' => $connectionGroup1,
             'encoding'  => $query1->encoding,
@@ -47,17 +67,14 @@ class DatabaseInfoController extends BaseController
         ];
 
         $connectionGroup2 = 'external';
-        if (db_is_available($connectionGroup2)) {
+        $db2 = db_connect($connectionGroup2, false);
+        if ($db2) {
+            log_message('info', 'Connessione a doppio database abilitata, procedo con il secondo database.');
+            // Connessione al DB esterno  (PostgreSQL)
             $db2 = db_connect($connectionGroup2, false);
-            //dd($connectionGroup2, $db2);
-            $host2 = $db2->hostname;
-            if ($db2) {
-                log_message('info', 'Connessione a doppio database abilitata, procedo con il secondo database.');
-                // Connessione al DB esterno  (PostgreSQL)
-                $db2 = db_connect($connectionGroup2, false);
-                $driver2 = $db2->DBDriver;
-                log_message('info', 'Driver del secondo database: ' . $driver2);
-                $query2 = $db2->query("
+            $driver2 = $db2->DBDriver;
+            log_message('info', 'Driver del secondo database: ' . $driver2);
+            $query2 = $db2->query("
                 SELECT 
                     current_database() AS db_name,
                     pg_encoding_to_char(encoding) AS encoding,
@@ -66,31 +83,16 @@ class DatabaseInfoController extends BaseController
                 FROM pg_database 
                 WHERE datname = current_database()
             ")->getRow();
-                $datadbExternal = [
-                    'title'         => 'Connessione Database ' . $driver2,
-                    'db_name'       => $query2->db_name,
-                    'connection_group' => $connectionGroup2,
-                    'encoding'      => $query2->encoding,
-                    'collation'     => $query2->collation,
-                    'ctype'         => $query2->ctype,
-                    'driver'        => $driver2,
-                    'hostname'      => $host2
-                ];
-                $databases[] = $datadbExternal;
-            }
-        } else {
-                $datadbExternal = [
-                    'title'         => 'Connessione Database non disponibile',
-                    'connection_group' => $connectionGroup2,
-                    'db_name'       => null,
-                    'encoding'      => null,
-                    'collation'     => null,
-                    'ctype'         => null,
-                    'driver'        => null,
-                    'hostname'      => null
-                ];
-
-                $databases[] = $datadbExternal;
+            $datadbExternal = [
+                'title'         => 'Connessione Database'.$driver2,
+                'db_name'       => $query2->db_name,
+                'connection_group' => $connectionGroup2,
+                'encoding'      => $query2->encoding,
+                'collation'     => $query2->collation,
+                'ctype'         => $query2->ctype,
+                'driver'        => $driver2
+            ];
+            $databases[] = $datadbExternal;
         }
 
 
