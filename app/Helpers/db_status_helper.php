@@ -44,7 +44,6 @@ if (!function_exists('db_is_available')) {
         }
         // 2) Connessione DB: fallisce in ~2s (impostato in Database.php)
         try {
-            // "postgres" è il nome del group nel tuo Config\Database
             $db = Database::connect($connectionGroup, false);
             // Forza davvero l'apertura (alcuni driver connettono "lazy")
             $db->initialize();
