@@ -28,8 +28,8 @@ $siteName = $config->siteName ?? 'MeTe Licenze';
                         <li><a class="dropdown-item" href="<?= base_url('fornitori/') ?>">Elenco</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="<?= base_url('tipi/') ?>">Tipi Licenze</a></li>
-
                     </ul>
+                </li>
                 <li class="nav-item"><a class="nav-link" href="<?= base_url('licenze') ?>">Licenze</a></li>
                 <li class="nav-item"><a class="nav-link" href="<?= base_url('versioni') ?>">Versioni</a></li>
 

@@ -55,10 +55,10 @@
 <body>
 
   <!-- Navbar -->
-  <?= $this->include('partials/navbar') ?>
+  <?= $this->include('layouts/partials/navbar') ?>
 
   <!-- Toast messages -->
-  <?= $this->include('partials/toasts') ?>
+  <?= $this->include('layouts/partials/toasts') ?>
 
   <!-- Contenuto principale -->
   <main class="container my-4">
@@ -66,7 +66,7 @@
   </main>
 
   <!-- Footer -->
-  <?= $this->include('partials/footer') ?>
+  <?= $this->include('layouts/partials/footer') ?>
 
   <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>

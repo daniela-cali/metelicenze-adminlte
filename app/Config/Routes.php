@@ -106,7 +106,7 @@ $routes->group('admin', ['filter' => 'group:superadmin,admin'], function($routes
 $routes->get('admin/test-settings', 'Admin\TestSettings::index');
 
 
-$routes->group('fornitori', ['filter' => ['notpending', 'dev']], function($routes) {
+$routes->group('fornitori', ['filter' => ['notpending']], function($routes) {
     $routes->get('/', 'FornitoriController::index', ['as' => 'fornitori_index']); //Elenco
     $routes->get('(:num)', 'FornitoriController::show/$1', ['as' => 'fornitori_show']); //Visualizzazione record per ID
     $routes->get('new', 'FornitoriController::create', ['as' => 'fornitori_new']); //Nuovo record
@@ -115,7 +115,7 @@ $routes->group('fornitori', ['filter' => ['notpending', 'dev']], function($route
     $routes->put('(:num)', 'FornitoriController::update/$1', ['as' => 'fornitori_update']); //Salva modifica record per ID
     $routes->get('delete/(:num)', 'FornitoriController::delete/$1', ['as' => 'fornitori_delete']); //Elimina record per ID
 });
-$routes->group('tipi', ['filter' => ['notpending', 'dev']], function($routes) {
+$routes->group('tipi', ['filter' => ['notpending']], function($routes) {
     $routes->get('/', 'TipiLicenzeController::index', ['as' => 'tipi_index']); //Elenco
     $routes->get('(:num)', 'TipiLicenzeController::show/$1', ['as' => 'tipi_show']); //Visualizzazione record per ID
     $routes->get('new', 'TipiLicenzeController::create', ['as' => 'tipi_new']); //Nuovo record
