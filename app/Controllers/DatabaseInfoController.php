@@ -2,6 +2,8 @@
 // app/Controllers/DatabaseInfoController.php
 namespace App\Controllers;
 
+helper('db_status');
+
 class DatabaseInfoController extends BaseController
 {
     public function connectionTest()
@@ -9,20 +11,27 @@ class DatabaseInfoController extends BaseController
         $profiles = array();
         $database_config = config(\Config\Database::class);
         $object_vars = get_object_vars($database_config);
-        log_message('info', 'Recuperati i profili di connessione al database: ' .print_r($object_vars, true));
+        //dd($object_vars);
+        log_message('info', 'Recuperati i profili di connessione al database: ' . print_r($object_vars, true));
         foreach ($object_vars as $key => $value) {
             if (is_array($value) && isset($value['DBDriver'])) {
                 $profiles[$key] = $value;
-                $dbConnection = db_connect($key, false);
-                log_message('info', "Connessione dbConnection $key: ". print_r($dbConnection, true));
-                log_message('info', "Profilo di connessione '$key' con driver: " . $dbConnection->DBDriver);
-                if ($dbConnection) {
+                if (db_is_available($key)) {
+
+                    log_message('info', "Connessione al database '$key' riuscita.");
+                } else {
+                    log_message('error', "Connessione al database '$key' fallita.");
+                }
+                //$dbConnection = db_connect($key, false);
+                //log_message('info', "Connessione dbConnection $key: ". print_r($dbConnection, true));
+                //log_message('info', "Profilo di connessione '$key' con driver: " . $dbConnection->DBDriver);
+                /*if ($dbConnection) {
                     log_message('info', "Connessione: ". print_r($dbConnection, true));
                     log_message('info', "Connessione al database '$key' riuscita.");
                 } else {
                     log_message('info', "Connessione: ". print_r($dbConnection, true));
                     log_message('error', "Connessione al database '$key' fallita.");
-                }
+                }*/
             }
         }
         log_message('info', 'Profili di connessione trovati: ' . print_r($profiles, true));
@@ -52,47 +61,64 @@ class DatabaseInfoController extends BaseController
                 @@collation_database AS collation,
                 '' AS ctype
         ")->getRow();
-        $datadbDefault =[
-            'title'     => 'Connessione Database'.$driver1,
+        $datadbDefault = [
+            'title'     => 'Connessione Database' . $driver1,
             'db_name'   => $query1->db_name,
             'connection_group' => $connectionGroup1,
             'encoding'  => $query1->encoding,
             'collation' => $query1->collation,
             'ctype'     => $query1->ctype,
             'driver'    => $driver1,
-            'hostname'  => $host1
+            'hostname'  => $host1,
+            'status'    => db_is_available($connectionGroup1) ? 'Raggiungibile' : 'Non raggiungibile'
+
         ];
         $databases = [
             $datadbDefault,
         ];
-
         $connectionGroup2 = 'external';
-        $db2 = db_connect($connectionGroup2, false);
-        if ($db2) {
-            log_message('info', 'Connessione a doppio database abilitata, procedo con il secondo database.');
-            // Connessione al DB esterno  (PostgreSQL)
+        if (db_is_available($connectionGroup2)) {
             $db2 = db_connect($connectionGroup2, false);
-            $driver2 = $db2->DBDriver;
-            log_message('info', 'Driver del secondo database: ' . $driver2);
-            $query2 = $db2->query("
-                SELECT 
-                    current_database() AS db_name,
-                    pg_encoding_to_char(encoding) AS encoding,
-                    datcollate AS collation,
-                    datctype AS ctype
-                FROM pg_database 
-                WHERE datname = current_database()
-            ")->getRow();
-            $datadbExternal = [
-                'title'         => 'Connessione Database'.$driver2,
-                'db_name'       => $query2->db_name,
+            if ($db2) {
+
+                $driver2 = $db2->DBDriver;
+                log_message('info', 'Driver del secondo database: ' . $driver2);
+                $query2 = $db2->query("
+                    SELECT 
+                        current_database() AS db_name,
+                        pg_encoding_to_char(encoding) AS encoding,
+                        datcollate AS collation,
+                        datctype AS ctype
+                    FROM pg_database 
+                    WHERE datname = current_database()
+                ")->getRow();
+                $datadbExternal = [
+                    'title'         => 'Connessione Database' . $driver2,
+                    'db_name'       => $query2->db_name,
+                    'connection_group' => $connectionGroup2,
+                    'encoding'      => $query2->encoding,
+                    'collation'     => $query2->collation,
+                    'ctype'         => $query2->ctype,
+                    'driver'        => $driver2,
+                    'hostname'      => $db2->hostname ?? 'N/A',
+                    'status'        => db_is_available($connectionGroup2) ? 'Raggiungibile' : 'Non raggiungibile'
+                ];
+                $databases[] = $datadbExternal;
+            }   
+        } else {
+            $databases[] = [
+                'title'         => 'Connessione Database ' . $object_vars[$connectionGroup2]['database'] ?? $connectionGroup2,
+                'db_name'       => $object_vars[$connectionGroup2]['database'] ?? 'N/A',
                 'connection_group' => $connectionGroup2,
-                'encoding'      => $query2->encoding,
-                'collation'     => $query2->collation,
-                'ctype'         => $query2->ctype,
-                'driver'        => $driver2
+                'encoding'      => 'N/A',
+                'collation'     => 'N/A',
+                'ctype'         => 'N/A',
+                'driver'        => 'N/A',
+                'hostname'      => 'N/A',
+                'status'    => db_is_available($connectionGroup2) ? 'Raggiungibile' : 'Non raggiungibile'
             ];
-            $databases[] = $datadbExternal;
+
+            log_message('error', "Connessione al database '$connectionGroup2' fallita, nonostante il test di disponibilità fosse positivo.");
         }
 
 
@@ -103,7 +129,7 @@ class DatabaseInfoController extends BaseController
         $data = [
             'databases' => $databases,
         ];
-    //dd($data);
+        //dd($data);
         return view('database/dbConnectionTest', $data);
     }
 
