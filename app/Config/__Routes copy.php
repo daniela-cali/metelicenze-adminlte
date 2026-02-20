@@ -39,6 +39,16 @@ $routes->group('clienti', ['filter' => 'notpending'], function($routes) {
     $routes->post('salva/(:num)', 'ClientiController::salva/$1', ['as' => 'clienti_salva']); // Salva cliente esistente by ID
  });
 
+ $routes->group('fornitori', ['filter' => 'notpending'], function($routes) {
+    $routes->get('/', 'FornitoriController::index', ['as' => 'fornitori_index']);
+    $routes->get('schedaFornitore/(:num)', 'FornitoriController::schedaFornitore/$1', ['as' => 'fornitori_visualizza']);
+    $routes->get('crea/', 'FornitoriController::crea', ['as' => 'fornitori_crea']); // Nuovo fornitore con ID interno
+    $routes->get('modifica/(:num)', 'FornitoriController::modifica/$1', ['as' => 'fornitori_modifica']);
+    $routes->get('elimina/(:num)', 'FornitoriController::elimina/$1', ['as' => 'fornitori_elimina']);
+    $routes->post('salva/', 'FornitoriController::salva/', ['as' => 'fornitori_nuovo']); // Salva fornitore nuovo
+    $routes->post('salva/(:num)', 'FornitoriController::salva/$1', ['as' => 'fornitori_salva']); // Salva fornitore esistente by ID
+ });
+
 $routes->group('licenze', ['filter' => 'notpending'], function($routes) {
     $routes->get('/', 'LicenzeController::index', ['as' => 'licenze_index']);
     $routes->get('crea/(:num)', 'LicenzeController::crea/$1', ['as' => 'licenze_crea']); // Nuova licenza per IDCliente
@@ -48,7 +58,16 @@ $routes->group('licenze', ['filter' => 'notpending'], function($routes) {
     $routes->post('salva/(:num)/', 'LicenzeController::salva/$1', ['as' => 'licenze_salva_IDCli']); // Salva licenza per IDCliente
     $routes->post('salva/(:num)/(:num)/', 'LicenzeController::salva/$1/$2', ['as' => 'licenze_salva_IDCli_IDLic']); // Salva licenza per IDCliente e IDLicenza   
 });
-
+$routes->group('tipi',['filter' => 'notpending'], function($routes) {
+    $routes->get('/', 'TipiLicenzeController::index', ['as' => 'tipi_index']);
+    $routes->get('crea/', 'TipiLicenzeController::crea'); // Nuova tipologia di licenza 
+    $routes->get('associa/(:num)', 'TipiLicenzeController::associa/$1'); // Associa tipologia di licenza a IDFornitore
+    $routes->get('nuova/', 'TipiLicenzeController::nuova'); // Crea nuova tipologia di licenza
+    $routes->get('modifica/(:num)', 'TipiLicenzeController::modifica/$1');
+    $routes->get('elimina/(:num)', 'TipiLicenzeController::elimina/$1');
+    $routes->get('visualizza/(:num)', 'TipiLicenzeController::visualizza/$1'); // Visualizza tipo licenza per ID
+    $routes->post('salva/(:num)', 'TipiLicenzeController::salva/$1'); // Salva tipo licenza per ID
+});
 $routes->group('aggiornamenti',['filter' => 'notpending'], function($routes) {
     $routes->get('byLicenza/(:num)', 'AggiornamentiController::getByLicenza/$1');
     $routes->get('crea/(:num)/(:segment)', 'AggiornamentiController::crea/$1/$2'); // Crea aggiornamento per IDLicenza e tipo
@@ -79,11 +98,8 @@ $routes->group('test', function($routes) {
     $routes->get('db', 'TestController::testDatabaseConnection');
 });
 
-$routes->group('account', function($routes) {
-    $routes->get('pending', 'AccountController::pending');
-    $routes->get('nodev', 'AccountController::nodev');
-});
 
+$routes->get('account-pending', 'AccountController::pending');
 
 $routes->group('utenti', ['filter' => 'group:superadmin,admin'], function($routes) {
     $routes->get('/', 'UsersController::index', ['as' => 'utenti_index']);
@@ -105,24 +121,4 @@ $routes->group('admin', ['filter' => 'group:superadmin,admin'], function($routes
 });
 $routes->get('admin/test-settings', 'Admin\TestSettings::index');
 
-
-$routes->group('fornitori', ['filter' => ['notpending', 'dev']], function($routes) {
-    $routes->get('/', 'FornitoriController::index', ['as' => 'fornitori_index']); //Elenco
-    $routes->get('(:num)', 'FornitoriController::show/$1', ['as' => 'fornitori_show']); //Visualizzazione record per ID
-    $routes->get('new', 'FornitoriController::create', ['as' => 'fornitori_new']); //Nuovo record
-    $routes->post('/', 'FornitoriController::store', ['as' => 'fornitori_store']); //Salva nuovo record
-    $routes->get('edit/(:num)', 'FornitoriController::edit/$1', ['as' => 'fornitori_edit']); //Modifica record per ID
-    $routes->put('(:num)', 'FornitoriController::update/$1', ['as' => 'fornitori_update']); //Salva modifica record per ID
-    $routes->get('delete/(:num)', 'FornitoriController::delete/$1', ['as' => 'fornitori_delete']); //Elimina record per ID
-});
-$routes->group('tipi', ['filter' => ['notpending', 'dev']], function($routes) {
-    $routes->get('/', 'TipiLicenzeController::index', ['as' => 'tipi_index']); //Elenco
-    $routes->get('(:num)', 'TipiLicenzeController::show/$1', ['as' => 'tipi_show']); //Visualizzazione record per ID
-    $routes->get('new', 'TipiLicenzeController::create', ['as' => 'tipi_new']); //Nuovo record
-    $routes->post('/', 'TipiLicenzeController::store', ['as' => 'tipi_store']); //Salva nuovo record
-    $routes->get('edit/(:num)', 'TipiLicenzeController::edit/$1', ['as' => 'tipi_edit']); //Modifica record per ID
-    $routes->put('(:num)', 'TipiLicenzeController::update/$1', ['as' => 'tipi_update']); //Salva modifica record per ID   
-    $routes->get('delete/(:num)', 'TipiLicenzeController::delete/$1', ['as' => 'tipi_delete']); //Elimina record per ID
-    $routes->post('link/(:num)', 'TipiLicenzeController::link/$1', ['as' => 'tipi_link']); // Crea nuova tipologia di licenza associata a IDFornitore
-    $routes->get('unlink/(:num)', 'TipiLicenzeController::unlink/$1', ['as' => 'tipi_unlink']); // Rimuovi associazione tipologia di licenza da IDFornitore
-});
+// $routes->get('padri', 'ClientiController::getClientiPadre', ['filter' => 'session']);

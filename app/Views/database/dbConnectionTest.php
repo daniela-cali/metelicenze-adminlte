@@ -29,6 +29,7 @@
                         <div class="mb-2"><span class="text-muted">CType:</span> <code class="ms-2"><?= esc($dbInfo['ctype']) ?></code></div>
                         <div class="mb-3"><span class="text-muted">Driver:</span> <code class="ms-2"><?= esc($dbInfo['driver']) ?></code></div>
                         <div class="mb-3"><span class="text-muted">Hostname:</span> <code class="ms-2"><?= esc($dbInfo['hostname']) ?></code></div>
+                        <div class="mb-3"><span class="text-muted">Status:</span> <code class="ms-2"><?= esc($dbInfo['status']) ?></code></div>
                             
                         <!-- Pulsanti -->
                         <div class="d-flex justify-content-center gap-2 mt-3">

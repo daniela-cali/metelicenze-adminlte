@@ -17,16 +17,14 @@ class SettingsController extends BaseController
     public function index()
     {
         // Legge l'intero oggetto SiteSettings dal DB
-        $siteSettings = $this->settingsService->get(SiteSettings::class);
+        /*$siteSettings = $this->settingsService->get(SiteSettings::class);
 
         // Se non esiste ancora, crea un oggetto vuoto
         if (!$siteSettings) {
             $siteSettings = new SiteSettings();
-        }
-
-        return view('admin/settings_form', [
-            'settings' => $siteSettings,
-        ]);
+        }*/
+        //$siteSettings = $this->settingsService->get(SiteSettings::class) ?? new SiteSettings();
+        return view('admin/settings_form');
     }
 
     public function save()
