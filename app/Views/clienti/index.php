@@ -107,7 +107,7 @@
                                     <td>
                                         <?php // Visualizzo i tipi di licenze come lista
                                         foreach ($cliente["tipiLicenze"] as $tipo): ?>
-                                            <span class="badge bg-transparent text-dark mb-1"><?= esc($tipo) ?></span>
+                                            <span class="badge d-block bg-transparent text-dark"><?= esc($tipo) ?></span>
                                         <?php endforeach; ?>
                                     </td>
                                     <td>

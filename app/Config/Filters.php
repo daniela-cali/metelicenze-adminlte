@@ -35,6 +35,7 @@ class Filters extends BaseFilters
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
         'notpending'    => \App\Filters\NotPendingFilter::class,
+        'rememberBackTo'=> \App\Filters\RememberBackToFilter::class,
     ];
 
     /**
@@ -73,6 +74,7 @@ class Filters extends BaseFilters
      */
     public array $globals = [
         'before' => [
+            'rememberBackTo',
             // 'honeypot',
             // 'csrf',
             // 'invalidchars',
