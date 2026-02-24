@@ -64,7 +64,7 @@
                 </div>
                 <div class="mb-3 d-none" data-licenza="Sigla">
                     <label for="postazioni" class="form-label">Postazioni Licenza</label>
-                    <input type="text" name="postazioni" id="postazioni" class="form-control" required placeholder="1"
+                    <input type="text" name="postazioni" id="postazioni" class="form-control" required 
                         value="<?= isset($licenza) ? esc($licenza["postazioni"]) : 1 ?>" />
                 </div>
                 <div class="mb-3 form-check d-none" data-licenza="Sigla">
@@ -167,7 +167,7 @@
                     // Rimuovo obbligatorietà e resetto i valori
                     wrapper.querySelectorAll("input, select, textarea").forEach(campo => {
                         campo.required = false;
-                        campo.value = "";
+                        //campo.value = "";
                         campo.disabled = true;
                     });
                 }
