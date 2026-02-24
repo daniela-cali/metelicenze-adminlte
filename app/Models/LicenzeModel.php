@@ -8,7 +8,7 @@ class LicenzeModel extends AuditModel
 {
     protected $table            = 'licenze';
     protected $primaryKey       = 'id';
-
+    protected $beforeInsert = ['setFakePadre'];
     protected $afterInsert = ['setPadreSelfIfMissing'];
 
     protected $allowedFields = [
@@ -116,10 +116,18 @@ class LicenzeModel extends AuditModel
         return $this->save($data); // Restituisce l'ID della nuova licenza
 
     }
+    protected function setFakePadre(array $data)
+    {
+        // Imposto il valore a numerico positivo fittizio per evitare errori di incorrect integer value, poi dopo l'inserimento lo correggo con setPadreSelfIfMissing
+        $insertData = $data['data'] ?? [];
+        $insertData['padre_lic_id'] = 0; // Valore fittizio temporaneo
+        $data['data'] = $insertData;
 
+        return $data;
+    }
     protected function setPadreSelfIfMissing(array $data)
     {
-        // Dopo l'inserimento, prenso l'ID appena creato
+        // Dopo l'inserimento, prendo l'ID appena creato
         $newId = $data['id'] ?? null;
         if (!$newId) {
             return $data; //Altrimenti non faccio nulla se non c'è un nuovo ID

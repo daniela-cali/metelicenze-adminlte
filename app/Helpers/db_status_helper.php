@@ -28,8 +28,15 @@ if (!function_exists('tcp_port_open')) {
 if (!function_exists('db_is_available')) {
     function db_is_available($connectionGroup): bool
     {
-        $host = (string) env('database.external.hostname');
-        $port = (int) env('database.external.port');
+        $config = config('Database');
+        if (!isset($config->{$connectionGroup})) {
+            return false;
+        }
+        $host = $config->{$connectionGroup}['hostname'] ?? null;
+        $port = $config->{$connectionGroup}['port'] ?? null;
+        if (!$host || !$port) {
+            return false;
+        }
 
         // 1) Rete: fallisce in ~1s invece di 20s
         if (! tcp_port_open($host, $port, 1.0)) {
@@ -37,7 +44,6 @@ if (!function_exists('db_is_available')) {
         }
         // 2) Connessione DB: fallisce in ~2s (impostato in Database.php)
         try {
-            // "postgres" è il nome del group nel tuo Config\Database
             $db = Database::connect($connectionGroup, false);
             // Forza davvero l'apertura (alcuni driver connettono "lazy")
             $db->initialize();

@@ -1,115 +1,113 @@
 <?php
 // app/Controllers/DatabaseInfoController.php
 namespace App\Controllers;
-use Config\Database;
+
 helper('db_status');
+
 class DatabaseInfoController extends BaseController
 {
     public function connectionTest()
     {
-        $datadbDefault = [];
-        $datadbExternal = [];
-        /*Commento perché sostituito da helper
-        $config = config('SiteConfig');
-        log_message('info', 'Caricata configurazione SiteConfig per test di connessione database: ' . print_r($config, true));
-        log_message('info', 'Esecuzione test di connessione a due database');
-        $enableMultiDB = $config->enableMultiDB ?? false;
+        $database_config = config(\Config\Database::class);
+        $profiles = get_object_vars($database_config);
 
-        //dd($enableMultiDB);*/
-        //log_message('info', 'Connessione a doppio database: ' . ($enableMultiDB ? 'abilitata' : 'disabilitata') . '.');
+        // Filtro per escludere properties non-array e config vuote
+        $profiles = array_filter($profiles, function ($config) {
+            return is_array($config) && !empty($config['DBDriver']);
+        });
 
-        // Connessione al primo DB (Default)
-        $connectionGroup1 = 'default';
-        $db1 = db_connect($connectionGroup1, false);
-        $host1 = $db1->hostname;
-        $driver1 = $db1->DBDriver;
+        $databases = [];
+        $results = [];
+        $errors = [];
 
-        log_message('info', 'Driver del primo database: ' . $driver1);
-        $query1 = $db1->query("
-            SELECT 
-                DATABASE() AS db_name,
-                @@character_set_database AS encoding,
-                @@collation_database AS collation,
-                '' AS ctype
-        ")->getRow();
-        $datadbDefault = [
-            'title'     => 'Connessione Database ' . $driver1,
-            'db_name'   => $query1->db_name,
-            'connection_group' => $connectionGroup1,
-            'encoding'  => $query1->encoding,
-            'collation' => $query1->collation,
-            'ctype'     => $query1->ctype,
-            'driver'    => $driver1,
-            'hostname'  => $host1
-        ];
-        $databases = [
-            $datadbDefault,
-        ];
+        log_message('info', 'Profili trovati: ' . implode(', ', array_keys($profiles)));
+        foreach ($profiles as $group => $config) {
+            /* Analizzo il profili di connessione: se è un array con DBDriver, provo a testare la connessione (get_object_vars restituisce un array per tutte le proprietà delle classi, 
+            quindi controllo che abbia DBDriver per essere sicura che sia un profilo di connessione valido) */
+            log_message('info', 'Analizzando il profilo di connessione: ' . $group);
+            if (db_is_available($group)) {
+                log_message('info', 'Database disponibile per il profilo: ' . $group);
+                try { // Database disponibile controllando la connessione alla porta relativa (db_status helper) ed effettuo la connessione
+                    $db = db_connect($group, false); //Attivo la connessione
+                    $driver = $db->DBDriver;
+                    log_message('info', 'Driver del database per il profilo ' . $group . ': ' . $driver);
+                    //Eseguo le query specifiche per driver
+                    if ($driver === 'MySQLi') {
+                        $query = $db->query("
+                                SELECT 
+                                    DATABASE() AS db_name,
+                                    @@character_set_database AS encoding,
+                                    @@collation_database AS collation,
+                                    'N/A' AS ctype
+                            ")->getRowArray();
+                        log_message('info', 'Query eseguita per MySQLi: ' . print_r($query, true));
+                    } elseif ($driver === 'Postgre') {
+                        $query = $db->query("
+                                SELECT 
+                                    current_database() AS db_name,
+                                    pg_encoding_to_char(encoding) AS encoding,
+                                    datcollate AS collation,
+                                    datctype AS ctype
+                                FROM pg_database 
+                                WHERE datname = current_database()
+                            ")->getRowArray();
+                        log_message('info', 'Query eseguita per PostgreSQL: ' . print_r($query, true));
+                    } else { // Se il driver non è supportato, loggo un messaggio di avviso e salto al prossimo
+                        log_message('warning', 'Driver non supportato per il test di connessione: ' . $driver);
 
-        $connectionGroup2 = 'external';
-        if (db_is_available($connectionGroup2)) {
-            $db2 = db_connect($connectionGroup2, false);
-            //dd($connectionGroup2, $db2);
-            $host2 = $db2->hostname;
-            if ($db2) {
-                log_message('info', 'Connessione a doppio database abilitata, procedo con il secondo database.');
-                // Connessione al DB esterno  (PostgreSQL)
-                $db2 = db_connect($connectionGroup2, false);
-                $driver2 = $db2->DBDriver;
-                log_message('info', 'Driver del secondo database: ' . $driver2);
-                $query2 = $db2->query("
-                SELECT 
-                    current_database() AS db_name,
-                    pg_encoding_to_char(encoding) AS encoding,
-                    datcollate AS collation,
-                    datctype AS ctype
-                FROM pg_database 
-                WHERE datname = current_database()
-            ")->getRow();
-                $datadbExternal = [
-                    'title'         => 'Connessione Database ' . $driver2,
-                    'db_name'       => $query2->db_name,
-                    'connection_group' => $connectionGroup2,
-                    'encoding'      => $query2->encoding,
-                    'collation'     => $query2->collation,
-                    'ctype'         => $query2->ctype,
-                    'driver'        => $driver2,
-                    'hostname'      => $host2
+                        throw new \Exception("Driver $driver non supportato per il test di connessione");
+                    }
+
+                    $results[$group] = $query;
+                    $databases[] = [
+                        'title' => 'Connessione Database ' . ucfirst($query['db_name'] ?? $group),
+                        'db_name' => $query['db_name'] ?? 'N/A',
+                        'encoding' => $query['encoding'] ?? 'N/A',
+                        'collation' => $query['collation'] ?? 'N/A',
+                        'ctype' => $query['ctype'] ?? 'N/A',
+                        'driver' => $driver,
+                        'hostname' => $config['hostname'] ?? 'N/A',
+                        'connection_group' => $group,
+                        'status' => 'Raggiungibile'
+                    ];
+                    log_message('info', 'Connessione testata con successo per il profilo: ' . $group);
+                } catch (\Throwable $e) {
+                    /*$errors[$group] = [
+                            'message' => $e->getMessage(),
+                            'code' => $e->getCode(),
+                            'file' => $e->getFile(),
+                            'line' => $e->getLine(),
+                            'exception' => $e,
+                        ];*/
+                    log_message('error', 'Errore durante l\'analisi del profilo di connessione: ' . $group . ' - ' . $e->getMessage());
+                }
+            } else {
+                log_message('warning', 'Database non raggiungibile per il profilo: ' . $group);
+
+                $databases[] = [
+                    'title' => 'Connessione Database ' . ucfirst($profiles[$group]['database'] ?? $group),
+                    'db_name' => $config['database'] ?? 'N/A',
+                    'encoding' => 'N/A',
+                    'collation' => 'N/A',
+                    'ctype' => 'N/A',
+                    'driver' => $config['DBDriver'] ?? 'N/A',
+                    'hostname' => $config['hostname'] ?? 'N/A',
+                    'connection_group' => $group,
+                    'status' => 'Non Raggiungibile'
                 ];
-                $databases[] = $datadbExternal;
             }
-        } else {
-                $datadbExternal = [
-                    'title'         => 'Connessione Database non disponibile',
-                    'connection_group' => $connectionGroup2,
-                    'db_name'       => null,
-                    'encoding'      => null,
-                    'collation'     => null,
-                    'ctype'         => null,
-                    'driver'        => null,
-                    'hostname'      => null
-                ];
-
-                $databases[] = $datadbExternal;
         }
 
-
-        /*$data = [
+        return view('database/dbConnectionTest', [
             'databases' => $databases,
-            'enableMultiDB' => $enableMultiDB,
-        ];*/
-        $data = [
-            'databases' => $databases,
-        ];
-    //dd($data);
-        return view('database/dbConnectionTest', $data);
+        ]);
     }
 
     /**
      * Visualizza le informazioni del database specificato
      * Uso interno alla classe per evitare duplicazioni
      **/
-    private function getDatabaseInfo($database)
+    /*private function getDatabaseInfo($database)
     {
         // Connessione al database
         $db = db_connect($database, false);
@@ -127,7 +125,7 @@ class DatabaseInfoController extends BaseController
             'connection_group' => $database,
             'connection' => $db,
         ];
-    }
+    }*/
 
     public function getTableFields($database = 'default', $tableName = '')
     {
