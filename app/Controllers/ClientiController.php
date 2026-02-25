@@ -17,7 +17,7 @@ class ClientiController extends BaseController
     {
         $this->ClientiModel = new ClientiModel();
         $this->LicenzeModel = new LicenzeModel();
-        $this->backTo = session()->get('backTo') ?? base_url('/clienti');
+        $this->backTo = base_url('/clienti');
     }
 
     /*public function __index()
@@ -98,6 +98,7 @@ class ClientiController extends BaseController
     }
     public function crea()
     {
+        $backTo = $this->resolveBackTo(base_url('/clienti'));
         /**
          * Creo un nuovo codice distintivo per il cliente interno
          */
@@ -112,11 +113,13 @@ class ClientiController extends BaseController
             'title' => 'Crea Nuovo Cliente Interno [' . esc($internal_code) . ']',
             'internal_code' => $internal_code,
             'selectValues' => $selectValues,
+            'backTo' => $backTo,
         ]);
     }
 
     public function modifica($id)
     {
+        $backTo = $this->resolveBackTo(base_url('/clienti'));
         $cliente = $this->ClientiModel->getClientiById($id);
         $selectValues = $this->ClientiModel->getClientiPadre();
         return view('clienti/form', [
@@ -125,6 +128,7 @@ class ClientiController extends BaseController
             'action' => '/clienti/salva/' . $id,
             'title' => 'Modifica Cliente ' .$cliente["nome"],
             'selectValues' => $selectValues,
+            'backTo' => $backTo,
         ]);
     }
 
@@ -132,7 +136,8 @@ class ClientiController extends BaseController
     {
         $this->ClientiModel->delete($id);
         // Redirect o mostra un messaggio di successo
-        return redirect()->back()->with('success', 'Cliente eliminato con successo.');
+        return redirect()->to($this->resolveBackTo(base_url('/clienti')))
+            ->with('success', 'Cliente eliminato con successo.');
     }
     public function salva($id = null)
     {
@@ -150,7 +155,8 @@ class ClientiController extends BaseController
         }
         log_message('info', 'Ricevo questi dati nel CONTROLLER: ' . print_r($data, true) . ' - ClienteID: ' . $clienteID);
         // Redirect o mostra un messaggio di successo
-        return redirect()->to('clienti/schedaCliente/' . $clienteID)->with('success', 'Cliente salvato con successo.');
+        return redirect()->to($this->resolveBackTo(base_url('/clienti')))
+            ->with('success', 'Cliente salvato con successo.');
 
     }
     /*public function __clientiFilters()

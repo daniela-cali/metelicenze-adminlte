@@ -19,7 +19,7 @@ class FornitoriController extends BaseController
         $this->FornitoriModel = new FornitoriModel();
         $this->tipiLicenzeModel = new \App\Models\TipiLicenzeModel();
         $this->fornitoriTipi_map = new \App\Models\FornitoriTipilicenzeMapModel();
-        $this->backTo = session()->get('backTo') ?? base_url('/fornitori');
+        $this->backTo = base_url('/fornitori');
     }
 
 
@@ -50,10 +50,12 @@ class FornitoriController extends BaseController
 
     public function create()
     {
+        $backTo = $this->resolveBackTo(base_url('/fornitori'));
         return view('fornitori/form', [
             'title' => 'Crea Nuovo Fornitore',
             'mode' => 'create',
             'fornitore' => null,
+            'backTo' => $backTo,
             'form' => [
                 'action' => site_url('fornitori'),
                 'method' => 'post',
@@ -73,7 +75,9 @@ class FornitoriController extends BaseController
         }
         if ($this->FornitoriModel->save($data)) {
             $fornitoreID = $this->FornitoriModel->getInsertID();
-            return redirect()->to('fornitori/' . $fornitoreID)->with('success', 'Fornitore creato con successo.');
+            return redirect()->to(
+                $this->resolveBackTo(base_url('/fornitori/' . $fornitoreID))
+            )->with('success', 'Fornitore creato con successo.');
         } else {
             return redirect()->back()->with('error', 'Errore durante la creazione del fornitore.')->withInput();
         }
@@ -100,11 +104,13 @@ class FornitoriController extends BaseController
     public function edit($id)
     {
         $fornitore = $this->FornitoriModel->getFornitoriById($id);
+        $backTo = $this->resolveBackTo(base_url('/fornitori'));
         return view('fornitori/form', [
             'mode' => 'edit',
             'fornitore' => $fornitore,
             'action' => 'fornitori/' . $id . '/edit',
             'title' => 'Modifica Fornitore ' . $fornitore["nome"],
+            'backTo' => $backTo,
             'form' => [
                 'action' => site_url('fornitori/' . $id),
                 'method' => 'POST',
@@ -120,7 +126,9 @@ class FornitoriController extends BaseController
         $data = $this->request->getPost();
         $data['id'] = $id; // Aggiungo l'ID per la modifica
         if ($this->FornitoriModel->save($data)) {
-            return redirect()->to('fornitori/' . $id)->with('success', 'Fornitore aggiornato con successo.');
+            return redirect()->to(
+                $this->resolveBackTo(base_url('/fornitori/' . $id))
+            )->with('success', 'Fornitore aggiornato con successo.');
         } else {
             return redirect()->back()->with('error', 'Errore durante l\'aggiornamento del fornitore.')->withInput();
         }
@@ -129,7 +137,8 @@ class FornitoriController extends BaseController
     public function delete($id)
     {
         if($this->FornitoriModel->delete($id)) {
-            return redirect()->back()->with('success', 'Fornitore eliminato con successo.');
+            return redirect()->to($this->resolveBackTo(base_url('/fornitori')))
+                ->with('success', 'Fornitore eliminato con successo.');
         } else {
             return redirect()->back()->with('error', 'Errore durante l\'eliminazione del fornitore.');
         }

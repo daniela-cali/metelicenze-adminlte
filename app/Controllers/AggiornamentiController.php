@@ -15,7 +15,7 @@ class AggiornamentiController extends BaseController
     {
         $this->VersioniModel = new \App\Models\VersioniModel();
         $this->AggiornamentiModel = new \App\Models\AggiornamentiModel();
-        $this->backTo = session()->get('backTo') ?? base_url('/licenze'); // Recupera il path di provenienza dalla sessione o usa un default
+        $this->backTo = base_url('/licenze');
     }
 
     public function getByLicenza($idLicenza)
@@ -49,6 +49,7 @@ class AggiornamentiController extends BaseController
 
     public function visualizza($idAggiornamento)
     {
+        $this->backTo = $this->resolveBackTo(base_url('/licenze'));
         // Logica per visualizzare i dettagli di una licenza
         $aggiornamento = $this->AggiornamentiModel->getById($idAggiornamento);
         $versioni = $this->VersioniModel->getVersioni();
@@ -64,6 +65,7 @@ class AggiornamentiController extends BaseController
     }
     public function crea($idLicenza = null, $tipo = null)
     {
+        $this->backTo = $this->resolveBackTo(base_url('/licenze'));
         log_message('info', 'AggiornamentiController::crea - Tipo: ' . $tipo);
         log_message('info', 'AggiornamentiController::crea - ID Licenza: ' . $idLicenza);
         // Se non è fornito un ID licenza, non posso creare un aggiornamento
@@ -104,12 +106,15 @@ class AggiornamentiController extends BaseController
 
         // Salvataggio dell'aggiornamento
         $this->AggiornamentiModel->save($data);
-        return redirect()->redirect(previous_url())->with('success', 'Aggiornamento salvato con successo!');
+        return redirect()->to(
+            $this->resolveBackTo(base_url('/licenze'))
+        )->with('success', 'Aggiornamento salvato con successo!');
     }
 
 
     public function modifica($idAggiornamento)
     {
+        $this->backTo = $this->resolveBackTo(base_url('/licenze'));
 
         $aggiornamento = $this->AggiornamentiModel->getById($idAggiornamento);
         $versioni = $this->VersioniModel->getVersioni();
@@ -127,6 +132,7 @@ class AggiornamentiController extends BaseController
 
     public function elimina($idAggiornamento)
     {
+        $this->backTo = $this->resolveBackTo(base_url('/licenze'));
         // Logica per eliminare una licenza
         $this->AggiornamentiModel->delete($idAggiornamento);
         // Redirect o mostra un messaggio di successo

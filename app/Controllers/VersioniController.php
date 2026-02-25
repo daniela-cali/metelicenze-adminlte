@@ -24,21 +24,25 @@ class VersioniController extends BaseController
     public function visualizza($idVersione)
     {
         $versione = $this->VersioniModel->getVersioneById($idVersione);
+        $backTo = $this->resolveBackTo(base_url('/versioni'));
         return view('versioni/form', [
             'mode' => 'view',
             'action' => '', // Nessuna azione in visualizzazione
             'versione' => $versione, // Non abbiamo una versione esistente da modificare
             'title' => 'Dettagli Versione ' . esc($versione["codice"]),
+            'backTo' => $backTo,
         ]);
     }
 
     public function crea()
     {
+        $backTo = $this->resolveBackTo(base_url('/versioni'));
         return view('versioni/form', [
             'mode' => 'create',
             'action' => base_url('/versioni/salva'), // Non ha ancora ID
             'versione' => null, // Non abbiamo una versione esistente da modificare
             'title' => 'Crea Nuova Versione',
+            'backTo' => $backTo,
         ]);
     }
 
@@ -48,12 +52,14 @@ class VersioniController extends BaseController
         if (!$versione) {
             return redirect()->to('/versioni')->with('error', 'Versione non trovata.');
         }
+        $backTo = $this->resolveBackTo(base_url('/versioni'));
 
         return view('versioni/form', [
             'mode' => 'edit',
             'action' => base_url('/versioni/salva/' . $idVersione),
             'versione' => $versione,
             'title' => 'Modifica Versione ' . esc($versione["codice"]),
+            'backTo' => $backTo,
         ]);
     }
 
@@ -79,7 +85,8 @@ class VersioniController extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->VersioniModel->errors());
         }
         // Se non ci sono errori, reindirizziamo alla lista delle versioni
-        return redirect()->to('/versioni')->with('success', 'Versione salvata con successo!');
+        return redirect()->to($this->resolveBackTo(base_url('/versioni')))
+            ->with('success', 'Versione salvata con successo!');
     }
     public function elimina($idVersione)
     {
@@ -89,6 +96,7 @@ class VersioniController extends BaseController
         }
 
         $this->VersioniModel->delete($idVersione);
-        return redirect()->to('/versioni')->with('success', 'Versione eliminata con successo.');
+        return redirect()->to($this->resolveBackTo(base_url('/versioni')))
+            ->with('success', 'Versione eliminata con successo.');
     }
 }
