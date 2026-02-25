@@ -1,12 +1,15 @@
 <?= $this->extend('layouts/main') ?>
 
 <?= $this->section('content') ?>
+<?php
+$backTo = $backTo ?? back_to_url(base_url('/licenze'));
+?>
 
 <div class="container my-5">
     <div class="card shadow-sm">
         <div class="card-header bg-primary  d-flex justify-content-between align-items-center">
             <h5 class="mb-0"><i class="bi bi-key-fill"></i> <?= esc($title) ?> </h5>
-            <a href="<?= isset($backTo) ? $backTo : previous_url() ?>" class="btn btn-light btn-outline-secondary btn-sm">
+            <a href="<?= esc($backTo) ?>" class="btn btn-light btn-outline-secondary btn-sm">
                 <i class="bi bi-arrow-left"></i> Indietro
             </a>
         </div>
@@ -14,6 +17,7 @@
         <div class="card-body">
             <!--Aggiungo la modalità di creazione o modifica per il js-->
             <form action="<?= $action ?>" method="post" data-mode="<?= $mode ?>">
+                <input type="hidden" name="backTo" value="<?= esc($backTo) ?>">
 
                 <div class="mb-3" data-licenza="Common">
                     <label for="tipo" class="form-label">Tipo</label>
@@ -114,7 +118,7 @@
                     <button type="submit" class="btn btn-success">
                         <i class="bi bi-check-circle"></i> Salva 
                     </button>
-                    <a href="<?= previous_url() ?>" class="btn btn-secondary">Annulla</a>
+                    <a href="<?= esc($backTo) ?>" class="btn btn-secondary">Annulla</a>
                 </div>
             </form>
         </div>

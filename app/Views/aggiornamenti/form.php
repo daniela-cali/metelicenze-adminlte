@@ -4,13 +4,13 @@
 <div class="container my-5">
     <div class="card shadow-sm">
         <div class="card-header bg-primary  d-flex justify-content-between align-items-center">
-            <h5 class="mb-0"><i class="bi bi-key-fill"></i> <?= esc($title) ?> </h5>
-            <a href="<?= $backTo ?>" class="btn btn-secondary">Annulla</a>
+            <h5 class="mb-0"><i class="bi bi-key-fill"></i> <?= esc($title) ?> </h5>           
         </div>
 
         <div class="card-body">
             <!--Aggiungo la modalità di creazione o modifica per il js-->
             <form action="<?= $action ?>" method="post" data-mode="<?= $mode ?>">
+                <input type="hidden" name="backTo" value="<?= esc($backTo) ?>">
                 <input type="hidden" name="id" value="<?= isset($aggiornamento->id) ? esc($aggiornamento->id) : '' ?>">
 
                 <div class="mb-3">
