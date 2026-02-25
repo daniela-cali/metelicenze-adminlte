@@ -1,12 +1,15 @@
 <?= $this->extend('layouts/main') ?>
 
 <?= $this->section('content') ?>
+<?php
+$backTo = $backTo ?? back_to_url(base_url('/tipi'));
+?>
 
 <div class="container my-5">
     <div class="card shadow-sm">
         <div class="card-header bg-primary  d-flex justify-content-between align-items-center">
             <h5 class="mb-0"><i class="bi bi-key-fill"></i> <?= esc($title) ?> </h5>
-            <a href="<?= previous_url() ?>" class="btn btn-light btn-outline-secondary btn-sm">
+            <a href="<?= esc($backTo) ?>" class="btn btn-light btn-outline-secondary btn-sm">
                 <i class="bi bi-arrow-left"></i> Indietro
             </a>
         </div>
@@ -50,7 +53,7 @@
                     <button type="submit" class="btn btn-success">
                         <i class="bi bi-check-circle"></i> <?= esc($form['submitText']) ?>
                     </button>
-                    <a href="<?= previous_url() ?>" class="btn btn-secondary">Annulla</a>
+                    <a href="<?= esc($backTo) ?>" class="btn btn-secondary">Annulla</a>
                 </div>
         </form>
     </div>

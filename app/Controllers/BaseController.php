@@ -55,4 +55,18 @@ abstract class BaseController extends Controller
 
         // E.g.: $this->session = service('session');
     }
+
+    protected function resolveBackTo(string $fallback): string
+    {
+        $candidate = $this->request->getGet('backTo')
+            ?? $this->request->getPost('backTo')
+            ?? session()->get('backTo')
+            ?? previous_url();
+
+        if (is_string($candidate) && $candidate !== '') {
+            session()->set('backTo', $candidate);
+        }
+
+        return back_to_url($fallback);
+    }
 }

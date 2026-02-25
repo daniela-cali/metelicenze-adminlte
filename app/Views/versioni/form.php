@@ -2,7 +2,7 @@
 
 <?= $this->section('content') ?>
 <?php
-$backTo = back_to_url(base_url('/versioni'));
+$backTo = $backTo ?? back_to_url(base_url('/versioni'));
 ?>
 <div class="container my-5">
     <div class="card shadow-sm">
@@ -14,6 +14,7 @@ $backTo = back_to_url(base_url('/versioni'));
         </div>
 
         <form action="<?= $action ?>" method="post" data-mode="<?= $mode ?>">
+            <input type="hidden" name="backTo" value="<?= esc($backTo) ?>">
             <div class="card-body">
                 <div class="mb-3 form-check">
                     <label class="form-check-label" class="form-label" for="stato">Ultima Versione</label>
