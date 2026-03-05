@@ -72,7 +72,7 @@
                                     <td>
                                         <?php // Visualizzo i tipi di licenze fornite come lista
                                         foreach ($fornitore["tipiLicenze"] as $tipo): ?>
-                                            <span class="badge bg-transparent text-dark mb-1"><?= esc($tipo["nome"]) ?></span>
+                                            <span class="badge d-block bg-transparent text-dark mb-1"><?= esc($tipo["nome"]) ?></span>
                                         <?php endforeach; ?>
                                     </td>
                                     <td>

@@ -119,7 +119,7 @@
 
         </div>
         <div class="card-body">
-            <?php if (!empty($tipiLicenze)): ?>
+            <?php if (!empty($licenzeFornite)): ?>
                 <table class="table table-bordered table-striped table-hover align-middle datatable" id="tabella-licenze">
                     <thead>
                         <tr>
@@ -132,35 +132,22 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach ($tipiLicenze as $tipo): ?>
+                        <?php foreach ($licenzeFornite as $tipo): ?>
+                            <?php log_message('info', 'Licenza fornita: ' . json_encode($tipo)); ?>
+
                             <tr class="licenza-row" data-id="<?= esc($tipo["id"])
                                                                 ?>" style="cursor:pointer;">
                                 <td><?= esc($tipo["id"]) ?></td>
-                                <td><?= $tipo["codice"] ? esc($tipo["codice"]) : esc($tipo["ambiente"]) ?></td>
-                                <td><?= esc($tipo["tipo"]) ?></td>
-                                <td><?= esc($tipo["modello"]) ?></td>
+                                <td><?= $tipo["nome"] ? esc($tipo["nome"]) : 'N/A' ?></td>
+                                <td><?= esc($tipo["descrizione"]) ?></td>
+                                <td><?= esc($tipo["categoria_label"]) ?></td>
                                 <td>
                                     <span class="badge <?= $tipo["stato"] ? 'bg-success' : 'bg-danger' ?>">
                                         <?= $tipo["stato"] ? 'Attiva' : 'Inattiva' ?>
                                     </span>
                                 </td>
                                 <td>
-                                    <a href="/aggiornamenti/crea/<?= $tipo["id"] ?>/<?= $tipo["tipo"] ?>" 
-                                        class="btn btn-sm btn-outline-primary" 
-                                        title="Crea Aggiornamento">
-                                        <i class="bi bi-clock-history"></i>
-                                    </a>
-                                    <a href="/licenze/modifica/<?= $tipo["id"] ?>" 
-                                        class="btn btn-sm btn-outline-secondary" 
-                                        title="Modifica">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
-                                    <a href="/licenze/elimina/<?= $tipo["id"]?>" 
-                                        class="btn btn-sm btn-outline-danger"
-                                        title="Elimina" 
-                                        onclick=" return confirm('Sei sicuro di voler eliminare questa licenza?');">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
+                                  
                                 </td>
                             </tr>
                         <?php endforeach; ?>

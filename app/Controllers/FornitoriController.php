@@ -88,12 +88,11 @@ class FornitoriController extends BaseController
     {
         $this->backTo = base_url('fornitori'); // Imposto il path di ritorno alla lista dei fornitori
 
-        //log_message('info', 'FornitoriController::schedaFornitore - Path di provenienza: ' . previous_url());
-        //log_message('info', 'FornitoriController::schedaFornitore - Path attuale: ' . current_url());
         $session = session();
         $session->set('backTo', $this->backTo);
         $data['fornitore'] = $this->FornitoriModel->getFornitoriById($id);
         $data['selectData'] = $this->tipiLicenzeModel->getTipiLicenzaForSelect();
+        $data['licenzeFornite'] = $this->tipiLicenzeModel->getTipiLicenzeByFornitore($id);
 
 
         $data['title'] = 'Scheda Fornitore';
