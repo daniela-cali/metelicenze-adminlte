@@ -93,6 +93,7 @@ class FornitoriController extends BaseController
         $data['fornitore'] = $this->FornitoriModel->getFornitoriById($id);
         $data['selectData'] = $this->tipiLicenzeModel->getTipiLicenzaForSelect();
         $data['licenzeFornite'] = $this->tipiLicenzeModel->getTipiLicenzeByFornitore($id);
+        $data['mode'] = 'show';
 
 
         $data['title'] = 'Scheda Fornitore';

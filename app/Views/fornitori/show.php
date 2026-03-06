@@ -120,7 +120,7 @@
         </div>
         <div class="card-body">
             <?php if (!empty($licenzeFornite)): ?>
-                <table class="table table-bordered table-striped table-hover align-middle datatable" id="tabella-licenze">
+                <table class="table table-bordered table-striped table-hover align-middle datatable" id="primaryTable">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -135,8 +135,15 @@
                         <?php foreach ($licenzeFornite as $tipo): ?>
                             <?php log_message('info', 'Licenza fornita: ' . json_encode($tipo)); ?>
 
-                            <tr class="licenza-row" data-id="<?= esc($tipo["id"])
-                                                                ?>" style="cursor:pointer;">
+                            <tr class="data-row" 
+                                data-id="<?= esc($tipo["id"]) ?>"
+                                data-bs-toggle="tooltip"
+                                data-bs-placement= "right"
+                                title="Creato da: <?= $tipo["created_by_name"] ?> il <?= date('d/m/Y H:i', strtotime($tipo["created_at"])) ?>
+                                <?php if ($tipo["updated_at"]): ?>
+                                     Ultima modifica da: <?= $tipo["updated_by_name"] ?> il <?= date('d/m/Y H:i', strtotime($tipo["updated_at"])) ?>
+                                <?php endif; ?> 
+                                ">
                                 <td><?= esc($tipo["id"]) ?></td>
                                 <td><?= $tipo["nome"] ? esc($tipo["nome"]) : 'N/A' ?></td>
                                 <td><?= esc($tipo["descrizione"]) ?></td>
@@ -147,7 +154,9 @@
                                     </span>
                                 </td>
                                 <td>
-                                  
+                                  <a href="<?= url_to('tipi_edit', $tipo["id"]) ?>" class="btn btn-light btn-outline-secondary btn-sm" title="Modifica Tipologia di Licenza">
+                                      <i class="bi bi-pencil"></i>
+                                  </a>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -194,4 +203,34 @@
 </div>
 
 
+<?php $this->endSection(); ?>
+<?php $this->section('scripts'); ?>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        //$(document).ready(function () {
+        const tableRows = document.querySelectorAll('.data-row');
+        let selectedID = null;
+        tableRows.forEach(row => {
+            row.addEventListener('click', function() {
+                tableRows.forEach(r => r.classList.remove('table-primary', 'selected'));
+                selectedID = this.getAttribute('data-id');
+                console.log("ID selezionato: " + selectedID);
+                this.classList.add('table-primary', 'selected');
+            });
+            row.addEventListener('dblclick', function() {
+                // evita che il click sui bottoni scatti anche sulla riga
+                //if (e.target.closest('button')) return;
+                selectedID = this.getAttribute('data-id');
+                const baseUrl = "<?= base_url() ?>";
+                selectedID = this.getAttribute('data-id');
+                console.log("Redirecting to ID: " + selectedID);
+                window.location.href = `${baseUrl}/tipi/edit/${selectedID}`;
+            });
+        });
+
+
+    });
+                
+
+</script>
 <?php $this->endSection(); ?>

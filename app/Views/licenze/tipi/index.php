@@ -33,7 +33,7 @@
                                 title="Creato da: <?= $tipo["created_by_name"] ?> il <?= date('d/m/Y H:i', strtotime($tipo["created_at"])) ?>">
                                     <td><?= esc($tipo["id"]) ?></td>
                                     <td><?= esc($tipo["nome"]) ?></td>
-                                    <td><?= esc($tipo["categoria_nome"]) ?></td>
+                                    <td><?= esc($tipo["categoria_label"]) ?></td>
                                     <td>
                                         <div class="dropdown">
                                             <button class="btn dropdown-toggle" type="button" id="azione" data-bs-toggle="dropdown" aria-expanded="false">

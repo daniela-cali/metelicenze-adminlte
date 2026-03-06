@@ -38,7 +38,7 @@
                 <?php if (!empty($fornitori)): ?>
                     <?php //dd($fornitori) ?>
 
-                    <table class="table table-striped table-hover align-middle datatable" id="clientiTable">
+                    <table class="table table-striped table-hover align-middle datatable" id="primaryTable">
                         <thead class="table-light">
                             <tr>
                                 <th>ID</th>
@@ -53,7 +53,7 @@
                         </thead>
                         <tbody>
                             <?php foreach ($fornitori as $fornitore): ?>
-                                <tr class="fornitore-row" 
+                                <tr class="data-row" 
                                 data-id="<?= esc($fornitore["id"]) ?>"
                                 data-bs-toggle="tooltip"
                                 data-bs-placement= "right"
@@ -124,31 +124,31 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         //$(document).ready(function () {
-        const fornitoriRows = document.querySelectorAll('.fornitore-row');
-        let selectedFornitoreId = null;
-        fornitoriRows.forEach(row => {
+        const tableRows = document.querySelectorAll('.data-row');
+        let selectedID = null;
+        tableRows.forEach(row => {
             row.addEventListener('click', function() {
-                fornitoriRows.forEach(r => r.classList.remove('table-primary', 'selected'));
-                selectedFornitoreId = this.getAttribute('data-id');
-                console.log("Cliente selezionato: " + selectedFornitoreId);
+                tableRows.forEach(r => r.classList.remove('table-primary', 'selected'));
+                selectedID = this.getAttribute('data-id');
+                console.log("ID selezionato: " + selectedID);
                 this.classList.add('table-primary', 'selected');
             });
             row.addEventListener('dblclick', function() {
-                selectedFornitoreId = this.getAttribute('data-id');
+                selectedID = this.getAttribute('data-id');
                 const baseUrl = "<?= base_url() ?>";
-                selectedFornitoreId = this.getAttribute('data-id');
-                console.log("Redirecting to cliente ID: " + selectedFornitoreId);
-                window.location.href = `${baseUrl}/fornitori/${selectedFornitoreId}`;
+                selectedID = this.getAttribute('data-id');
+                console.log("Redirecting to ID: " + selectedID);
+                window.location.href = `${baseUrl}/fornitori/${selectedID}`;
             });
         });
         // inizializza la DataTable 
-        const table = $('#clientiTable').DataTable($.extend(true, {}, datatableDefaults, {
+        const table = $('#primaryTable').DataTable($.extend(true, {}, datatableDefaults, {
             order: [],
         }));
 
         // filtro custom: licenze + tipi
         $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-            if (settings.nTable.id !== 'clientiTable') return true;
+            if (settings.nTable.id !== 'primaryTable') return true;
 
             // --- filtro "licenze" (colonna N° index 6)
             const licenzeVal = $('input[name="licenze"]:checked').val(); // 'si'|'no'|undefined
@@ -166,7 +166,7 @@
                 return $(this).val();
             }).get();
             if (selectedTipi.length === 0) return true; // nessun filtro tipi
-            const tipiCellText = $(rowNode).find('td').eq(7).text().trim();
+            const tipiCellText = $(rowNode).find('td').eq(6).text().trim();
             // includi se ALMENO un tipo selezionato è presente nella cella (OR)
             return selectedTipi.some(t => tipiCellText.indexOf(t) !== -1);
         });
