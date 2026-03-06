@@ -28,16 +28,16 @@ $routes->group('filters', ['filter' => 'notpending'], function($routes) {
     $routes->get('clear', 'FiltersController::clearFilters');
  });
 
-$routes->group('clienti', ['filter' => 'notpending'], function($routes) {
-    //$routes->post('filters', 'ClientiController::clientiFilters');
-    $routes->get('/', 'ClientiController::index', ['as' => 'clienti_index']);
-    $routes->get('schedaCliente/(:num)', 'ClientiController::schedaCliente/$1', ['as' => 'clienti_visualizza']);
-    $routes->get('crea/', 'ClientiController::crea', ['as' => 'clienti_crea']); // Nuovo cliente con ID interno
-    $routes->get('modifica/(:num)', 'ClientiController::modifica/$1', ['as' => 'clienti_modifica']);
-    $routes->get('elimina/(:num)', 'ClientiController::elimina/$1', ['as' => 'clienti_elimina']);
-    $routes->post('salva/', 'ClientiController::salva/', ['as' => 'clienti_nuovo']); // Salva cliente nuovo
-    $routes->post('salva/(:num)', 'ClientiController::salva/$1', ['as' => 'clienti_salva']); // Salva cliente esistente by ID
- });
+ $routes->group('clienti', ['filter' => ['notpending']], function($routes) {
+    $routes->get('/', 'ClientiController::index', ['as' => 'clienti_index']); //Elenco
+    $routes->get('(:num)', 'ClientiController::show/$1', ['as' => 'clienti_show']); //Visualizzazione record per ID
+    $routes->get('new', 'ClientiController::create', ['as' => 'clienti_new']); //Nuovo record
+    $routes->post('/', 'ClientiController::store', ['as' => 'clienti_store']); //Salva nuovo record
+    $routes->get('edit/(:num)', 'ClientiController::edit/$1', ['as' => 'clienti_edit']); //Modifica record per ID
+    $routes->put('(:num)', 'ClientiController::update/$1', ['as' => 'clienti_update']); //Salva modifica record per ID
+    $routes->get('delete/(:num)', 'ClientiController::delete/$1', ['as' => 'clienti_delete']); //Elimina record per ID
+});
+
 
 $routes->group('licenze', ['filter' => 'notpending'], function($routes) {
     $routes->get('/', 'LicenzeController::index', ['as' => 'licenze_index']);
@@ -83,6 +83,7 @@ $routes->group('account', function($routes) {
     $routes->get('pending', 'AccountController::pending');
     $routes->get('nodev', 'AccountController::nodev');
 });
+
 
 
 $routes->group('utenti', ['filter' => 'group:superadmin,admin'], function($routes) {

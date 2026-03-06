@@ -157,10 +157,7 @@ class LicenzeModel extends AuditModel
             ->groupBy('clienti_id')
             ->findAll();
         $result = array_column($rows, 'numLicenze', 'clienti_id');
-        //dd($result);
-        log_message('debug', 'LicenzeModel class: ' . get_class($this->LicenzeModel));
-        log_message('debug', 'LicenzeModel parent: ' . get_parent_class($this->LicenzeModel));
-        log_message('debug', 'afterFind: ' . json_encode($this->LicenzeModel->afterFind ?? null));
+
         return $result;
     }
     public function getTipoLicenzeByCliente()

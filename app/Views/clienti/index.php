@@ -6,7 +6,7 @@
     <div class="card shadow-sm">
         <div class="card-header bg-primary d-flex justify-content-between align-items-center">
             <h5 class="mb-0"><i class="bi bi-people"></i> Elenco Clienti</h5>
-            <a href="<?= base_url("/clienti/crea") ?>" class="btn btn-light btn-outline-secondary btn-sm" title="Aggiungi nuovo cliente">
+            <a href="<?= url_to("clienti_new") ?>" class="btn btn-light btn-outline-secondary btn-sm" title="Aggiungi nuovo cliente">
                 <i class="bi bi-person-add"></i>
                 Nuovo Cliente
             </a>
@@ -116,14 +116,14 @@
                                         </button>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                             <li>
-                                                <a class="dropdown-item" href="<?= site_url('/clienti/schedaCliente/' . $cliente["id"]) ?>">
+                                                <a class="dropdown-item" href="<?= url_to('clienti_show', $cliente["id"]) ?>">
                                                     <i class="bi bi-person-vcard"></i>
                                                     Scheda Cliente
                                                 </a>
                                             </li>
 
                                             <li>
-                                                <a class="dropdown-item" href="<?= site_url('clienti/modifica/' . $cliente["id"]) ?>">
+                                                <a class="dropdown-item" href="<?= url_to('clienti_edit', $cliente["id"]) ?>">
                                                     <i class="bi bi-pencil"></i>
                                                     Modifica
                                                 </a>
@@ -133,7 +133,7 @@
                                             </li>
 
                                             <li class="">
-                                                <a class="dropdown-item text-danger" href="<?= site_url('clienti/elimina/' . $cliente["id"]) ?>">
+                                                <a class="dropdown-item text-danger" href="<?= url_to('clienti_delete', $cliente["id"]) ?>">
                                                     <i class="bi bi-trash"></i>
                                                     Elimina
                                                 </a>
@@ -173,7 +173,7 @@
                 const baseUrl = "<?= base_url() ?>";
                 selectedClienteId = this.getAttribute('data-id');
                 console.log("Redirecting to cliente ID: " + selectedClienteId);
-                window.location.href = `${baseUrl}/clienti/schedaCliente/${selectedClienteId}`;
+                window.location.href = `${baseUrl}/clienti/${selectedClienteId}`;
             });
         });
         // inizializza la DataTable 
