@@ -65,6 +65,7 @@
                                 <th>ID Licenza</th>
                                 <th>Codice</th>
                                 <th>Tipo</th>
+                                <th>Modello</th>
                                 <th>Cliente</th>
                                 <th>Data Ult. Agg.</th>
                                 <th>Versione attuale</th>
@@ -83,6 +84,7 @@
                                     <td><?= esc($licenza["id"]) ?></td>
                                     <td><?= esc($licenza["codice"]) ?></td>
                                     <td><?= esc($licenza["tipo"]) ?></td>
+                                    <td><?= esc($licenza["modello"]) ?></td>
                                     <td><?= esc($licenza["clienteNome"]) ?></td>
                                     <td><?= esc($licenza["ultimoAggiornamento"]) ?></td>
                                     <td><?= esc($licenza["versioneUltimoAggiornamento"]) ?></td>
@@ -191,7 +193,7 @@
             let passStato = true;
             if (selectedStati.length > 0) {
                 //console.log('Filtrando per stati: ' + selectedStati);
-                const statoText = String(data[6] ?? '')
+                const statoText = String(data[7] ?? '')
                     .replace(/<[^>]*>/g, '')
                     .replace(/\s+/g, ' ')
                     .trim();
