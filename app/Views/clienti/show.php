@@ -243,17 +243,17 @@
     }
                                 
     function tooltipFormatter(row, aggiornamento, type='display') {
-        console.log('Tooltip formatter - DOM element Row: ', row);
-        console.log('Tooltip formatter - Aggiornamento: ', aggiornamento);
+        //console.log('Tooltip formatter - DOM element Row: ', row);
+        //console.log('Tooltip formatter - Aggiornamento: ', aggiornamento);
 
         if (type === 'display' && aggiornamento) {
-            console.log('Tooltip formatter - Formattazione tooltip per aggiornamento ID:', aggiornamento.id);
+            //console.log('Tooltip formatter - Formattazione tooltip per aggiornamento ID:', aggiornamento.id);
             row.setAttribute('data-bs-toggle', 'tooltip');
             row.setAttribute('data-bs-placement', 'top'); 
             row.setAttribute('title', `Creato da: ${aggiornamento.created_by_name || 'N/A'} il ${aggiornamento.created_at ? new Date(aggiornamento.created_at).toLocaleString() : 'N/A'}`);
             row.tooltip = new bootstrap.Tooltip(row);
         } else{
-            console.log(type === 'display' ? `<span data-bs-toggle="tooltip" data-bs-placement="right" title="Creato da: ${aggiornamento.created_by_name || 'N/A'} il ${aggiornamento.created_at ? new Date(aggiornamento.created_at).toLocaleString() : 'N/A'}">${aggiornamento}</span>` : aggiornamento);
+            //console.log(type === 'display' ? `<span data-bs-toggle="tooltip" data-bs-placement="right" title="Creato da: ${aggiornamento.created_by_name || 'N/A'} il ${aggiornamento.created_at ? new Date(aggiornamento.created_at).toLocaleString() : 'N/A'}">${aggiornamento}</span>` : aggiornamento);
         } 
     }
 
