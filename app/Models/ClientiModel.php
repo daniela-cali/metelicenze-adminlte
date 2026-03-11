@@ -6,8 +6,6 @@ use CodeIgniter\Model;
 
 class ClientiModel extends AuditModel
 {
-
-
     protected $table            = 'clienti';
     protected $primaryKey       = 'id';
 
@@ -36,9 +34,6 @@ class ClientiModel extends AuditModel
         'deleted_at',
         'deleted_by',
     ];
-
-
-
 
     /**
      * Genera l'elenco di tutti i clienti
@@ -86,12 +81,4 @@ class ClientiModel extends AuditModel
             ->findAll();
     }
 
-    public function salva($data)
-    {
-
-        //log_message('info', 'Ricevo i seguenti dati nel MODEL: ' . print_r($data, true));
-        $this->save($data);
-        log_message('info', 'Dopo il salvataggio, l\'ID del cliente è: ' . $this->insertID);
-        return $this->insertID; // Restituisce l'ID del nuovo cliente
-    }
 }

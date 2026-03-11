@@ -48,6 +48,23 @@ class FornitoriController extends BaseController
         return view('fornitori/index', $data);
     }
 
+    public function show($id)
+    {
+        $this->backTo = base_url('fornitori'); // Imposto il path di ritorno alla lista dei fornitori
+
+        $session = session();
+        $session->set('backTo', $this->backTo);
+        $data['fornitore'] = $this->FornitoriModel->getFornitoriById($id);
+        $data['selectData'] = $this->tipiLicenzeModel->getTipiLicenzaForSelect();
+        $data['licenzeFornite'] = $this->tipiLicenzeModel->getTipiLicenzeByFornitore($id);
+        $data['mode'] = 'show';
+
+
+        $data['title'] = 'Scheda Fornitore';
+
+        return view('fornitori/show', $data);
+    }
+
     public function create()
     {
         $backTo = $this->resolveBackTo(base_url('/fornitori'));
@@ -81,24 +98,6 @@ class FornitoriController extends BaseController
         } else {
             return redirect()->back()->with('error', 'Errore durante la creazione del fornitore.')->withInput();
         }
-    }
-
-
-    public function show($id)
-    {
-        $this->backTo = base_url('fornitori'); // Imposto il path di ritorno alla lista dei fornitori
-
-        $session = session();
-        $session->set('backTo', $this->backTo);
-        $data['fornitore'] = $this->FornitoriModel->getFornitoriById($id);
-        $data['selectData'] = $this->tipiLicenzeModel->getTipiLicenzaForSelect();
-        $data['licenzeFornite'] = $this->tipiLicenzeModel->getTipiLicenzeByFornitore($id);
-        $data['mode'] = 'show';
-
-
-        $data['title'] = 'Scheda Fornitore';
-
-        return view('fornitori/show', $data);
     }
 
     public function edit($id)
@@ -136,12 +135,11 @@ class FornitoriController extends BaseController
 
     public function delete($id)
     {
-        if($this->FornitoriModel->delete($id)) {
+        if ($this->FornitoriModel->delete($id)) {
             return redirect()->to($this->resolveBackTo(base_url('/fornitori')))
                 ->with('success', 'Fornitore eliminato con successo.');
         } else {
             return redirect()->back()->with('error', 'Errore durante l\'eliminazione del fornitore.');
         }
     }
-    
 }

@@ -147,7 +147,11 @@
                     </thead>
                     <tbody>
                         <?php foreach ($licenze as $licenza): ?>
-                            <tr class="licenza-row" data-id="<?= esc($licenza["padre_lic_id"]) //linko il padre per il fetch aggiornamenti 
+                            <tr class="licenza-row" 
+                            data-bs-toggle="tooltip"
+                            data-bs-placement= "top"
+                            title = "Creato da: <?= $licenza["created_by_name"] ?? 'N/A' ?> il <?= isset($licenza["created_at"]) ? date('d/m/Y H:i', strtotime($licenza["created_at"])) : 'N/A' ?>"
+                            data-id="<?= esc($licenza["padre_lic_id"]) //linko il padre per il fetch aggiornamenti 
                                                                 ?>" style="cursor:pointer;">
                                 <td><?= esc($licenza["id"]) ?></td>
                                 <td><?= $licenza["codice"] ? esc($licenza["codice"]) : esc($licenza["ambiente"]) ?></td>
@@ -245,7 +249,7 @@
         if (type === 'display' && aggiornamento) {
             console.log('Tooltip formatter - Formattazione tooltip per aggiornamento ID:', aggiornamento.id);
             row.setAttribute('data-bs-toggle', 'tooltip');
-            row.setAttribute('data-bs-placement', 'right'); 
+            row.setAttribute('data-bs-placement', 'top'); 
             row.setAttribute('title', `Creato da: ${aggiornamento.created_by_name || 'N/A'} il ${aggiornamento.created_at ? new Date(aggiornamento.created_at).toLocaleString() : 'N/A'}`);
             row.tooltip = new bootstrap.Tooltip(row);
         } else{
@@ -319,7 +323,7 @@
                         .then(payload => {
                             console.log('Aggiornamenti ricevuti (payload):', payload);
                             console.log('Tipo payload:', typeof payload);
-                            console.log('Dati E PORCO PORCO aggiornamenti:', payload.data.length);
+                            console.log('Dati aggiornamenti:', payload.data.length);
                             console.log('Aggiornamenti da visualizzare:');
 
                             const rows = payload.data ?? []; // <-- array di oggetti

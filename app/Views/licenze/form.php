@@ -54,7 +54,7 @@ $backTo = $backTo ?? back_to_url(base_url('/licenze'));
                 <div class="mb-3 d-none" data-licenza="VarHub">
                     <label for="giga" class="form-label">Giga</label>
                     <input type="text" name="giga" id="giga" class="form-control" required placeholder="Invii * 2"
-                        value="<?= isset($licenza) ? esc($licenza["giga"]) : '' ?>">
+                        value="<?= isset($licenza) ? esc($licenza["giga"]) : 1000 ?>">
                 </div>
                 <div class="mb-3 d-none" data-licenza="Sigla">
                     <label for="modello" class="form-label" data-licenza="Sigla">Modello</label>

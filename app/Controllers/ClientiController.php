@@ -44,14 +44,13 @@ class ClientiController extends BaseController
         return view('clienti/index', $data);
     }
 
-        public function show($id)
+    public function show($id)
     {
-        $this->backTo = base_url('/clienti/' . $id);
-
+        $this->backTo = base_url('clienti');
         $session = session();
+        $session->set('backTo', $this->backTo);
 
         $data['cliente'] = $this->ClientiModel->getClientiById($id);
-
         $session->set('current_cliente_id', $data['cliente']["id"]);
         $session->set('current_padre_id', $data['cliente']["padre_id"]);
 
@@ -61,7 +60,6 @@ class ClientiController extends BaseController
         }
 
         $data['licenze'] = $this->LicenzeModel->getLicenzeByCliente($id);
-
         $data['title'] = 'Scheda Cliente';
 
         return view('clienti/show', $data);
@@ -73,7 +71,7 @@ class ClientiController extends BaseController
         return view('clienti/form', [
             'title' => 'Crea Nuovo Cliente',
             'mode' => 'create',
-            'fornitore' => null,
+            'cliente' => null,
             'backTo' => $backTo,
             'form' => [
                 'action' => site_url('clienti'),
@@ -85,7 +83,6 @@ class ClientiController extends BaseController
             ],
         ]);
     }
-
 
     public function store()
     {
@@ -102,8 +99,6 @@ class ClientiController extends BaseController
             return redirect()->back()->with('error', 'Errore durante la creazione del cliente.')->withInput();
         }
     }
-
-
 
     public function edit($id)
     {
@@ -133,7 +128,7 @@ class ClientiController extends BaseController
         }
     }
 
-        public function delete($id)
+    public function delete($id)
     {
         if ($this->ClientiModel->delete($id)) {
             return redirect()->to($this->resolveBackTo(base_url('/clienti')))
@@ -142,7 +137,6 @@ class ClientiController extends BaseController
             return redirect()->back()->with('error', 'Errore durante l\'eliminazione del cliente.');
         }
     }
-    
 }
 
 /*

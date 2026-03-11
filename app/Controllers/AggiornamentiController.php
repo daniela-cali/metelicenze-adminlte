@@ -105,7 +105,7 @@ class AggiornamentiController extends BaseController
         log_message('info', 'AggiornamentiController::salva - Dati ricevuti e modificato lo stato: ' . print_r($data, true));
 
         // Salvataggio dell'aggiornamento
-        $this->AggiornamentiModel->save($data);
+        $this->AggiornamentiModel->modelSave($data);
         return redirect()->to(
             $this->resolveBackTo(base_url('/licenze'))
         )->with('success', 'Aggiornamento salvato con successo!');

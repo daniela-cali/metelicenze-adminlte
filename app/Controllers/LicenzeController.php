@@ -47,7 +47,7 @@ class LicenzeController extends BaseController
             /**
              * Commento in quanto ho cambiato il tipo in enum nel database
              */
-            //$licenza->tipo = decodingTipo($licenza->tipo);
+            //$licenza["tipo"] = decodingTipo($licenza["tipo"]);
             //$licenza->modello = decodingModello($licenza->modello);
         }
         $data['licenze'] = $licenze;
@@ -95,11 +95,11 @@ class LicenzeController extends BaseController
             $licenzePadre = $this->LicenzeModel->getLicenzeByCliente($cliente["padre_id"]);
             //log_message('info', 'LicenzeController::crea Licenze del padre trovate: ' . print_r($licenzePadre, true));
             foreach ($licenzePadre as $licenza) {
-                if ($licenza->tipo === 'Sigla') {
+                if ($licenza["tipo"] === 'Sigla') {
                     $data['licenzePadre']['Sigla'] = $licenza;
-                } elseif ($licenza->tipo === 'VarHub') {
+                } elseif ($licenza["tipo"] === 'VarHub') {
                     $data['licenzePadre']['VarHub'] = $licenza;
-                } elseif ($licenza->tipo === 'SKNT') {
+                } elseif ($licenza["tipo"] === 'SKNT') {
                     $data['licenzePadre']['SKNT'] = $licenza;
                 }
             }
@@ -181,7 +181,7 @@ class LicenzeController extends BaseController
         log_message('info', 'Data contiene questo prima di inviare al model ->salva: ' . print_r($data, true));
 
         // Salvo la licenza nel database
-        $this->LicenzeModel->salva($data);
+        $this->LicenzeModel->save($data);
 
         // Redirect o mostra un messaggio di successo
         return redirect()->to(

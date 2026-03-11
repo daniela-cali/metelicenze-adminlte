@@ -20,7 +20,7 @@ class AuditModel extends Model
     protected array $castHandlers = [];
 
     // Dates
-    protected $useTimestamps = false;
+    protected $useTimestamps = true;
     protected $dateFormat    = 'datetime';
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
@@ -47,7 +47,7 @@ class AuditModel extends Model
     protected function created_by(array $data)
     {
         $user = auth()->user();
-
+        log_message('info', 'AuditModel::created_by - Utente autenticato: ' . ($user ? $user->username : 'Nessun utente autenticato'));
         if ($user) {
             $data['data']['created_by'] = $user->id ?? null;
             $data['data']['updated_by'] = $user->id ?? null;
@@ -58,7 +58,7 @@ class AuditModel extends Model
     protected function updated_by(array $data)
     {
         $user = auth()->user();
-
+        log_message('info', 'AuditModel::updated_by - Utente autenticato: ' . ($user ? $user->username : 'Nessun utente autenticato'));
         if ($user) {
             $data['data']['updated_by'] = $user->id ?? null;
         }
@@ -139,9 +139,4 @@ class AuditModel extends Model
         return $data;
     }
 
-    public function getClienti()
-    {
-        $test = 'decode_user';
-        return $this->{$test}([]);
-    }
 }
