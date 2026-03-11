@@ -79,7 +79,7 @@
                                 <tr class="clickable <?= $trClass ?>" 
                                 data-id="<?= esc($licenza["id"])?>" 
                                 data-bs-toggle="tooltip"
-                                data-bs-placement= "right"
+                                data-bs-placement= "top"
                                 title="Creato da: <?= $licenza["created_by_name"] ?> il <?= date('d/m/Y H:i', strtotime($licenza["created_at"])) ?>">
                                     <td><?= esc($licenza["id"]) ?></td>
                                     <td><?= esc($licenza["codice"]) ?></td>

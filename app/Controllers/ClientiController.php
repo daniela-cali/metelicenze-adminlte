@@ -46,7 +46,7 @@ class ClientiController extends BaseController
 
         public function show($id)
     {
-        $this->backTo = base_url('/clienti/schedaCliente/' . $id);
+        $this->backTo = base_url('/clienti/' . $id);
 
         $session = session();
 
@@ -64,7 +64,7 @@ class ClientiController extends BaseController
 
         $data['title'] = 'Scheda Cliente';
 
-        return view('clienti/schedaCliente', $data);
+        return view('clienti/show', $data);
     }
 
     public function create()

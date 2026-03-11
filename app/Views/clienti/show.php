@@ -237,6 +237,22 @@
             </a>
             `;
     }
+                                
+    function tooltipFormatter(row, aggiornamento, type='display') {
+        console.log('Tooltip formatter - DOM element Row: ', row);
+        console.log('Tooltip formatter - Aggiornamento: ', aggiornamento);
+
+        if (type === 'display' && aggiornamento) {
+            console.log('Tooltip formatter - Formattazione tooltip per aggiornamento ID:', aggiornamento.id);
+            row.setAttribute('data-bs-toggle', 'tooltip');
+            row.setAttribute('data-bs-placement', 'right'); 
+            row.setAttribute('title', `Creato da: ${aggiornamento.created_by_name || 'N/A'} il ${aggiornamento.created_at ? new Date(aggiornamento.created_at).toLocaleString() : 'N/A'}`);
+            row.tooltip = new bootstrap.Tooltip(row);
+        } else{
+            console.log(type === 'display' ? `<span data-bs-toggle="tooltip" data-bs-placement="right" title="Creato da: ${aggiornamento.created_by_name || 'N/A'} il ${aggiornamento.created_at ? new Date(aggiornamento.created_at).toLocaleString() : 'N/A'}">${aggiornamento}</span>` : aggiornamento);
+        } 
+    }
+
     document.addEventListener("DOMContentLoaded", function() {
 
         const cliente_padre = document.querySelector('#cliente-padre');
@@ -303,23 +319,27 @@
                         .then(payload => {
                             console.log('Aggiornamenti ricevuti (payload):', payload);
                             console.log('Tipo payload:', typeof payload);
-                            console.log('Dati aggiornamenti:', payload.data.length);
+                            console.log('Dati E PORCO PORCO aggiornamenti:', payload.data.length);
+                            console.log('Aggiornamenti da visualizzare:');
 
                             const rows = payload.data ?? []; // <-- array di oggetti
 
                             tabellaAggiornamenti.clear();
-
                             rows.forEach(aggiornamento => {
-
+                                
+                                console.log('Aggiornamento aggiunto alla tabella:', aggiornamento);
                                 const rowNode = tabellaAggiornamenti.row.add([
                                     aggiornamento.id,
                                     aggiornamento.dt_agg,
                                     aggiornamento.versione,
                                     aggiornamento.note,
-                                    actionButtons(aggiornamento.id)
+                                    actionButtons(aggiornamento.id),
                                 ]).draw(false).node();
+                                tooltipFormatter(rowNode, aggiornamento) // Applico il tooltip
                                 rowNode.classList.add('aggiornamento-row');
                                 rowNode.dataset.id = aggiornamento.id;
+                                rowNode.tooltip = aggiornamento.created_by_name; // Dati per tooltip
+                                rowNode.created_at = aggiornamento.created_at; // Dati per tooltip
 
                             });
                             if (rows.length === 0) {
@@ -338,9 +358,9 @@
                 }
             });
 
-            $('#tabella-aggiornamenti').on('dblclick', '.aggiornamento-row', function(e) {
+            /*$('#tabella-aggiornamenti').on('dblclick', '.aggiornamento-row', function(e) {
                 // evita che il click sui bottoni scatti anche sulla riga
-                if (e.target.closest('button')) return;
+                //if (e.target.closest('button')) return;
 
                 const selectedAggiornamento = this.dataset.id;
                 console.log('Click riga aggiornamento', selectedAggiornamento);
@@ -352,8 +372,14 @@
                 selectedLicenzaId = this.getAttribute('data-id');
                 window.location.href = `${baseUrl}/licenze/modifica/${selectedLicenzaId}`;
 
-            });
+            });*/
         });
+        const aggiornamentiRows = document.querySelectorAll('.aggiornamento-row');
+        aggiornamentiRows.forEach(row => {
+            
+        });
+
+
 
     });
 </script>
