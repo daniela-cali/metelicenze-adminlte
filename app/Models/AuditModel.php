@@ -44,6 +44,21 @@ class AuditModel extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
+    /*MG - 11.03.2026 - Aggiunta di un metodo initialize per assicurare che i callback di created_by e updated_by vengano sempre eseguiti, 
+    anche nelle classi figlie che potrebbero sovrascrivere i callback senza includere quelli di AuditModel.*/
+    protected function initialize()
+    {
+        parent::initialize();
+        $this->beforeInsert=[
+            'created_by',
+            ...$this->beforeInsert,
+        ];
+        $this->beforeUpdate=[
+            'updated_by',
+            ...$this->beforeUpdate,
+        ];
+    }
+
     protected function created_by(array $data)
     {
         $user = auth()->user();

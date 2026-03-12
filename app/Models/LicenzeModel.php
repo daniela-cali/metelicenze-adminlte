@@ -8,8 +8,8 @@ class LicenzeModel extends AuditModel
 {
     protected $table            = 'licenze';
     protected $primaryKey       = 'id';
-    protected $beforeInsert =   ['created_by', 'setFakePadre'];
-    protected $afterInsert =    ['updated_by','setPadreSelfIfMissing'];
+    protected $beforeInsert =   ['setFakePadre'];
+    protected $afterInsert =    ['setPadreSelfIfMissing'];
 
     protected $allowedFields = [
         'clienti_id',
@@ -37,7 +37,6 @@ class LicenzeModel extends AuditModel
         'invii',
         'giga',
     ];
-
 
     /**
      * Genera l'elenco delle licenze
