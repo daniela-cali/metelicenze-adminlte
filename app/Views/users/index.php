@@ -23,8 +23,8 @@
 
         <!-- Tabella -->
         <div class="table-responsive shadow-sm">
-            <table class="table table-striped align-middle" id="utentiTable">
-                <thead class="table-light">
+            <table class="table table-bordered table-striped align-middle" id="utentiTable">
+                <thead class="table-secondary">
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Username</th>

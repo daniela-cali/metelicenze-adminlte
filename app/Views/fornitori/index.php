@@ -1,45 +1,46 @@
 <?= $this->extend('layouts/main') ?>
+
+<?= $this->section('breadcrumb') ?>
+<ol class="breadcrumb float-sm-end">
+    <li class="breadcrumb-item"><a href="<?= base_url('/') ?>">Dashboard</a></li>
+    <li class="breadcrumb-item active">Fornitori</li>
+</ol>
+<?= $this->endSection() ?>
+
 <?= $this->section('content') ?>
-<div class="container my-5">
-
-
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary d-flex justify-content-between align-items-center">
-            <h5 class="mb-0"><i class="bi bi-people"></i> Elenco Fornitori</h5>
-            <a href="<?= url_to('fornitori_new') ?>" class="btn btn-light btn-outline-secondary btn-sm" title="Aggiungi nuovo fornitore">
-                <i class="bi bi-person-add"></i>
-                Nuovo Fornitore
-            </a>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0"><i class="bi bi-people"></i> Elenco Fornitori</h5>
+    <a href="<?= url_to('fornitori_crea') ?>" class="btn btn-outline-secondary btn-sm" title="Aggiungi nuovo fornitore">
+        <i class="bi bi-person-add"></i> Nuovo Fornitore
+    </a>
+</div>
+<div class="row g-3 mb-3">
+    <div class="col-auto">
+        <small class="text-muted text-uppercase fw-semibold d-block mb-1">Tipo licenza</small>
+        <div class="d-flex gap-3" id="tipi">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="tipi" value="Sigla" id="tipoSigla">
+                <label class="form-check-label" for="tipoSigla">Sigla</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="tipi" value="VarHub" id="tipoVarHub">
+                <label class="form-check-label" for="tipoVarHub">VarHub</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="tipi" value="firma" id="tipoFirma">
+                <label class="form-check-label" for="tipoFirma">Servizio Firma</label>
+            </div>
         </div>
-        <div class="card-body">
-            <div class="container"> <!-- CONTAINER FILTRI -->
-                <div class="row"> <!-- TIPO -->
-                    <div class="col"> 
-                        <div class="d-flex justify-content-end align-items-center gap-3" id="tipi">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="tipi" value="Sigla"
-                                    id="tipoSigla">
-                                <label class="form-check-label" for="tipoSigla">Sigla</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="tipi" value="VarHub"
-                                    id="tipoVarHub">
-                                <label class="form-check-label" for="tipoVarHub">VarHub</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" name="tipi" value="firma" id="tipoFirma">
-                                <label class="form-check-label" for="tipoFirma">Servizio Firma</label>
-                            </div>
-                        </div>
-                    </div>
-                </div> <!-- END TIPO -->
-                
+    </div>
+</div>
+<div>
+
 
                 <?php if (!empty($fornitori)): ?>
                     <?php //dd($fornitori) ?>
 
-                    <table class="table table-striped table-hover align-middle datatable" id="primaryTable">
-                        <thead class="table-light">
+                    <table class="table table-bordered table-striped table-hover align-middle datatable" id="primaryTable">
+                        <thead class="table-secondary">
                             <tr>
                                 <th>ID</th>
                                 <th>Codice Fornitore</th>
@@ -53,15 +54,9 @@
                         </thead>
                         <tbody>
                             <?php foreach ($fornitori as $fornitore): ?>
-                                <tr class="data-row" 
+                                <tr class="data-row"
                                 data-id="<?= esc($fornitore["id"]) ?>"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement= "right"
-                                title="Creato da: <?= $fornitore["created_by_name"] ?> il <?= date('d/m/Y H:i', strtotime($fornitore["created_at"])) ?>
-                                <?php if ($fornitore["updated_at"]): ?>
-                                     Ultima modifica da: <?= $fornitore["updated_by_name"] ?> il <?= date('d/m/Y H:i', strtotime($fornitore["updated_at"])) ?>
-                                <?php endif; ?> 
-                                ">
+                                <?= audit_tooltip($fornitore, 'right') ?>>
                                     <td><?= esc($fornitore["id"]) ?></td>
                                     <td><?= esc($fornitore["codice"]) ?></td>
                                     <td><?= esc($fornitore["nome"]) ?></td>
@@ -81,14 +76,14 @@
                                         </button>
                                         <ul class="dropdown-menu" aria-labelledby="azioniDropDownMenu">
                                             <li>
-                                                <a class="dropdown-item" href="<?= url_to('fornitori_show', $fornitore["id"]);  ?>">
+                                                <a class="dropdown-item" href="<?= url_to('fornitori_scheda', $fornitore["id"]);  ?>">
                                                     <i class="bi bi-person-vcard"></i>
                                                     Scheda Fornitore
                                                 </a>
                                             </li>
 
                                             <li>
-                                                <a class="dropdown-item" href="<?= url_to('fornitori_edit', $fornitore["id"]); ?>">
+                                                <a class="dropdown-item" href="<?= url_to('fornitori_modifica', $fornitore["id"]); ?>">
                                                     <i class="bi bi-pencil"></i>
                                                     Modifica
                                                 </a>
@@ -98,7 +93,7 @@
                                             </li>
 
                                             <li class="">
-                                                <a class="dropdown-item text-danger" href="<?= url_to('fornitori_delete', $fornitore["id"]); ?>">
+                                                <a class="dropdown-item text-danger" href="<?= url_to('fornitori_elimina', $fornitore["id"]); ?>">
                                                     <i class="bi bi-trash"></i>
                                                     Elimina
                                                 </a>
@@ -114,33 +109,13 @@
                         <i class="bi bi-info-circle"></i> Nessun fornitore trovato nel database.
                     </div>
                 <?php endif; ?>
-            </div>
-        </div>
-    </div>
 </div>
 
 <?= $this->endSection() ?>
 <?= $this->section('scripts') ?>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
-        //$(document).ready(function () {
-        const tableRows = document.querySelectorAll('.data-row');
-        let selectedID = null;
-        tableRows.forEach(row => {
-            row.addEventListener('click', function() {
-                tableRows.forEach(r => r.classList.remove('table-primary', 'selected'));
-                selectedID = this.getAttribute('data-id');
-                console.log("ID selezionato: " + selectedID);
-                this.classList.add('table-primary', 'selected');
-            });
-            row.addEventListener('dblclick', function() {
-                selectedID = this.getAttribute('data-id');
-                const baseUrl = "<?= base_url() ?>";
-                selectedID = this.getAttribute('data-id');
-                console.log("Redirecting to ID: " + selectedID);
-                window.location.href = `${baseUrl}/fornitori/${selectedID}`;
-            });
-        });
+
         // inizializza la DataTable 
         const table = $('#primaryTable').DataTable($.extend(true, {}, datatableDefaults, {
             order: [],

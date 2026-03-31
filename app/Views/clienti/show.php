@@ -1,24 +1,22 @@
 <?php $this->extend('layouts/main'); ?>
 
+<?php $this->section('breadcrumb'); ?>
+<ol class="breadcrumb float-sm-end">
+    <li class="breadcrumb-item"><a href="<?= base_url('/') ?>">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="<?= url_to('clienti_index') ?>">Clienti</a></li>
+    <li class="breadcrumb-item active">Scheda Cliente</li>
+</ol>
+<?php $this->endSection(); ?>
+
 <?php $this->section('content'); ?>
 
-<div class="container mt-4 mb-4" id="scheda-cliente">
+<div id="scheda-cliente">
 
-<div class="container-fluid mt-4 p-0">
-    <h1 class="display-6 mb-2">
-        <i class="bi bi-people-fill"></i> Scheda Cliente
-    </h1>
-
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <p class="lead mb-0">
-            Dettagli e gestione del cliente
-        </p>
-
-        <a href="<?= base_url("/clienti") ?>"
-           class="btn btn-light btn-outline-secondary btn-sm">
-            <i class="bi bi-arrow-left-circle"></i> Torna all'elenco clienti
-        </a>
-    </div>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <p class="lead mb-0">Dettagli e gestione del cliente</p>
+    <a href="<?= base_url("/clienti") ?>" class="btn btn-light btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left-circle"></i> Torna all'elenco clienti
+    </a>
 </div>
         <nav id="anchor-nav" class="navbar navbar-expand-lg navbar-light bg-light anchor-nav rounded shadow-sm mt-3 mb-3 p-2">
 
@@ -147,10 +145,8 @@
                     </thead>
                     <tbody>
                         <?php foreach ($licenze as $licenza): ?>
-                            <tr class="licenza-row" 
-                            data-bs-toggle="tooltip"
-                            data-bs-placement= "top"
-                            title = "Creato da: <?= $licenza["created_by_name"] ?? 'N/A' ?> il <?= isset($licenza["created_at"]) ? date('d/m/Y H:i', strtotime($licenza["created_at"])) : 'N/A' ?>"
+                            <tr class="licenza-row"
+                            <?= audit_tooltip($licenza) ?>
                             data-id="<?= esc($licenza["padre_lic_id"]) //linko il padre per il fetch aggiornamenti 
                                                                 ?>" style="cursor:pointer;">
                                 <td><?= esc($licenza["id"]) ?></td>
@@ -266,7 +262,7 @@
 
             if (!padreId) return;
             const baseUrl = "<?= base_url() ?>";
-            window.location.href = `${baseUrl}/clienti/schedaCliente/${padreId}`;
+            window.location.href = `${baseUrl}/clienti/${padreId}`;
         });
 
         const MSG_SELECT = "Seleziona una licenza per visualizzare gli aggiornamenti associati.";

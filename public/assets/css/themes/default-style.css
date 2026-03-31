@@ -8,20 +8,12 @@
     /* Mantiene le proporzioni */
 }
 
-/* Card bianche con shadow leggero */
+/* Card stile AdminLTE: angoli ridotti, nessuna animazione */
 .card {
     background-color: #ffffff;
-    /* sfondo standard BS5 */
     color: #495057;
-    /* testo principale grigio scuro */
-    border-radius: 0.75rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    border-radius: 0.25rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 .status-connection {
@@ -33,13 +25,13 @@
     margin-bottom: 0.5rem;
 }
 
-/* Card headers (manteniamo la versione originale) */
+/* Card header piatto stile AdminLTE */
 .card-header {
-    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    background-color: #f8f9fa;
     color: #212529;
     font-weight: 600;
-    border-radius: 0.75rem 0.75rem 0 0 !important;
-    border: none;
+    border-radius: 0.25rem 0.25rem 0 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.125);
 }
 
 /* Testo secondario leggibile */
@@ -48,11 +40,10 @@
     /* grigio medio pastello */
 }
 
-/* Pulsanti pastello */
+/* Pulsanti */
 .btn {
-    border-radius: 0.5rem;
+    border-radius: 0.25rem;
     font-weight: 500;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .btn-primary {
@@ -226,7 +217,7 @@ dl.dl-kv dd {
   border-bottom: 2px dashed rgba(0,0,0,.08);
 }
 
-.clickable {
+.row-clickable {
     cursor: pointer;
 }
 

@@ -1,66 +1,60 @@
 <?php $this->extend('layouts/main') ?>
+
+<?php $this->section('breadcrumb'); ?>
+<ol class="breadcrumb float-sm-end">
+    <li class="breadcrumb-item"><a href="<?= base_url('/') ?>">Dashboard</a></li>
+    <li class="breadcrumb-item active">Licenze</li>
+</ol>
+<?php $this->endSection(); ?>
+
 <?php $this->section('content') ?>
-<div class="container my-5">
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary d-flex justify-content-between align-items-center">
-            <h5 class="mb-0"><i class="bi bi-key"></i> Elenco Licenze</h5>
-
-            </a>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0"><i class="bi bi-key"></i> Elenco Licenze</h5>
+</div>
+<div class="row g-3 mb-3">
+    <div class="col-auto">
+        <small class="text-muted text-uppercase fw-semibold d-block mb-1">Tipo licenza</small>
+        <div class="d-flex gap-3" id="tipi">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="tipi" value="Sigla" id="tipoSigla">
+                <label class="form-check-label" for="tipoSigla">Sigla</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="tipi" value="VarHub" id="tipoVarHub">
+                <label class="form-check-label" for="tipoVarHub">VarHub</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="tipi" value="SKNT" id="tipoSKNT">
+                <label class="form-check-label" for="tipoSKNT">SKNT</label>
+            </div>
         </div>
-        <div class="card-body">
-            <div class="container"><!-- FILTRI -->
-                <div class="row"> <!--TIPO-->
-                    <div class="col">
-                        <div class="d-flex justify-content-end align-items-center gap-3" id="tipi">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="tipi" value="Sigla"
-                                    id="tipoSigla">
-                                <label class="form-check-label" for="tipoSigla">Sigla</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="tipi" value="VarHub"
-                                    id="tipoVarHub">
-                                <label class="form-check-label" for="tipoVarHub">VarHub</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" name="tipi" value="SKNT" id="tipoSKNT">
-                                <label class="form-check-label" for="tipoSKNT">SKNT</label>
-                            </div>
-                        </div>
-                    </div>
-                </div> <!-- END TIPO -->
-                <hr>
-                <div class="row"> <!--STATO-->
-                    <div class="col">
-                        <div class="d-flex justify-content-end align-items-center gap-3" id="statoLicenze">
-                            <div class="form-check">
-
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="statoLicenze" value="Tutte"
-                                        checked
-                                        id="Tutte">
-                                    <label class="form-check-label" for="Tutte">Tutte</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="statoLicenze" value="Aggiornato"
-                                        id="aggiornate">
-                                    <label class="form-check-label" for="aggiornate">Aggiornate</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="statoLicenze" value="Da aggiornare"
-                                        id="da_aggiornare">
-                                    <label class="form-check-label" for="da_aggiornare">Da aggiornare</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div> <!-- END STATO -->
-            </div> <!-- END FILTRI -->
-            <hr>
+    </div>
+    <div class="col-auto d-none d-sm-flex align-items-end pb-1">
+        <div class="vr"></div>
+    </div>
+    <div class="col-auto">
+        <small class="text-muted text-uppercase fw-semibold d-block mb-1">Stato aggiornamento</small>
+        <div class="d-flex gap-3" id="statoLicenze">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="statoLicenze" value="Tutte" id="Tutte" checked>
+                <label class="form-check-label" for="Tutte">Tutte</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="statoLicenze" value="Aggiornato" id="aggiornate">
+                <label class="form-check-label" for="aggiornate">Aggiornate</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="statoLicenze" value="Da aggiornare" id="da_aggiornare">
+                <label class="form-check-label" for="da_aggiornare">Da aggiornare</label>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
             <?php if (!empty($licenze)): ?>
                 <div class="table-responsive">
-                    <table class="table table-striped table-hover align-middle" id="licenzeTable">
-                        <thead class="table-light">
+                    <table class="table table-bordered table-striped table-hover align-middle" id="licenzeTable">
+                        <thead class="table-secondary">
                             <tr>
                                 <th>ID Licenza</th>
                                 <th>Codice</th>
@@ -76,11 +70,9 @@
                         <tbody>
                             <?php foreach ($licenze as $licenza): ?>
                                 <?php $trClass = $licenza["stato"] == 0 ? 'table-danger' : ''; ?>
-                                <tr class="clickable <?= $trClass ?>" 
-                                data-id="<?= esc($licenza["id"])?>" 
-                                data-bs-toggle="tooltip"
-                                data-bs-placement= "top"
-                                title="Creato da: <?= $licenza["created_by_name"] ?> il <?= date('d/m/Y H:i', strtotime($licenza["created_at"])) ?>">
+                                <tr class="clickable <?= $trClass ?>"
+                                data-id="<?= esc($licenza["id"])?>"
+                                <?= audit_tooltip($licenza) ?>>
                                     <td><?= esc($licenza["id"]) ?></td>
                                     <td><?= esc($licenza["codice"]) ?></td>
                                     <td><?= esc($licenza["tipo"]) ?></td>
@@ -154,8 +146,6 @@
                 </div>
             <?php endif; ?>
 
-        </div>
-    </div>
 </div>
 <?= $this->endSection() ?>
 <?= $this->section('scripts') ?>

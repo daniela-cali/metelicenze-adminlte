@@ -136,6 +136,6 @@ class AggiornamentiController extends BaseController
         // Logica per eliminare una licenza
         $this->AggiornamentiModel->delete($idAggiornamento);
         // Redirect o mostra un messaggio di successo
-        return redirect()->redirect($this->backTo)->with('success', 'Aggiornamento eliminato con successo.');
+        return redirect()->to($this->backTo)->with('success', 'Aggiornamento eliminato con successo.');
     }
 }

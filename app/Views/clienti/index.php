@@ -1,69 +1,70 @@
 <?= $this->extend('layouts/main') ?>
+
+<?= $this->section('breadcrumb') ?>
+<ol class="breadcrumb float-sm-end">
+    <li class="breadcrumb-item"><a href="<?= base_url('/') ?>">Dashboard</a></li>
+    <li class="breadcrumb-item active">Clienti</li>
+</ol>
+<?= $this->endSection() ?>
+
 <?= $this->section('content') ?>
-<div class="container my-5">
-
-
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary d-flex justify-content-between align-items-center">
-            <h5 class="mb-0"><i class="bi bi-people"></i> Elenco Clienti</h5>
-            <a href="<?= url_to("clienti_new") ?>" class="btn btn-light btn-outline-secondary btn-sm" title="Aggiungi nuovo cliente">
-                <i class="bi bi-person-add"></i>
-                Nuovo Cliente
-            </a>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0"><i class="bi bi-people"></i> Elenco Clienti</h5>
+    <a href="<?= url_to('clienti_crea') ?>" class="btn btn-outline-secondary btn-sm" title="Aggiungi nuovo cliente">
+        <i class="bi bi-person-add"></i> Nuovo Cliente
+    </a>
+</div>
+<div class="row g-3 mb-3">
+    <!-- Colonna: Tipo licenza -->
+    <div class="col-auto">
+        <small class="text-muted text-uppercase fw-semibold d-block mb-1">Tipo licenza</small>
+        <div class="d-flex gap-3" id="tipi">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="tipi" value="Sigla" id="tipoSigla">
+                <label class="form-check-label" for="tipoSigla">Sigla</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="tipi" value="VarHub" id="tipoVarHub">
+                <label class="form-check-label" for="tipoVarHub">VarHub</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="tipi" value="SKNT" id="tipoSKNT">
+                <label class="form-check-label" for="tipoSKNT">SKNT</label>
+            </div>
         </div>
-        <div class="card-body">
-            <div class="container"> <!-- CONTAINER FILTRI -->
-                <div class="row"> <!-- TIPO -->
-                    <div class="col"> 
-                        <div class="d-flex justify-content-end align-items-center gap-3" id="tipi">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="tipi" value="Sigla"
-                                    id="tipoSigla">
-                                <label class="form-check-label" for="tipoSigla">Sigla</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="tipi" value="VarHub"
-                                    id="tipoVarHub">
-                                <label class="form-check-label" for="tipoVarHub">VarHub</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" name="tipi" value="SKNT" id="tipoSKNT">
-                                <label class="form-check-label" for="tipoSKNT">SKNT</label>
-                            </div>
-                        </div>
-                    </div>
-                </div> <!-- END TIPO -->
-                <hr>
-                <div class="row"> <!-- LICENZE -->
-                    <div class="col">
-                        <div class="d-flex justify-content-end align-items-center gap-3" id="licenze">
-                            <div class="form-check">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="licenze" value="tutti"
-                                        id="licenzeTutti" checked>
-                                    <label class="form-check-label" for="licenzeTutti">Tutti i clienti</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="licenze" value="si"
-                                        id="licenzeSi">
-                                    <label class="form-check-label" for="licenzeSi">Con Licenze attive</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="licenze" value="no"
-                                        id="licenzeNo">
-                                    <label class="form-check-label" for="licenzeNo">Senza Licenze attive</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div> <!-- END LICENZE -->
-                </div> <!-- END FILTRI -->
-                <hr>
+    </div>
+
+    <!-- Separatore verticale -->
+    <div class="col-auto d-none d-sm-flex align-items-end pb-1">
+        <div class="vr"></div>
+    </div>
+
+    <!-- Colonna: Stato licenze -->
+    <div class="col-auto">
+        <small class="text-muted text-uppercase fw-semibold d-block mb-1">Stato licenze</small>
+        <div class="d-flex gap-3" id="licenze">
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="licenze" value="tutti" id="licenzeTutti" checked>
+                <label class="form-check-label" for="licenzeTutti">Tutti</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="licenze" value="si" id="licenzeSi">
+                <label class="form-check-label" for="licenzeSi">Con licenze</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="radio" name="licenze" value="no" id="licenzeNo">
+                <label class="form-check-label" for="licenzeNo">Senza licenze</label>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
 
                 <?php if (!empty($clienti)): ?>
                     <?php //dd($clienti) ?>
 
-                    <table class="table table-striped table-hover align-middle datatable" id="clientiTable">
-                        <thead class="table-light">
+                    <table class="table table-bordered table-striped table-hover align-middle datatable" id="clientiTable">
+                        <thead class="table-secondary">
                             <tr>
                                 <th>ID</th>
                                 <th>Codice cliente</th>
@@ -78,15 +79,9 @@
                         </thead>
                         <tbody>
                             <?php foreach ($clienti as $cliente): ?>
-                                <tr class="cliente-row" 
+                                <tr class="cliente-row"
                                 data-id="<?= esc($cliente["id"]) ?>"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement= "right"
-                                title="Creato da: <?= $cliente["created_by_name"] ?> il <?= date('d/m/Y H:i', strtotime($cliente["created_at"])) ?>
-                                <?php if ($cliente["updated_at"]): ?>
-                                     Ultima modifica da: <?= $cliente["updated_by_name"] ?> il <?= date('d/m/Y H:i', strtotime($cliente["updated_at"])) ?>
-                                <?php endif; ?> 
-                                ">
+                                <?= audit_tooltip($cliente) ?>>
                                     <td><?= esc($cliente["id"]) ?></td>
                                     <td><?= esc($cliente["codice"]) ?></td>
                                     <td><?= esc($cliente["nome"]) ?></td>
@@ -116,14 +111,14 @@
                                         </button>
                                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                             <li>
-                                                <a class="dropdown-item" href="<?= url_to('clienti_show', $cliente["id"]) ?>">
+                                                <a class="dropdown-item" href="<?= url_to('clienti_scheda', $cliente["id"]) ?>">
                                                     <i class="bi bi-person-vcard"></i>
                                                     Scheda Cliente
                                                 </a>
                                             </li>
 
                                             <li>
-                                                <a class="dropdown-item" href="<?= url_to('clienti_edit', $cliente["id"]) ?>">
+                                                <a class="dropdown-item" href="<?= url_to('clienti_modifica', $cliente["id"]) ?>">
                                                     <i class="bi bi-pencil"></i>
                                                     Modifica
                                                 </a>
@@ -133,7 +128,7 @@
                                             </li>
 
                                             <li class="">
-                                                <a class="dropdown-item text-danger" href="<?= url_to('clienti_delete', $cliente["id"]) ?>">
+                                                <a class="dropdown-item text-danger" href="<?= url_to('clienti_elimina', $cliente["id"]) ?>">
                                                     <i class="bi bi-trash"></i>
                                                     Elimina
                                                 </a>
@@ -149,9 +144,6 @@
                         <i class="bi bi-info-circle"></i> Nessun cliente trovato nel database.
                     </div>
                 <?php endif; ?>
-            </div>
-        </div>
-    </div>
 </div>
 
 <?= $this->endSection() ?>

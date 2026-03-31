@@ -51,7 +51,7 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0"><i class="bi bi-person-badge"></i> Dati Anagrafici</h5>
-            <a href="<?= url_to('fornitori_edit', $fornitore["id"]) ?>" class="btn btn-light btn-outline-secondary btn-sm" title="Modifica">
+            <a href="<?= url_to('fornitori_modifica', $fornitore["id"]) ?>" class="btn btn-light btn-outline-secondary btn-sm" title="Modifica">
                 Modifica <i class="bi bi-pencil"></i>
             </a>
         </div>
@@ -135,15 +135,9 @@
                         <?php foreach ($licenzeFornite as $tipo): ?>
                             <?php log_message('info', 'Licenza fornita: ' . json_encode($tipo)); ?>
 
-                            <tr class="data-row" 
+                            <tr class="data-row"
                                 data-id="<?= esc($tipo["id"]) ?>"
-                                data-bs-toggle="tooltip"
-                                data-bs-placement= "right"
-                                title="Creato da: <?= $tipo["created_by_name"] ?> il <?= date('d/m/Y H:i', strtotime($tipo["created_at"])) ?>
-                                <?php if ($tipo["updated_at"]): ?>
-                                     Ultima modifica da: <?= $tipo["updated_by_name"] ?> il <?= date('d/m/Y H:i', strtotime($tipo["updated_at"])) ?>
-                                <?php endif; ?> 
-                                ">
+                                <?= audit_tooltip($tipo, 'right') ?>>
                                 <td><?= esc($tipo["id"]) ?></td>
                                 <td><?= $tipo["nome"] ? esc($tipo["nome"]) : 'N/A' ?></td>
                                 <td><?= esc($tipo["descrizione"]) ?></td>
@@ -154,7 +148,7 @@
                                     </span>
                                 </td>
                                 <td>
-                                  <a href="<?= url_to('tipi_edit', $tipo["id"]) ?>" class="btn btn-light btn-outline-secondary btn-sm" title="Modifica Tipologia di Licenza">
+                                  <a href="<?= url_to('tipi_modifica', $tipo["id"]) ?>" class="btn btn-light btn-outline-secondary btn-sm" title="Modifica Tipologia di Licenza">
                                       <i class="bi bi-pencil"></i>
                                   </a>
                                 </td>
@@ -183,7 +177,7 @@
             </div>
             <div class="modal-body">
                 <form action="<?= url_to('tipi_link', $fornitore["id"]) ?>" method="POST">
-                    <input type="hidden" name="backTo" value="<?= url_to('fornitori_show', $fornitore["id"]) ?>">
+                    <input type="hidden" name="backTo" value="<?= url_to('fornitori_scheda', $fornitore["id"]) ?>">
                     <select name="id_licenza" id="id_licenza" class="form-select" required>
                         <?php foreach ($selectData as $option): ?>
                             <option value="<?= esc($option["id"]) ?>">

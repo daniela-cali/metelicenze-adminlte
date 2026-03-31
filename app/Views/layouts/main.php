@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <meta name="description" content="MeTe Licenze - Gestione licenze software per la tua azienda">
   <meta name="author" content="MeTe Software">
   <meta name="keywords" content="MeTe, Licenze, Software, Gestione, Azienda">
@@ -19,60 +19,101 @@
   <meta name="twitter:description" content="Gestione licenze software per la tua azienda">
   <meta name="twitter:image" content="<?= base_url('assets/images/twitter-card.png') ?>">
 
-
   <title><?= esc($title ?? 'MeTe Licenze') ?></title>
 
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- 1. AdminLTE CSS — prima perché include Bootstrap 5 -->
+  <link rel="stylesheet" href="<?= base_url('assets/adminlte/css/adminlte.min.css') ?>">
 
-  <!-- Bootstrap Icons -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- 2. OverlayScrollbars -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/styles/overlayscrollbars.min.css" crossorigin="anonymous">
 
-  <!-- DataTables 2.x + Bootstrap 5 -->
+  <!-- 3. Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" crossorigin="anonymous">
+
+  <!-- 4. DataTables 2.x + Bootstrap 5 -->
   <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.min.css">
-
-  <!-- Estensioni DataTables 2.x -->
   <link rel="stylesheet" href="https://cdn.datatables.net/buttons/3.1.2/css/buttons.bootstrap5.min.css">
   <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/4.0.1/css/fixedHeader.bootstrap5.min.css">
   <link rel="stylesheet" href="https://cdn.datatables.net/responsive/3.0.3/css/responsive.bootstrap5.min.css">
   <link rel="stylesheet" href="https://cdn.datatables.net/select/2.0.4/css/select.bootstrap5.min.css">
   <link rel="stylesheet" href="https://cdn.datatables.net/searchpanes/2.3.5/css/searchPanes.bootstrap5.min.css">
 
-  <!-- CSS personalizzato -->
-   <?php use Config\SiteConfig; 
-   $theme = config('SiteConfig')->siteTheme; ?>
-  <link rel="stylesheet" href="<?= base_url('assets/css/themes/' . $theme . '-style.css') ?>">
+  <!-- 5. CSS personalizzato app -->
+  <link rel="stylesheet" href="<?= base_url('assets/css/custom.css') ?>">
 
   <!-- Favicon -->
   <link rel="icon" type="image/png" sizes="32x32" href="<?= base_url('assets/icons/favicon-32x32.png') ?>">
   <link rel="icon" type="image/png" sizes="16x16" href="<?= base_url('assets/icons/favicon-16x16.png') ?>">
   <link rel="shortcut icon" href="<?= base_url('assets/icons/favicon.ico') ?>">
 
-
   <?= $this->renderSection('styles') ?>
 </head>
 
-<body>
+<!--
+  layout-fixed        → sidebar fissa, contenuto scorrevole
+  sidebar-expand-lg   → la sidebar si espande su schermi >= lg
+  bg-body-tertiary    → sfondo grigio chiaro (Bootstrap 5)
+-->
+<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
 
-  <!-- Navbar -->
-  <?= $this->include('layouts/partials/navbar') ?>
+  <!-- App Wrapper: contenitore principale AdminLTE -->
+  <div class="app-wrapper">
 
-  <!-- Toast messages -->
-  <?= $this->include('layouts/partials/toasts') ?>
+    <!-- Barra superiore -->
+    <?= $this->include('layouts/partials/navbar') ?>
 
-  <!-- Contenuto principale -->
-  <main class="container my-4">
-    <?= $this->renderSection('content') ?>
-  </main>
+    <!-- Sidebar sinistra con menu -->
+    <?= $this->include('layouts/partials/sidebar') ?>
 
-  <!-- Footer -->
-  <?= $this->include('layouts/partials/footer') ?>
+    <!-- Contenuto principale -->
+    <main class="app-main">
 
-  <!-- jQuery -->
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+      <!-- Intestazione pagina: titolo + breadcrumb -->
+      <div class="app-content-header">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-6">
+              <h3 class="mb-0"><?= esc($title ?? 'MeTe Licenze') ?></h3>
+            </div>
+            <div class="col-sm-6">
+              <?= $this->renderSection('breadcrumb') ?>
+            </div>
+          </div>
+        </div>
+      </div>
 
-  <!-- Bootstrap JS -->
+      <!-- Corpo pagina -->
+      <div class="app-content">
+        <div class="container-fluid">
+
+          <!-- Toast messages -->
+          <?= $this->include('layouts/partials/toasts') ?>
+
+          <!-- Contenuto specifico della view -->
+          <?= $this->renderSection('content') ?>
+
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Footer -->
+    <?= $this->include('layouts/partials/footer') ?>
+
+  </div>
+  <!-- /App Wrapper -->
+
+  <!-- OverlayScrollbars JS (richiesto da AdminLTE) -->
+  <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/browser/overlayscrollbars.browser.es6.min.js" crossorigin="anonymous"></script>
+
+  <!-- Bootstrap JS (incluso in adminlte.min.js, ma serve anche standalone per DataTables) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- AdminLTE JS -->
+  <script src="<?= base_url('assets/adminlte/js/adminlte.min.js') ?>"></script>
+
+  <!-- jQuery (usato da DataTables) -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
   <!-- DataTables 2.x + Bootstrap 5 -->
   <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
@@ -107,12 +148,13 @@
   <script>
     const baseUrl = "<?= base_url() ?>";
   </script>
-  
+
   <!-- Inizializzazione tooltip Bootstrap -->
   <script>
-    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-      return new bootstrap.Tooltip(tooltipTriggerEl)
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function(el) {
+        new bootstrap.Tooltip(el);
+      });
     });
   </script>
 
@@ -123,9 +165,11 @@
 
   <!-- Init globale -->
   <script src="<?= base_url('assets/js/datatable-init.js') ?>"></script>
+  <script src="<?= base_url('assets/js/table-manager.js') ?>"></script>
 
   <!-- Script specifici pagina -->
   <?= $this->renderSection('scripts') ?>
+
 </body>
 
 </html>

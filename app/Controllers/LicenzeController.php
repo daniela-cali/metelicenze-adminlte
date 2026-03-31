@@ -149,7 +149,7 @@ class LicenzeController extends BaseController
         ]);
 
         // Redirect o mostra un messaggio di successo
-        return redirect()->to('clienti/schedaCliente/' . $idCliente);
+        return redirect()->to('clienti/' . $idCliente);
     }
     
     /**
@@ -185,7 +185,7 @@ class LicenzeController extends BaseController
 
         // Redirect o mostra un messaggio di successo
         return redirect()->to(
-            $this->resolveBackTo(base_url('/clienti/schedaCliente/' . $idCliente))
+            $this->resolveBackTo(base_url('/clienti/' . $idCliente))
         )->with('success', 'Licenza salvata con successo.');
     }
 

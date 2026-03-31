@@ -13,25 +13,25 @@ const datatableDefaults = {
         {
             extend: 'copy',
             text: '<i class="bi bi-clipboard"></i> Copia',
-            className: 'btn btn-sm btn-outline-primary',
+            className: 'btn btn-sm btn-outline-secondary',
             exportOptions: { columns: ':not(.notexport)' }
         },
         {
             extend: 'csv',
             text: '<i class="bi bi-filetype-csv"></i> CSV',
-            className: 'btn btn-sm btn-outline-success',
+            className: 'btn btn-sm btn-outline-secondary',
             exportOptions: { columns: ':not(.notexport)' }
         },
         {
             extend: 'excel',
             text: '<i class="bi bi-file-earmark-excel"></i> Excel',
-            className: 'btn btn-sm btn-outline-success',
+            className: 'btn btn-sm btn-outline-secondary',
             exportOptions: { columns: ':not(.notexport)' }
         },
         {
             extend: "pdf",
             text: '<i class="bi bi-file-earmark-pdf"></i> PDF',
-            className: 'btn btn-sm btn-outline-danger',
+            className: 'btn btn-sm btn-outline-secondary',
             exportOptions: {
                 columns: ':not(.notexport)',
                 format: {
@@ -79,8 +79,13 @@ const datatableDefaults = {
         topEnd: 'search',
         bottomStart: ['info', 'pageLength'],
         bottomEnd: 'paging'
-    }
+    },
 
+    drawCallback: function() {
+        document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function(el) {
+            bootstrap.Tooltip.getOrCreateInstance(el);
+        });
+    }
 
 };
 

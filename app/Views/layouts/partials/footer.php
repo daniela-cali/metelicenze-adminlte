@@ -1,8 +1,12 @@
-<footer class="bg-dark text-light py-3 text-center mt-5">
-    <div>
-        <small>&copy; <?= date('Y') ?> MeTe Licenze - Tutti i diritti riservati</small>
-    </div>
-    <div>
-        <small><em>Per informazioni: metelicenze at gmail dot com</em></small>
-    </div>
+<!--
+  app-footer → classe AdminLTE, si posiziona in fondo al contenuto (non fixed di default)
+-->
+<footer class="app-footer">
+  <div class="float-end d-none d-sm-inline text-muted">
+    <small>MeTe Licenze &mdash; Gestione licenze software</small>
+  </div>
+  <strong>
+    &copy; <?= date('Y') ?> MeTe Licenze
+  </strong>
+  &mdash; <small>Per informazioni: metelicenze at gmail dot com</small>
 </footer>
