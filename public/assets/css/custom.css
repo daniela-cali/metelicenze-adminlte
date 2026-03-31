@@ -1,0 +1,84 @@
+/* Stili specifici MeTe Licenze */
+
+/* DataTables: rimuove sfondo residuo dei bottoni */
+.dt-button {
+    background: transparent !important;
+    background-image: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+.dt-button.btn {
+    background-color: transparent !important;
+}
+
+/* Scrollable containers (liste tabelle, ecc.) */
+.tables-list-container {
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 8px;
+}
+.tables-list-container::-webkit-scrollbar { width: 6px; }
+.tables-list-container::-webkit-scrollbar-track { background: #f8f9fa; border-radius: 3px; }
+.tables-list-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+.tables-list-container::-webkit-scrollbar-thumb:hover { background: #a0aec0; }
+.tables-list-container { scrollbar-width: thin; scrollbar-color: #cbd5e1 #f8f9fa; }
+
+/* Riga licenza cliccabile */
+tr.licenza-row { cursor: pointer; }
+tr.licenza-row:hover { background-color: #f1f3f5; }
+.row-clickable { cursor: pointer; }
+
+/* Navbar per ancore interne (scheda cliente) */
+.anchor-nav .nav-link {
+    border-bottom: 4px solid transparent;
+    padding: 6px 0;
+    transition: border-color 0.2s ease;
+}
+.anchor-nav .nav-link:hover { border-bottom-color: #212529; }
+.anchor-nav .nav-link.active {
+    border-bottom-color: #212529;
+    font-weight: 500;
+}
+
+/* Definition list chiave-valore (scheda cliente) */
+dl.dl-kv {
+    display: grid;
+    grid-template-columns: minmax(180px, 220px) 1fr;
+    row-gap: .3rem;
+    column-gap: 1rem;
+    padding: .75rem .9rem;
+    margin: 0;
+}
+dl.dl-kv dt {
+    font-size: .75rem;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    color: rgba(0, 0, 0, .6);
+    border-bottom: 2px dashed rgba(0, 0, 0, .08);
+    white-space: nowrap;
+}
+dl.dl-kv dd {
+    font-size: .95rem;
+    margin: 0;
+    padding-bottom: .4rem;
+    border-bottom: 2px dashed rgba(0, 0, 0, .08);
+}
+
+/* Logo navbar */
+.navbar .logo-navbar {
+    max-height: 50px;
+    width: auto;
+}
+
+/* Logo card */
+.card-img-logo {
+    max-height: 100px !important;
+    width: auto;
+}
+
+.btn.btn-success {
+    background-color: #B0E4CC !important;
+    border-color: #28a745 !important;
+    color: #000 !important;
+}

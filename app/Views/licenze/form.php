@@ -1,13 +1,19 @@
 <?= $this->extend('layouts/main') ?>
 
+<?= $this->section('breadcrumb') ?>
+<ol class="breadcrumb float-sm-end">
+    <li class="breadcrumb-item"><a href="<?= base_url('/') ?>">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="<?= url_to('licenze_index') ?>">Licenze</a></li>
+    <li class="breadcrumb-item active"><?= esc($title) ?></li>
+</ol>
+<?= $this->endSection() ?>
+
 <?= $this->section('content') ?>
 <?php
 $backTo = $backTo ?? back_to_url(base_url('/licenze'));
 ?>
-
-<div class="container my-5">
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary  d-flex justify-content-between align-items-center">
+<div class="card shadow-sm">
+    <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0"><i class="bi bi-key-fill"></i> <?= esc($title) ?> </h5>
             <a href="<?= esc($backTo) ?>" class="btn btn-light btn-outline-secondary btn-sm">
                 <i class="bi bi-arrow-left"></i> Indietro
@@ -54,7 +60,7 @@ $backTo = $backTo ?? back_to_url(base_url('/licenze'));
                 <div class="mb-3 d-none" data-licenza="VarHub">
                     <label for="giga" class="form-label">Giga</label>
                     <input type="text" name="giga" id="giga" class="form-control" required placeholder="Invii * 2"
-                        value="<?= isset($licenza) ? esc($licenza["giga"]) : '' ?>">
+                        value="<?= isset($licenza) ? esc($licenza["giga"]) : 1000 ?>">
                 </div>
                 <div class="mb-3 d-none" data-licenza="Sigla">
                     <label for="modello" class="form-label" data-licenza="Sigla">Modello</label>
@@ -123,7 +129,6 @@ $backTo = $backTo ?? back_to_url(base_url('/licenze'));
             </form>
         </div>
     </div>
-</div>
 <?= $this->endSection() ?>
 <?= $this->section('scripts') ?>
 <script>

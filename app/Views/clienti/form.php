@@ -1,13 +1,19 @@
 <?= $this->extend('layouts/main') ?>
 
+<?= $this->section('breadcrumb') ?>
+<ol class="breadcrumb float-sm-end">
+    <li class="breadcrumb-item"><a href="<?= base_url('/') ?>">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="<?= url_to('clienti_index') ?>">Clienti</a></li>
+    <li class="breadcrumb-item active"><?= esc($title) ?></li>
+</ol>
+<?= $this->endSection() ?>
+
 <?= $this->section('content') ?>
 <?php
 $backTo = $backTo ?? back_to_url(base_url('/clienti'));
 ?>
-
-<div class="container my-5">
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary  d-flex justify-content-between align-items-center">
+<div class="card shadow-sm">
+    <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0"><i class="bi bi-key-fill"></i> <?= esc($title) ?> </h5>
             <a href="<?= esc($backTo) ?>" class="btn btn-light btn-sm">
                 <i class="bi bi-arrow-left"></i> Indietro
@@ -16,8 +22,8 @@ $backTo = $backTo ?? back_to_url(base_url('/clienti'));
 
         <div class="card-body">
             <!--Aggiungo la modalità di creazione o modifica per il js-->
-            <form action="<?= $action ?>" method="post" data-mode="<?= $mode ?>">
-                <input type="hidden" name="backTo" value="<?= esc($backTo) ?>">
+            <form action="<?= $form["action"] ?>" method="post" data-mode="<?= $mode ?>">
+                <input type="hidden" name="backTo" value="<?= isset($backTo) ? esc($backTo) : '' ?>">
 
                 <div class="mb-3">
                     <label for="codice" class="form-label">Codice Cliente</label>
@@ -130,7 +136,6 @@ $backTo = $backTo ?? back_to_url(base_url('/clienti'));
             </form>
         </div>
     </div>
-</div>
 <?= $this->endSection() ?>
 <?= $this->section('scripts') ?>
 <script>

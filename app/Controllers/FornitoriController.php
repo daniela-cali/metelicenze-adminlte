@@ -43,9 +43,27 @@ class FornitoriController extends BaseController
         }
         unset($fornitore); // Termina la referenza*/
         $data['title'] = 'Elenco Fornitori';
+        $data['route'] = 'fornitori';
         //session()->set(['route'=>'fornitori']);
         //dd($data);
         return view('fornitori/index', $data);
+    }
+
+    public function show($id)
+    {
+        $this->backTo = base_url('fornitori'); // Imposto il path di ritorno alla lista dei fornitori
+
+        $session = session();
+        $session->set('backTo', $this->backTo);
+        $data['fornitore'] = $this->FornitoriModel->getFornitoriById($id);
+        $data['selectData'] = $this->tipiLicenzeModel->getTipiLicenzaForSelect();
+        $data['licenzeFornite'] = $this->tipiLicenzeModel->getTipiLicenzeByFornitore($id);
+        $data['mode'] = 'show';
+
+
+        $data['title'] = 'Scheda Fornitore';
+
+        return view('fornitori/show', $data);
     }
 
     public function create()
@@ -83,24 +101,6 @@ class FornitoriController extends BaseController
         }
     }
 
-
-    public function show($id)
-    {
-        $this->backTo = base_url('fornitori'); // Imposto il path di ritorno alla lista dei fornitori
-
-        //log_message('info', 'FornitoriController::schedaFornitore - Path di provenienza: ' . previous_url());
-        //log_message('info', 'FornitoriController::schedaFornitore - Path attuale: ' . current_url());
-        $session = session();
-        $session->set('backTo', $this->backTo);
-        $data['fornitore'] = $this->FornitoriModel->getFornitoriById($id);
-        $data['selectData'] = $this->tipiLicenzeModel->getTipiLicenzaForSelect();
-
-
-        $data['title'] = 'Scheda Fornitore';
-
-        return view('fornitori/show', $data);
-    }
-
     public function edit($id)
     {
         $fornitore = $this->FornitoriModel->getFornitoriById($id);
@@ -136,12 +136,11 @@ class FornitoriController extends BaseController
 
     public function delete($id)
     {
-        if($this->FornitoriModel->delete($id)) {
+        if ($this->FornitoriModel->delete($id)) {
             return redirect()->to($this->resolveBackTo(base_url('/fornitori')))
                 ->with('success', 'Fornitore eliminato con successo.');
         } else {
             return redirect()->back()->with('error', 'Errore durante l\'eliminazione del fornitore.');
         }
     }
-    
 }

@@ -8,7 +8,7 @@
         <i class="bi bi-upload"></i> Importa Clienti
     </button>
 </form>
-<table id="importTable" class="table table-striped datatable">
+<table id="importTable" class="table table-bordered table-striped datatable">
     <thead>
         <tr>
             <th>ID Ext.</th>

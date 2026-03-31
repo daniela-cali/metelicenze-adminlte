@@ -105,7 +105,7 @@ class AggiornamentiController extends BaseController
         log_message('info', 'AggiornamentiController::salva - Dati ricevuti e modificato lo stato: ' . print_r($data, true));
 
         // Salvataggio dell'aggiornamento
-        $this->AggiornamentiModel->save($data);
+        $this->AggiornamentiModel->modelSave($data);
         return redirect()->to(
             $this->resolveBackTo(base_url('/licenze'))
         )->with('success', 'Aggiornamento salvato con successo!');
@@ -136,6 +136,6 @@ class AggiornamentiController extends BaseController
         // Logica per eliminare una licenza
         $this->AggiornamentiModel->delete($idAggiornamento);
         // Redirect o mostra un messaggio di successo
-        return redirect()->redirect($this->backTo)->with('success', 'Aggiornamento eliminato con successo.');
+        return redirect()->to($this->backTo)->with('success', 'Aggiornamento eliminato con successo.');
     }
 }

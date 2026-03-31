@@ -89,4 +89,10 @@ class AggiornamentiModel extends AuditModel
             })
             ->findAll();
     }
+    function modelSave($data){
+        log_message('info', 'AggiornamentiModel::modelSave - Dati ricevuti: ' . print_r($data, true));
+        $result = $this->save($data);
+        log_message('info', 'AggiornamentiModel::modelSave - Risultato save: ' . print_r($result, true));
+        return $result;
+    }
 }

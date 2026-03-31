@@ -1,24 +1,22 @@
 <?php $this->extend('layouts/main'); ?>
 
+<?php $this->section('breadcrumb'); ?>
+<ol class="breadcrumb float-sm-end">
+    <li class="breadcrumb-item"><a href="<?= base_url('/') ?>">Dashboard</a></li>
+    <li class="breadcrumb-item"><a href="<?= url_to('clienti_index') ?>">Clienti</a></li>
+    <li class="breadcrumb-item active">Scheda Cliente</li>
+</ol>
+<?php $this->endSection(); ?>
+
 <?php $this->section('content'); ?>
 
-<div class="container mt-4 mb-4" id="scheda-cliente">
+<div id="scheda-cliente">
 
-<div class="container-fluid mt-4 p-0">
-    <h1 class="display-6 mb-2">
-        <i class="bi bi-people-fill"></i> Scheda Cliente
-    </h1>
-
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <p class="lead mb-0">
-            Dettagli e gestione del cliente
-        </p>
-
-        <a href="<?= base_url("/clienti") ?>"
-           class="btn btn-light btn-outline-secondary btn-sm">
-            <i class="bi bi-arrow-left-circle"></i> Torna all'elenco clienti
-        </a>
-    </div>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <p class="lead mb-0">Dettagli e gestione del cliente</p>
+    <a href="<?= base_url("/clienti") ?>" class="btn btn-light btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left-circle"></i> Torna all'elenco clienti
+    </a>
 </div>
         <nav id="anchor-nav" class="navbar navbar-expand-lg navbar-light bg-light anchor-nav rounded shadow-sm mt-3 mb-3 p-2">
 
@@ -147,7 +145,9 @@
                     </thead>
                     <tbody>
                         <?php foreach ($licenze as $licenza): ?>
-                            <tr class="licenza-row" data-id="<?= esc($licenza["padre_lic_id"]) //linko il padre per il fetch aggiornamenti 
+                            <tr class="licenza-row"
+                            <?= audit_tooltip($licenza) ?>
+                            data-id="<?= esc($licenza["padre_lic_id"]) //linko il padre per il fetch aggiornamenti 
                                                                 ?>" style="cursor:pointer;">
                                 <td><?= esc($licenza["id"]) ?></td>
                                 <td><?= $licenza["codice"] ? esc($licenza["codice"]) : esc($licenza["ambiente"]) ?></td>
@@ -237,6 +237,22 @@
             </a>
             `;
     }
+                                
+    function tooltipFormatter(row, aggiornamento, type='display') {
+        //console.log('Tooltip formatter - DOM element Row: ', row);
+        //console.log('Tooltip formatter - Aggiornamento: ', aggiornamento);
+
+        if (type === 'display' && aggiornamento) {
+            //console.log('Tooltip formatter - Formattazione tooltip per aggiornamento ID:', aggiornamento.id);
+            row.setAttribute('data-bs-toggle', 'tooltip');
+            row.setAttribute('data-bs-placement', 'top'); 
+            row.setAttribute('title', `Creato da: ${aggiornamento.created_by_name || 'N/A'} il ${aggiornamento.created_at ? new Date(aggiornamento.created_at).toLocaleString() : 'N/A'}`);
+            row.tooltip = new bootstrap.Tooltip(row);
+        } else{
+            //console.log(type === 'display' ? `<span data-bs-toggle="tooltip" data-bs-placement="right" title="Creato da: ${aggiornamento.created_by_name || 'N/A'} il ${aggiornamento.created_at ? new Date(aggiornamento.created_at).toLocaleString() : 'N/A'}">${aggiornamento}</span>` : aggiornamento);
+        } 
+    }
+
     document.addEventListener("DOMContentLoaded", function() {
 
         const cliente_padre = document.querySelector('#cliente-padre');
@@ -246,7 +262,7 @@
 
             if (!padreId) return;
             const baseUrl = "<?= base_url() ?>";
-            window.location.href = `${baseUrl}/clienti/schedaCliente/${padreId}`;
+            window.location.href = `${baseUrl}/clienti/${padreId}`;
         });
 
         const MSG_SELECT = "Seleziona una licenza per visualizzare gli aggiornamenti associati.";
@@ -304,22 +320,26 @@
                             console.log('Aggiornamenti ricevuti (payload):', payload);
                             console.log('Tipo payload:', typeof payload);
                             console.log('Dati aggiornamenti:', payload.data.length);
+                            console.log('Aggiornamenti da visualizzare:');
 
                             const rows = payload.data ?? []; // <-- array di oggetti
 
                             tabellaAggiornamenti.clear();
-
                             rows.forEach(aggiornamento => {
-
+                                
+                                console.log('Aggiornamento aggiunto alla tabella:', aggiornamento);
                                 const rowNode = tabellaAggiornamenti.row.add([
                                     aggiornamento.id,
                                     aggiornamento.dt_agg,
                                     aggiornamento.versione,
                                     aggiornamento.note,
-                                    actionButtons(aggiornamento.id)
+                                    actionButtons(aggiornamento.id),
                                 ]).draw(false).node();
+                                tooltipFormatter(rowNode, aggiornamento) // Applico il tooltip
                                 rowNode.classList.add('aggiornamento-row');
                                 rowNode.dataset.id = aggiornamento.id;
+                                rowNode.tooltip = aggiornamento.created_by_name; // Dati per tooltip
+                                rowNode.created_at = aggiornamento.created_at; // Dati per tooltip
 
                             });
                             if (rows.length === 0) {
@@ -338,9 +358,9 @@
                 }
             });
 
-            $('#tabella-aggiornamenti').on('dblclick', '.aggiornamento-row', function(e) {
+            /*$('#tabella-aggiornamenti').on('dblclick', '.aggiornamento-row', function(e) {
                 // evita che il click sui bottoni scatti anche sulla riga
-                if (e.target.closest('button')) return;
+                //if (e.target.closest('button')) return;
 
                 const selectedAggiornamento = this.dataset.id;
                 console.log('Click riga aggiornamento', selectedAggiornamento);
@@ -352,8 +372,14 @@
                 selectedLicenzaId = this.getAttribute('data-id');
                 window.location.href = `${baseUrl}/licenze/modifica/${selectedLicenzaId}`;
 
-            });
+            });*/
         });
+        const aggiornamentiRows = document.querySelectorAll('.aggiornamento-row');
+        aggiornamentiRows.forEach(row => {
+            
+        });
+
+
 
     });
 </script>

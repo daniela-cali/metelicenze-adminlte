@@ -20,7 +20,7 @@ class AuditModel extends Model
     protected array $castHandlers = [];
 
     // Dates
-    protected $useTimestamps = false;
+    protected $useTimestamps = true;
     protected $dateFormat    = 'datetime';
     protected $createdField  = 'created_at';
     protected $updatedField  = 'updated_at';
@@ -44,10 +44,25 @@ class AuditModel extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
 
+    /*MG - 11.03.2026 - Aggiunta di un metodo initialize per assicurare che i callback di created_by e updated_by vengano sempre eseguiti, 
+    anche nelle classi figlie che potrebbero sovrascrivere i callback senza includere quelli di AuditModel.*/
+    protected function initialize()
+    {
+        parent::initialize();
+        $this->beforeInsert=[
+            'created_by',
+            ...$this->beforeInsert,
+        ];
+        $this->beforeUpdate=[
+            'updated_by',
+            ...$this->beforeUpdate,
+        ];
+    }
+
     protected function created_by(array $data)
     {
         $user = auth()->user();
-
+        log_message('info', 'AuditModel::created_by - Utente autenticato: ' . ($user ? $user->username : 'Nessun utente autenticato'));
         if ($user) {
             $data['data']['created_by'] = $user->id ?? null;
             $data['data']['updated_by'] = $user->id ?? null;
@@ -58,7 +73,7 @@ class AuditModel extends Model
     protected function updated_by(array $data)
     {
         $user = auth()->user();
-
+        log_message('info', 'AuditModel::updated_by - Utente autenticato: ' . ($user ? $user->username : 'Nessun utente autenticato'));
         if ($user) {
             $data['data']['updated_by'] = $user->id ?? null;
         }
@@ -139,9 +154,4 @@ class AuditModel extends Model
         return $data;
     }
 
-    public function getClienti()
-    {
-        $test = 'decode_user';
-        return $this->{$test}([]);
-    }
 }

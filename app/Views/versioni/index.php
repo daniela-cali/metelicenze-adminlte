@@ -1,40 +1,43 @@
 <?= $this->extend('layouts/main') ?>
+
+<?= $this->section('breadcrumb') ?>
+<ol class="breadcrumb float-sm-end">
+    <li class="breadcrumb-item"><a href="<?= base_url('/') ?>">Dashboard</a></li>
+    <li class="breadcrumb-item active">Versioni</li>
+</ol>
+<?= $this->endSection() ?>
+
 <?= $this->section('content') ?>
-<div class="container my-5">
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary d-flex justify-content-between align-items-center">
-            <h5 class="mb-0"><i class="bi bi-people"></i> Elenco Versioni</h5>
-            <a href="/versioni/crea" class="btn btn-light btn-outline-secondary btn-sm">
-                <i class="bi bi-plus-circle"></i> Aggiungi versione
-            </a>
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0"><i class="bi bi-tags-fill"></i> Elenco Versioni</h5>
+    <a href="/versioni/crea" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-plus-circle"></i> Aggiungi versione
+    </a>
+</div>
+<div class="row g-3 mb-3">
+    <div class="col-auto">
+        <small class="text-muted text-uppercase fw-semibold d-block mb-1">Tipo</small>
+        <div class="d-flex gap-3" id="tipi">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="tipi" value="Sigla" id="tipoSigla">
+                <label class="form-check-label" for="tipoSigla">Sigla</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="tipi" value="VarHub" id="tipoVarHub">
+                <label class="form-check-label" for="tipoVarHub">VarHub</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="tipi" value="SKNT" id="tipoSKNT">
+                <label class="form-check-label" for="tipoSKNT">SKNT</label>
+            </div>
         </div>
-        <div class="card-body">
-           <div class="container"><!-- FILTRI -->
-                <div class="row">  
-                    <div class="col"> <!--TIPO-->
-                        <div class="d-flex justify-content-end align-items-center gap-3" id="tipi">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="tipi" value="Sigla"
-                                    id="tipoSigla">
-                                <label class="form-check-label" for="tipoSigla">Sigla</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="tipi" value="VarHub"
-                                    id="tipoVarHub">
-                                <label class="form-check-label" for="tipoVarHub">VarHub</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" name="tipi" value="SKNT" id="tipoSKNT">
-                                <label class="form-check-label" for="tipoSKNT">SKNT</label>
-                            </div>
-                        </div>
-                    </div>
-                </div> <!-- END FILTRI -->
-                <hr>
+    </div>
+</div>
+<div>
             <?php if (!empty($versioni)): ?>
                 <div class="table-responsive">
-                    <table class="table table-striped table-hover align-middle" id="versioniTable">
-                        <thead class="table-light">
+                    <table class="table table-bordered table-striped table-hover align-middle" id="versioniTable">
+                        <thead class="table-secondary">
                             <tr>
                                 <th>ID</th>
                                 <th>Tipo</th>
@@ -47,7 +50,9 @@
                         </thead>
                         <tbody>
                             <?php foreach ($versioni as $versione): ?>
-                                <tr class="clickable" data-id="<?= esc($versione["id"]) ?>">
+                                <tr class="clickable"
+                                data-id="<?= esc($versione["id"])?>"
+                                <?= audit_tooltip($versione) ?>>
                                     <td><?= esc($versione["id"]) ?></td>
                                     <td><?= esc($versione["tipo"]) ?></td>
                                     <td><?= esc($versione["codice"]) ?></td>
@@ -82,8 +87,6 @@
                     <i class="bi bi-info-circle"></i> Nessuna versione trovata nel database.
                 </div>
             <?php endif; ?>
-        </div>
-    </div>
 </div>
 <?= $this->endSection() ?>
 <?= $this->section('scripts') ?>

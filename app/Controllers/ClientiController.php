@@ -20,69 +20,42 @@ class ClientiController extends BaseController
         $this->backTo = base_url('/clienti');
     }
 
-    /*public function __index()
-    {
-        $tipoLicenza = $this->request->getGet('tipoLicenza');
-        if ($tipoLicenza) {
-            $idClientiPerLicenza = $this->LicenzeModel->getLicenzeByTipo($tipoLicenza);
-            //log_message('info', 'Clienti con licenza di tipo ' . $tipoLicenza . ': ' . print_r($idClientiPerLicenza, true));
-            $ids = array_map(fn($licenza) => $licenza->clienti_id, $idClientiPerLicenza);
-            if (count($idClientiPerLicenza) > 0) $data['clienti'] = $this->ClientiModel->getClientiByIds($ids);
-            //else $data['clienti'] = [];
-            log_message('info', 'Clienti filtrati: ' . print_r($data['clienti'], true));
-        } else {
-            $data['clienti'] = $this->ClientiModel->getClienti();
-        }
-        $licenzeCount = $this->countLicenzeByCliente();
 
-        foreach ($data['clienti'] as $cliente) {
-            $cliente->numLicenze = $licenzeCount[$cliente->id] ?? 0;
-        }
-        $data['title'] = 'Elenco Clienti';
-
-        return view('clienti/index', $data);
-    }*/
     public function index(): string
     {
 
-        //setHistory(base_url('/clienti'));
-
-
         $data['clienti'] = $this->ClientiModel->getClienti();
-        $licenzeCount = $this->countLicenzeByCliente();
-        $licenzeTipo = $this->getTipoLicenzeByCliente();
+        $licenzeCount = $this->LicenzeModel->countLicenzeByCliente();
+        $licenzeTipo = $this->LicenzeModel->getTipoLicenzeByCliente();
 
-        //log_message('info', 'Conteggio licenze per cliente: ' . print_r($licenzeCount, true));
-        //dd($licenzeCount);
+        // Mappa id → nome per risolvere il nome del padre
+        $clientiMap = array_column($data['clienti'], 'nome', 'id');
 
-        //dd($data['clienti']);
-        foreach ($data['clienti'] as &$cliente) {    
-            $id = $cliente["id"];    log_message('info', '==============Elaboro il cliente con ID: ' . $id . ' - Nome: ' . $cliente["nome"]);    
-            //log_message('info', 'Numero di licenze trovate: ' . ($licenzeCount[$id] ?? 0));    
-            $cliente["numLicenze"] = $licenzeCount[$id] ?? 0;    
-            $cliente["tipiLicenze"] = isset($licenzeTipo[$id]) ? $licenzeTipo[$id] : [];    
-            //log_message('info', '==============Cliente ID elaboranto con successo: ' . $cliente["id"] . ' - Nome: ' . $cliente["nome"] . ' - NumLicenze: ' . $cliente["numLicenze"] . ' - TipiLicenze: ' . print_r($cliente["tipiLicenze"], true));
+        foreach ($data['clienti'] as &$cliente) {
+            $id = $cliente["id"];
+            log_message('info', '============== Elaboro il cliente con ID: ' . $id . ' - Nome: ' . $cliente["nome"]);
+            $cliente["numLicenze"] = $licenzeCount[$id] ?? 0;
+            $cliente["tipiLicenze"] = isset($licenzeTipo[$id]) ? $licenzeTipo[$id] : [];
+            // Gruppo: se figlio_sn=1 usa il nome del padre, altrimenti il proprio nome
+            $cliente["gruppo"] = ($cliente["figlio_sn"] == 1)
+                ? ($clientiMap[$cliente["padre_id"]] ?? $cliente["nome"])
+                : $cliente["nome"];
         }
-        unset ($cliente); // Termina la referenza
+        unset($cliente); // Termina la referenza
         $data['title'] = 'Elenco Clienti';
         //session()->set(['route'=>'clienti']);
 
         return view('clienti/index', $data);
     }
 
-    public function schedaCliente($id)
+    public function show($id)
     {
-        $this->backTo = base_url('/clienti/schedaCliente/'. $id);
-        
-        //log_message('info', 'ClientiController::schedaCliente - Path di provenienza: ' . previous_url());
-        //log_message('info', 'ClientiController::schedaCliente - Path attuale: ' . current_url());
+        $this->backTo = base_url('clienti');
         $session = session();
-        //$session->set('backTo', current_url()); // Salvo il path di provenienza nella sessione
+        $session->set('backTo', $this->backTo);
+
         $data['cliente'] = $this->ClientiModel->getClientiById($id);
-        //Salvo i dati del cliente corrente nella sessione per usi futuri (nel form delle licenze ad esempio)
-        //dd($data['cliente']);
-        //Uso indice 0 perchè getClientiById ritorna un array con un solo elemento
-        $session->set('current_cliente_id', $data['cliente']["id"]); 
+        $session->set('current_cliente_id', $data['cliente']["id"]);
         $session->set('current_padre_id', $data['cliente']["padre_id"]);
 
         if ($data['cliente']["padre_id"]) {
@@ -91,33 +64,51 @@ class ClientiController extends BaseController
         }
 
         $data['licenze'] = $this->LicenzeModel->getLicenzeByCliente($id);
-
         $data['title'] = 'Scheda Cliente';
 
-        return view('clienti/schedaCliente', $data);
+        return view('clienti/show', $data);
     }
-    public function crea()
+
+    public function create()
     {
         $backTo = $this->resolveBackTo(base_url('/clienti'));
-        /**
-         * Creo un nuovo codice distintivo per il cliente interno
-         */
-        $prefix = 'IN';
-        $internal_code = $prefix . str_pad(random_int(1, 99999), 5, '0', STR_PAD_LEFT);
-        // Recupero i clienti padre per la select
+        $internal_code = $this->ClientiModel->generateInternalCode();
         $selectValues = $this->ClientiModel->getClientiPadre();
-
         return view('clienti/form', [
+            'title' => 'Crea Nuovo Cliente',
             'mode' => 'create',
-            'action' => '/clienti/salva',
-            'title' => 'Crea Nuovo Cliente Interno [' . esc($internal_code) . ']',
+            'cliente' => null,
+            'backTo' => $backTo,
             'internal_code' => $internal_code,
             'selectValues' => $selectValues,
-            'backTo' => $backTo,
+            'form' => [
+                'action' => site_url('clienti'),
+                'method' => 'post',
+                'spoof' => null,
+                'submitText' => 'Salva',
+                'readonly' => false,
+
+            ],
         ]);
     }
 
-    public function modifica($id)
+    public function store()
+    {
+        $data = $this->request->getPost();
+        if (!$data) {
+            return redirect()->back()->with('error', 'Dati mancanti per creare il cliente.');
+        }
+        if ($this->ClientiModel->save($data)) {
+            $clienteID = $this->ClientiModel->getInsertID();
+            return redirect()->to(
+                $this->resolveBackTo(base_url('/clienti/' . $clienteID))
+            )->with('success', 'Cliente creato con successo.');
+        } else {
+            return redirect()->back()->with('error', 'Errore durante la creazione del cliente.')->withInput();
+        }
+    }
+
+    public function edit($id)
     {
         $backTo = $this->resolveBackTo(base_url('/clienti'));
         $cliente = $this->ClientiModel->getClientiById($id);
@@ -126,81 +117,34 @@ class ClientiController extends BaseController
             'mode' => 'edit',
             'cliente' => $cliente,
             'action' => '/clienti/salva/' . $id,
-            'title' => 'Modifica Cliente ' .$cliente["nome"],
+            'title' => 'Modifica Cliente ' . $cliente["nome"],
             'selectValues' => $selectValues,
             'backTo' => $backTo,
         ]);
     }
 
-    public function elimina($id)
+    public function update($id)
     {
-        $this->ClientiModel->delete($id);
-        // Redirect o mostra un messaggio di successo
-        return redirect()->to($this->resolveBackTo(base_url('/clienti')))
-            ->with('success', 'Cliente eliminato con successo.');
-    }
-    public function salva($id = null)
-    {
-        log_message('info', 'ClientiController::salva - ');
-        log_message('info', 'ID ricevuto ' . $id);
         $data = $this->request->getPost();
-
-        if ($id == null) {
-            log_message('info', 'ID nullo ' . $id);
-            $clienteID = $this->ClientiModel->salva($data);
+        $data['id'] = $id; // Aggiungo l'ID per la modifica
+        if ($this->ClientiModel->save($data)) {
+            return redirect()->to(
+                $this->resolveBackTo(base_url('/clienti/' . $id))
+            )->with('success', 'Cliente aggiornato con successo.');
         } else {
-            $data['id'] = $clienteID = $id; // Aggiungo l'ID per la modifica
-            log_message('info', 'ID NON nullo ' . $id);
-            $this->ClientiModel->salva($data);
+            return redirect()->back()->with('error', 'Errore durante l\'aggiornamento del cliente.')->withInput();
         }
-        log_message('info', 'Ricevo questi dati nel CONTROLLER: ' . print_r($data, true) . ' - ClienteID: ' . $clienteID);
-        // Redirect o mostra un messaggio di successo
-        return redirect()->to($this->resolveBackTo(base_url('/clienti')))
-            ->with('success', 'Cliente salvato con successo.');
-
-    }
-    /*public function __clientiFilters()
-    {
-        $tipoLicenza = $this->request->getPost('tipoLicenza');
-        echo "Tipo licenza selezionato: " . $tipoLicenza;
-        if ($tipoLicenza) {
-        }
-        return view('clienti/form', [
-            'mode' => 'view',
-            'cliente' => $cliente,
-            'action' => '',
-            'title' => 'Dettagli Cliente ' . esc($cliente->nome),
-        ]);
-    }*/
-
-    public function countLicenzeByCliente()
-    {
-        $rows =  $this->LicenzeModel
-            ->select('clienti_id, COUNT(id) AS numLicenze')
-            ->groupBy('clienti_id')
-            ->findAll();
-        $result = array_column($rows, 'numLicenze', 'clienti_id');
-        //dd($result);
-        log_message('debug', 'LicenzeModel class: ' . get_class($this->LicenzeModel));
-        log_message('debug', 'LicenzeModel parent: ' . get_parent_class($this->LicenzeModel));
-        log_message('debug', 'afterFind: ' . json_encode($this->LicenzeModel->afterFind ?? null));
-        return $result;
-    }
-    public function getTipoLicenzeByCliente()
-    {
-        $rows = $this->LicenzeModel->select('clienti_id, tipo')
-            ->groupBy('clienti_id, tipo')
-            ->get()
-            ->getResultArray(); // array normale, nessuna indicizzazione su PK come in findAll()
-        // Estraggo un array associativo con clienti_id come chiave e tipo come valore 
-        $result = [];
-        foreach ($rows as $row) {
-            $result[$row['clienti_id']][] = $row['tipo'];
-        }
-        //log_message('info', 'tipoLicenzaPerCliente: ' . print_r($result, true));
-        return $result;
     }
 
+    public function delete($id)
+    {
+        if ($this->ClientiModel->delete($id)) {
+            return redirect()->to($this->resolveBackTo(base_url('/clienti')))
+                ->with('success', 'Cliente eliminato con successo.');
+        } else {
+            return redirect()->back()->with('error', 'Errore durante l\'eliminazione del cliente.');
+        }
+    }
 }
 
 /*

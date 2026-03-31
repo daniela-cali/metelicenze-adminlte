@@ -1,76 +1,72 @@
 <?php
-// Carica le configurazioni del sito
-$config = config('SiteConfig');
+$config   = config('SiteConfig');
 $siteName = $config->siteName ?? 'MeTe Licenze';
 ?>
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-        <a class="navbar-brand d-flex align-items-center" href="<?= base_url() ?>">
-            <img src="<?=  config('SiteConfig')->logoPath;
-            //log_message('debug', 'Logo path: ' . config('SiteConfig')->logoPath) ?>" alt="logo" class="logo-navbar me-2">
-            <span><?= esc($siteName) ?></span>
+<!--
+  app-header  → classe AdminLTE per la barra superiore fissa
+  navbar-expand → espanso di default (non collassa su mobile, lo fa la sidebar)
+  bg-body     → sfondo adattivo Bootstrap 5 (bianco in light, scuro in dark)
+-->
+<nav class="app-header navbar navbar-expand bg-body">
+  <div class="container-fluid">
+
+    <!-- Sinistra: toggle sidebar + brand -->
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <!--
+          data-lte-toggle="sidebar" → AdminLTE JS intercetta questo attributo
+          e apre/chiude la sidebar al click
+        -->
+        <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button" aria-label="Toggle sidebar">
+          <i class="bi bi-list"></i>
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+      </li>
+      <li class="nav-item d-none d-md-flex align-items-center ms-2">
+        <a class="navbar-brand d-flex align-items-center" href="<?= base_url() ?>">
+          <img src="<?= esc($config->logoPath) ?>" alt="logo" style="max-height: 32px; width: auto;" class="me-2">
+          <span class="fw-semibold"><?= esc($siteName) ?></span>
+        </a>
+      </li>
+    </ul>
 
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item"><a class="nav-link" href="<?= base_url('clienti') ?>">Clienti</a></li>
-                <!-- Dropdown Fornitori e tipi licenze -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="fornitoriDropdown" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        Fornitori
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="fornitoriDropdown">
-                        <li><a class="dropdown-item" href="<?= base_url('fornitori/') ?>">Elenco</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="<?= base_url('tipi/') ?>">Tipi Licenze</a></li>
+    <!-- Destra: utente -->
+    <ul class="navbar-nav ms-auto">
 
-                    </ul>
-                <li class="nav-item"><a class="nav-link" href="<?= base_url('licenze') ?>">Licenze</a></li>
-                <li class="nav-item"><a class="nav-link" href="<?= base_url('versioni') ?>">Versioni</a></li>
+      <?php if (function_exists('auth') && auth()->loggedIn()): ?>
 
-                <!-- Dropdown Database -->
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="databaseDropdown" role="button"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                        Admin
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="databaseDropdown">
-                        <li><a class="dropdown-item" href="<?= base_url('database/') ?>">Test Connessioni</a></li>
-                        <li><a class="dropdown-item" href="<?= base_url('utenti/') ?>">Utenti</a></li>
-                        <li><a class="dropdown-item" href="<?= base_url('admin/settings') ?>">Impostazioni App</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="<?= base_url('admin/import_clienti') ?>">Importa Clienti</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="<?= base_url('database/log') ?>">Log Database</a></li>
-                    </ul>
-                </li>
-            </ul>
+        <!-- Menu utente -->
+        <li class="nav-item dropdown user-menu">
+          <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-person-circle me-1"></i>
+            <span class="d-none d-md-inline"><?= esc(auth()->user()->username) ?></span>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li>
+              <a class="dropdown-item" href="<?= base_url('utenti/visualizza/' . auth()->user()->id) ?>">
+                <i class="bi bi-person me-2"></i> Profilo
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <a class="dropdown-item text-danger" href="<?= base_url('logout') ?>">
+                <i class="bi bi-box-arrow-right me-2"></i> Logout
+              </a>
+            </li>
+          </ul>
+        </li>
 
-            <ul class="navbar-nav">
-                <?php if (function_exists('auth') && auth()->loggedIn()): ?>
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?= base_url('utenti/visualizza/' . auth()->user()->id) ?>">
-                            <i class="bi bi-person-circle"></i> <?= esc(auth()->user()->username) ?>
-                        </a>
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?= base_url('logout') ?>">
-                            <i class="bi bi-box-arrow-right"></i> Logout
-                        </a>
-                    </li>
-                <?php else: ?>
-                    <li class="nav-item">
-                        <a class="nav-link" href="<?= base_url('login') ?>">
-                            <i class="bi bi-box-arrow-in-left"></i> Login
-                        </a>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" href="<?= base_url('register') ?>">Register</a></li>
-                <?php endif; ?>
-            </ul>
-        </div>
-    </div>
+      <?php else: ?>
+
+        <li class="nav-item">
+          <a class="nav-link" href="<?= base_url('login') ?>">
+            <i class="bi bi-box-arrow-in-left me-1"></i> Login
+          </a>
+        </li>
+
+      <?php endif; ?>
+
+    </ul>
+
+  </div>
 </nav>

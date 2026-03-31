@@ -1,7 +1,7 @@
  <?php
     log_message('info', 'View tabAggiornamenti variabile aggiornamenti' . print_r($aggiornamenti, true));
     if (!empty($aggiornamenti)): ?>
-     <table class="table table-bordered table-hover table-striped align-middle datatable">
+     <table class="table table-bordered table-striped table-hover align-middle datatable">
          <thead>
              <tr>
                  <th>ID</th>

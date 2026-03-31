@@ -8,8 +8,8 @@ class LicenzeModel extends AuditModel
 {
     protected $table            = 'licenze';
     protected $primaryKey       = 'id';
-    protected $beforeInsert = ['setFakePadre'];
-    protected $afterInsert = ['setPadreSelfIfMissing'];
+    protected $beforeInsert =   ['setFakePadre'];
+    protected $afterInsert =    ['setPadreSelfIfMissing'];
 
     protected $allowedFields = [
         'clienti_id',
@@ -25,58 +25,28 @@ class LicenzeModel extends AuditModel
         'tipo',
         'modello',
         'created_at',
+        'created_by',
         'updated_at',
+        'updated_by',
+        'deleted_at',
+        'deleted_by',
         'server',
         'conn',
         'ambiente',
         'nodo',
         'invii',
         'giga',
-        'created_at',
-        'created_by',
-        'updated_at',
-        'updated_by',
-        'deleted_at',
-        'deleted_by',
     ];
 
-
-    protected function created_by(array $data)
-    {
-        $user = auth()->user();
-
-        if ($user) {
-            $data['data']['created_by'] = $user->id ?? null;
-            $data['data']['updated_by'] = $user->id ?? null;
-        }
-        return $data;
-    }
-
-    protected function updated_by(array $data)
-    {
-        $user = auth()->user();
-
-        if ($user) {
-            $data['data']['updated_by'] = $user->id ?? null;
-        }
-        return $data;
-    }
     /**
      * Genera l'elenco delle licenze
      */
-    //protected $afterFind = ['decodeLicenza'];
 
-    public function __construct()
-    {
-        parent::__construct();
-        helper('decoding'); // carica app/Helpers/decoding_helper.php
-    }
     public function getLicenze()
     {
 
         return $this->select('*')
             ->orderBy('codice', 'ASC')
-
             ->findAll();
     }
 
@@ -110,12 +80,7 @@ class LicenzeModel extends AuditModel
         //log_message('info', 'tipoLicenzaPerCliente: ' . print_r($tipoLicenzaPerCliente, true));
         return $tipoLicenzaPerCliente;
     }
-    public function salva($data)
-    {
-        log_message('info', 'Ricevo i seguenti dati nel MODEL: ' . print_r($data, true));
-        return $this->save($data); // Restituisce l'ID della nuova licenza
 
-    }
     protected function setFakePadre(array $data)
     {
         // Imposto il valore a numerico positivo fittizio per evitare errori di incorrect integer value, poi dopo l'inserimento lo correggo con setPadreSelfIfMissing
@@ -157,10 +122,7 @@ class LicenzeModel extends AuditModel
             ->groupBy('clienti_id')
             ->findAll();
         $result = array_column($rows, 'numLicenze', 'clienti_id');
-        //dd($result);
-        log_message('debug', 'LicenzeModel class: ' . get_class($this->LicenzeModel));
-        log_message('debug', 'LicenzeModel parent: ' . get_parent_class($this->LicenzeModel));
-        log_message('debug', 'afterFind: ' . json_encode($this->LicenzeModel->afterFind ?? null));
+
         return $result;
     }
     public function getTipoLicenzeByCliente()

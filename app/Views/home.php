@@ -1,55 +1,129 @@
 <?php $this->extend('layouts/main'); ?>
+
+<?php $this->section('styles'); ?>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css">
+<?php $this->endSection(); ?>
+
+<?php $this->section('breadcrumb'); ?>
+<ol class="breadcrumb float-sm-end">
+    <li class="breadcrumb-item active">Dashboard</li>
+</ol>
+<?php $this->endSection(); ?>
+
 <?php $this->section('content'); ?>
 
-<header class="bg-light py-5 text-center">
-    <div class="container">
-        <h1 class="display-4 fw-bold">Benvenuto in <?= esc($siteName) ?></h1>
-        <p class="lead text-muted">Gestisci in modo semplice licenze, versioni e aggiornamenti software</p>
-    </div>
-</header>
+<!-- Riga contatori -->
+<div class="row g-3 mb-4">
 
-<main class="container my-5">
-    <div class="row g-4">
-
-        <!-- Clienti -->
-        <div class="col">
-            <div class="card h-100 text-center shadow-sm border-0">
-                <div class="card-body">
-                    <i class="bi bi-people-fill display-4 text-success"></i>
-                    <h5 class="card-title mt-3">Clienti</h5>
-                    <p class="card-text text-muted">Visualizza e gestisci l’elenco dei clienti.</p>
-                    <a href="<?= base_url('clienti') ?>" class="btn btn-success btn-outline-secondary">Vai ai clienti</a>
-                </div>
+    <!-- Clienti -->
+    <div class="col-12 col-sm-4">
+        <div class="info-box shadow-sm">
+            <span class="info-box-icon text-bg-secondary">
+                <i class="bi bi-people-fill"></i>
+            </span>
+            <div class="info-box-content">
+                <span class="info-box-text">Clienti</span>
+                <span class="info-box-number"><?= $totClienti ?></span>
+                <a href="<?= url_to('clienti_index') ?>" class="small text-muted">Vai all'elenco &rarr;</a>
             </div>
         </div>
-
-        <!-- Licenze -->
-        <div class="col">
-            <div class="card h-100 text-center shadow-sm border-0">
-                <div class="card-body">
-                    <i class="bi bi-key-fill display-4 text-primary"></i>
-                    <h5 class="card-title mt-3">Licenze</h5>
-                    <p class="card-text text-muted">Visualizza, crea e gestisci le licenze dei clienti.</p>
-                    <a href="<?= base_url('licenze') ?>" class="btn btn-primary btn-outline-secondary">Vai alle licenze</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Versioni -->
-        <div class="col">
-            <div class="card h-100 text-center shadow-sm border-0">
-                <div class="card-body">
-                    <i class="bi bi-tags-fill display-4 text-secondary"></i>
-                    <h5 class="card-title mt-3">Versioni</h5>
-                    <p class="card-text text-muted">Consulta le versioni disponibili del software.</p>
-                    <a href="<?= base_url('versioni') ?>" class="btn btn-secondary btn-outline-secondary">Vai alle versioni</a>
-                </div>
-            </div>
-        </div>
-
     </div>
 
+    <!-- Licenze -->
+    <div class="col-12 col-sm-4">
+        <div class="info-box shadow-sm">
+            <span class="info-box-icon text-bg-secondary">
+                <i class="bi bi-key-fill"></i>
+            </span>
+            <div class="info-box-content">
+                <span class="info-box-text">Licenze</span>
+                <span class="info-box-number"><?= $totLicenze ?></span>
+                <a href="<?= url_to('licenze_index') ?>" class="small text-muted">Vai all'elenco &rarr;</a>
+            </div>
+        </div>
+    </div>
 
-</main>
+    <!-- Versioni -->
+    <div class="col-12 col-sm-4">
+        <div class="info-box shadow-sm">
+            <span class="info-box-icon text-bg-secondary">
+                <i class="bi bi-tags-fill"></i>
+            </span>
+            <div class="info-box-content">
+                <span class="info-box-text">Versioni</span>
+                <span class="info-box-number"><?= $totVersioni ?></span>
+                <a href="<?= url_to('versioni_index') ?>" class="small text-muted">Vai all'elenco &rarr;</a>
+            </div>
+        </div>
+    </div>
 
+</div>
+
+<!-- Grafico distribuzione licenze per tipo -->
+<div class="row">
+    <div class="col-12 col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="bi bi-pie-chart-fill me-2"></i> Distribuzione licenze per tipo
+                </h5>
+            </div>
+            <div class="card-body">
+                <?php if (!empty($distribuzione)): ?>
+                <div id="chart-distribuzione"></div>
+                <?php else: ?>
+                <p class="text-center text-muted py-3">Nessuna licenza presente</p>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php $this->endSection(); ?>
+
+<?php $this->section('scripts'); ?>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.min.js"></script>
+<?php if (!empty($distribuzione)): ?>
+<script>
+    const distribuzioneData = <?= json_encode(array_values($distribuzione)) ?>;
+
+    const chart = new ApexCharts(document.querySelector('#chart-distribuzione'), {
+        series: distribuzioneData.map(r => parseInt(r.totale)),
+        labels: distribuzioneData.map(r => r.nome ?? 'Non specificato'),
+        chart: {
+            type: 'donut',
+            height: 320,
+        },
+        legend: {
+            position: 'bottom',
+        },
+        dataLabels: {
+            formatter: (val, opts) => {
+                return opts.w.config.series[opts.seriesIndex];
+            },
+        },
+        tooltip: {
+            y: {
+                formatter: val => val + ' licenze',
+            },
+        },
+        plotOptions: {
+            pie: {
+                donut: {
+                    labels: {
+                        show: true,
+                        total: {
+                            show: true,
+                            label: 'Totale',
+                            formatter: () => <?= $totLicenze ?>,
+                        },
+                    },
+                },
+            },
+        },
+    });
+
+    chart.render();
+</script>
+<?php endif; ?>
 <?php $this->endSection(); ?>
