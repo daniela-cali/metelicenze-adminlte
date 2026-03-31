@@ -75,6 +75,7 @@
                                 <th>N°</th>
                                 <th>Tipi</th>
                                 <th class="notexport">Azioni</th>
+                                <th class="notexport">Gruppo</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -135,6 +136,7 @@
                                             </li>
                                         </ul>
                                     </td>
+                                    <td><?= esc($cliente["gruppo"]) ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>

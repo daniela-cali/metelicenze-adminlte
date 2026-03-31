@@ -81,4 +81,11 @@ class ClientiModel extends AuditModel
             ->findAll();
     }
 
+    public function generateInternalCode()
+    {
+        $lastClient = $this->orderBy('id', 'DESC')->first();
+        $lastId = $lastClient ? (int)$lastClient['id'] : 0;
+        return 'CL' . str_pad($lastId + 1, 5, '0', STR_PAD_LEFT);
+    }
+
 }

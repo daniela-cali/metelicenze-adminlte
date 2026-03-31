@@ -79,7 +79,7 @@ class TipiLicenzeController extends BaseController
             'title' => 'Modifica Tipo Licenza: ' . $tipoLicenza["nome"],
             'backTo' => $this->resolveBackTo(base_url('/tipi')),
             'form' => [
-                'action' => url_to('tipi_update', $id),
+                'action' => url_to('tipi_aggiorna', $id),
                 'method' => 'POST',
                 'spoof' => 'PUT',
                 'submitText' => 'Aggiorna',

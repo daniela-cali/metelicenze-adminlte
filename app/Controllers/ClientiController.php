@@ -24,18 +24,22 @@ class ClientiController extends BaseController
     public function index(): string
     {
 
-
         $data['clienti'] = $this->ClientiModel->getClienti();
         $licenzeCount = $this->LicenzeModel->countLicenzeByCliente();
         $licenzeTipo = $this->LicenzeModel->getTipoLicenzeByCliente();
 
+        // Mappa id → nome per risolvere il nome del padre
+        $clientiMap = array_column($data['clienti'], 'nome', 'id');
+
         foreach ($data['clienti'] as &$cliente) {
             $id = $cliente["id"];
             log_message('info', '============== Elaboro il cliente con ID: ' . $id . ' - Nome: ' . $cliente["nome"]);
-            //log_message('info', 'Numero di licenze trovate: ' . ($licenzeCount[$id] ?? 0));    
             $cliente["numLicenze"] = $licenzeCount[$id] ?? 0;
             $cliente["tipiLicenze"] = isset($licenzeTipo[$id]) ? $licenzeTipo[$id] : [];
-            //log_message('info', '==============Cliente ID elaboranto con successo: ' . $cliente["id"] . ' - Nome: ' . $cliente["nome"] . ' - NumLicenze: ' . $cliente["numLicenze"] . ' - TipiLicenze: ' . print_r($cliente["tipiLicenze"], true));
+            // Gruppo: se figlio_sn=1 usa il nome del padre, altrimenti il proprio nome
+            $cliente["gruppo"] = ($cliente["figlio_sn"] == 1)
+                ? ($clientiMap[$cliente["padre_id"]] ?? $cliente["nome"])
+                : $cliente["nome"];
         }
         unset($cliente); // Termina la referenza
         $data['title'] = 'Elenco Clienti';
@@ -68,11 +72,15 @@ class ClientiController extends BaseController
     public function create()
     {
         $backTo = $this->resolveBackTo(base_url('/clienti'));
+        $internal_code = $this->ClientiModel->generateInternalCode();
+        $selectValues = $this->ClientiModel->getClientiPadre();
         return view('clienti/form', [
             'title' => 'Crea Nuovo Cliente',
             'mode' => 'create',
             'cliente' => null,
             'backTo' => $backTo,
+            'internal_code' => $internal_code,
+            'selectValues' => $selectValues,
             'form' => [
                 'action' => site_url('clienti'),
                 'method' => 'post',

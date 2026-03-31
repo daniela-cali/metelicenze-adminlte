@@ -22,7 +22,7 @@ $backTo = $backTo ?? back_to_url(base_url('/clienti'));
 
         <div class="card-body">
             <!--Aggiungo la modalità di creazione o modifica per il js-->
-            <form action="<?= $action ?>" method="post" data-mode="<?= $mode ?>">
+            <form action="<?= $form["action"] ?>" method="post" data-mode="<?= $mode ?>">
                 <input type="hidden" name="backTo" value="<?= isset($backTo) ? esc($backTo) : '' ?>">
 
                 <div class="mb-3">
