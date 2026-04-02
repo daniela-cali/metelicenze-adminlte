@@ -65,6 +65,25 @@ dl.dl-kv dd {
     border-bottom: 2px dashed rgba(0, 0, 0, .08);
 }
 
+/* Righe header di gruppo nella tabella clienti — !important per sovrascrivere table-striped */
+tr.group-header td {
+    background-color: #dee2e6 !important;
+    font-weight: 600;
+    font-size: .85rem;
+    letter-spacing: .03em;
+    padding: .35rem .75rem !important;
+    border-top: 2px solid #adb5bd !important;
+    border-bottom: none !important;
+}
+/* Bordo di chiusura sull'ultima riga del gruppo */
+tr.group-last td {
+    border-bottom: 2px solid #adb5bd !important;
+}
+/* Righe membro di un gruppo: sfondo uniforme, niente striped */
+tr.group-member td {
+    background-color: #f1f3f5 !important;
+}
+
 /* Logo navbar */
 .navbar .logo-navbar {
     max-height: 50px;
@@ -77,8 +96,32 @@ dl.dl-kv dd {
     width: auto;
 }
 
+
 .btn.btn-success {
     background-color: #B0E4CC !important;
     border-color: #28a745 !important;
     color: #000 !important;
+}
+
+/* =========================================================
+   Modalità ospite: blur dell'app + modal di login in primo piano
+   ========================================================= */
+
+/* Sfoca l'intera app quando l'utente non è autenticato */
+body.guest-mode .app-wrapper {
+    filter: blur(6px);
+    pointer-events: none;
+    user-select: none;
+}
+
+/* Header scuro del modal di login, coerente con il tema AdminLTE */
+#loginModal .modal-header {
+    background-color: #343a40;
+    color: #fff;
+}
+
+/* Logo nel header del modal */
+#loginModal .modal-header img {
+    max-height: 48px;
+    width: auto;
 }

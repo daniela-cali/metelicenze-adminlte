@@ -170,9 +170,64 @@
                 window.location.href = `${baseUrl}/clienti/${selectedClienteId}`;
             });
         });
-        // inizializza la DataTable 
+        // Pre-calcola i conteggi per gruppo dall'HTML PRIMA che DataTables inizializzi
+        // la tabella — così abbiamo i totali reali, indipendenti dalla paginazione.
+        const gruppiCount = {};
+        $('#clientiTable tbody tr').each(function() {
+            const gruppo = $(this).find('td').eq(9).text().trim();
+            if (gruppo) gruppiCount[gruppo] = (gruppiCount[gruppo] || 0) + 1;
+        });
+
+        // inizializza la DataTable
         const table = $('#clientiTable').DataTable($.extend(true, {}, datatableDefaults, {
             order: [],
+            columnDefs: [
+                { targets: 9, visible: false } // colonna "Gruppo" nascosta, usata solo per raggruppamento
+            ],
+            orderFixed: { pre: [[9, 'asc']] }, // forza sort per gruppo come primo criterio
+            drawCallback: function() {
+                // Tooltip (ripetuto perché questo drawCallback sovrascrive quello dei defaults)
+                document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function(el) {
+                    bootstrap.Tooltip.getOrCreateInstance(el);
+                });
+
+                // Aggiorna i conteggi rispettando i filtri attivi
+                const api = this.api();
+                const gruppiCountFiltered = {};
+                api.rows({ search: 'applied' }).every(function() {
+                    const gruppo = this.data()[9];
+                    gruppiCountFiltered[gruppo] = (gruppiCountFiltered[gruppo] || 0) + 1;
+                });
+
+                // Inietta header di gruppo, bordo di chiusura e classe sui membri
+                let lastGruppo = null;
+                let lastNode = null;
+                api.rows({ page: 'current' }).every(function() {
+                    const gruppo = this.data()[9];
+                    const node = this.node();
+                    if (gruppo !== lastGruppo) {
+                        if (lastNode && gruppiCountFiltered[lastGruppo] > 1) {
+                            $(lastNode).addClass('group-last');
+                        }
+                        if (gruppiCountFiltered[gruppo] > 1) {
+                            $(node).before(
+                                '<tr class="group-header"><td colspan="9"><strong>' + gruppo + '</strong></td></tr>'
+                            );
+                        }
+                        lastGruppo = gruppo;
+                    }
+                    // Marca le righe che appartengono a un gruppo reale (toglie lo striped)
+                    if (gruppiCountFiltered[gruppo] > 1) {
+                        $(node).addClass('group-member');
+                    } else {
+                        $(node).removeClass('group-member');
+                    }
+                    lastNode = node;
+                });
+                if (lastNode && gruppiCountFiltered[lastGruppo] > 1) {
+                    $(lastNode).addClass('group-last');
+                }
+            }
         }));
 
         // filtro custom: licenze + tipi

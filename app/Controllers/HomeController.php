@@ -10,25 +10,35 @@ class HomeController extends BaseController
 {
     public function index(): string
     {
-        $config = config('SiteConfig');
+        $config   = config('SiteConfig');
+        $loggedIn = auth()->loggedIn();
 
-        $clientiModel = new ClientiModel();
-        $licenzeModel = new LicenzeModel();
+        // Le query vengono eseguite solo se l'utente è autenticato.
+        // Quando non loggato, la home mostra la struttura dell'UI ma senza dati reali:
+        // il contenuto del DOM non conterrà numeri sensibili leggibili dai dev tools.
+        if ($loggedIn) {
+            $clientiModel = new ClientiModel();
+            $licenzeModel = new LicenzeModel();
 
-        // Conteggi generali
-        $totClienti  = $clientiModel->countAll();
-        $totLicenze  = $licenzeModel->countAll();
-        $totVersioni = (new VersioniModel())->countAll();
+            $totClienti  = $clientiModel->countAll();
+            $totLicenze  = $licenzeModel->countAll();
+            $totVersioni = (new VersioniModel())->countAll();
 
-        // Distribuzione licenze per tipo (campo tipo su licenze)
-        $db = \Config\Database::connect();
-        $distribuzione = $db->table('licenze')
-            ->select('tipo AS nome, COUNT(id) AS totale')
-            ->where('deleted_at IS NULL')
-            ->groupBy('tipo')
-            ->orderBy('totale', 'DESC')
-            ->get()
-            ->getResultArray();
+            $db = \Config\Database::connect();
+            $distribuzione = $db->table('licenze')
+                ->select('tipo AS nome, COUNT(id) AS totale')
+                ->where('deleted_at IS NULL')
+                ->groupBy('tipo')
+                ->orderBy('totale', 'DESC')
+                ->get()
+                ->getResultArray();
+        } else {
+            // Dati vuoti: nessuna query al DB, nessun dato nel DOM
+            $totClienti    = '—';
+            $totLicenze    = '—';
+            $totVersioni   = '—';
+            $distribuzione = [];
+        }
 
         return view('home', [
             'title'         => 'Dashboard',
@@ -38,6 +48,7 @@ class HomeController extends BaseController
             'totLicenze'    => $totLicenze,
             'totVersioni'   => $totVersioni,
             'distribuzione' => $distribuzione,
+            'loggedIn'      => $loggedIn,
         ]);
     }
 }

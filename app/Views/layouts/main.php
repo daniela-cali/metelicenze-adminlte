@@ -144,6 +144,7 @@
   <script src="https://cdn.datatables.net/searchpanes/2.3.5/js/dataTables.searchPanes.min.js"></script>
   <script src="https://cdn.datatables.net/searchpanes/2.3.5/js/searchPanes.bootstrap5.min.js"></script>
 
+
   <!-- baseUrl per i file locali -->
   <script>
     const baseUrl = "<?= base_url() ?>";

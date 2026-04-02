@@ -79,6 +79,35 @@
     </div>
 </div>
 
+
+<?php if (!$loggedIn): ?>
+<!-- Modal di login: si sovrappone al contenuto sfocato, non chiudibile dall'utente -->
+<div class="modal fade" id="loginModal" tabindex="-1"
+     data-bs-backdrop="static" data-bs-keyboard="false"
+     aria-labelledby="loginModalLabel" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content shadow-lg">
+
+            <!-- Header scuro con logo e nome dell'applicazione -->
+            <div class="modal-header">
+                <img src="<?= config('SiteConfig')->logoPath ?>"
+                     alt="<?= esc(config('SiteConfig')->siteName) ?>"
+                     class="me-3">
+                <h5 class="modal-title mb-0" id="loginModalLabel">
+                    <?= esc(config('SiteConfig')->siteName) ?> — Accesso
+                </h5>
+            </div>
+
+            <!-- Form di login riusato dal partial Shield/_login_form -->
+            <div class="modal-body px-4 pb-4">
+                <?= view('Shield/_login_form') ?>
+            </div>
+
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
 <?php $this->endSection(); ?>
 
 <?php $this->section('scripts'); ?>
@@ -126,4 +155,26 @@
     chart.render();
 </script>
 <?php endif; ?>
+
+<?php if (!$loggedIn): ?>
+<script>
+    // Modalità ospite: attiva blur sull'app e mostra il modal di login
+    document.addEventListener('DOMContentLoaded', function () {
+        // Sposta il modal come figlio diretto di <body> (era dentro .app-wrapper)
+        // così non viene colpito dal filter:blur applicato all'app-wrapper
+        document.body.appendChild(document.getElementById('loginModal'));
+
+        // Aggiunge la classe che applica il filtro blur all'app-wrapper via custom.css
+        document.body.classList.add('guest-mode');
+
+        // Mostra il modal in modo non chiudibile (backdrop=static, keyboard=false)
+        const loginModal = new bootstrap.Modal(document.getElementById('loginModal'), {
+            backdrop: 'static',
+            keyboard: false,
+        });
+        loginModal.show();
+    });
+</script>
+<?php endif; ?>
+
 <?php $this->endSection(); ?>

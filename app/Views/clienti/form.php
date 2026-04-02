@@ -11,6 +11,7 @@
 <?= $this->section('content') ?>
 <?php
 $backTo = $backTo ?? back_to_url(base_url('/clienti'));
+//dd(get_defined_vars());
 ?>
 <div class="card shadow-sm">
     <div class="card-header d-flex justify-content-between align-items-center">

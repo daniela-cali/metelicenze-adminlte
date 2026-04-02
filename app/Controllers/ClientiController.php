@@ -63,9 +63,18 @@ class ClientiController extends BaseController
             $data['cliente']['padre_nome'] = $padre['nome'] ?? null;
         }
 
-        $data['licenze'] = $this->LicenzeModel->getLicenzeByCliente($id);
-        $data['title'] = 'Scheda Cliente';
-
+        $data = [
+            'title' => 'Scheda Cliente ',
+            'mode' => 'view',
+            'cliente' => $data['cliente'],
+            'backTo' => $this->backTo,
+            'form' => [
+                'action' => site_url('clienti'),
+                'method' => 'post',
+                'spoof' => null,
+                'readonly' => true,
+            ]
+        ];
         return view('clienti/show', $data);
     }
 
@@ -113,14 +122,22 @@ class ClientiController extends BaseController
         $backTo = $this->resolveBackTo(base_url('/clienti'));
         $cliente = $this->ClientiModel->getClientiById($id);
         $selectValues = $this->ClientiModel->getClientiPadre();
-        return view('clienti/form', [
+        $data = [
+            'title' => 'Modifica Cliente ' . $cliente["nome"],
             'mode' => 'edit',
             'cliente' => $cliente,
-            'action' => '/clienti/salva/' . $id,
-            'title' => 'Modifica Cliente ' . $cliente["nome"],
+            'form' => [
+                'action' => site_url('clienti'),
+                'method' => 'post',
+                'spoof' => null,
+                'submitText' => 'Salva',
+                'readonly' => false,
+
+            ],
             'selectValues' => $selectValues,
             'backTo' => $backTo,
-        ]);
+        ];
+        return view('clienti/form', $data);
     }
 
     public function update($id)
