@@ -168,6 +168,21 @@
   <script src="<?= base_url('assets/js/datatable-init.js') ?>"></script>
   <script src="<?= base_url('assets/js/table-manager.js') ?>"></script>
 
+  <!-- Gestione globale modalità "view": disabilita tutti i campi dei form con data-mode="view" -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.querySelector('form[data-mode="view"]');
+      if (!form) return;
+      form.querySelectorAll('input, select, textarea').forEach(function(el) {
+        el.readOnly = true;
+        el.disabled = true;
+      });
+      form.querySelectorAll('button[type="submit"]').forEach(function(btn) {
+        btn.disabled = true;
+      });
+    });
+  </script>
+
   <!-- Script specifici pagina -->
   <?= $this->renderSection('scripts') ?>
 

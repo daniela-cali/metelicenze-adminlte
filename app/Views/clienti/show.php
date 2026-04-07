@@ -51,7 +51,7 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0"><i class="bi bi-person-badge"></i> Dati Anagrafici</h5>
-            <a href="<?= base_url("/clienti/modifica/" . $cliente["id"]) ?>" class="btn btn-light btn-outline-secondary btn-sm" title="Modifica">
+            <a href="<?= url_to('clienti_modifica', $cliente["id"]) ?>" class="btn btn-light btn-outline-secondary btn-sm" title="Modifica">
                 Modifica <i class="bi bi-pencil"></i>
             </a>
         </div>

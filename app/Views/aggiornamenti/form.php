@@ -55,19 +55,4 @@
         </div>
 </div>
 <?= $this->endSection() ?>
-<?= $this->section('scripts') ?>
-<script>
-    $(document).ready(function() {
-        // Inizializza il form con i dati della licenza se esistono
-        const mode = $('form').data('mode');
-        console.log('Modalità: ' + mode);
-        if (mode === 'view') {
-            // Se la modalità è "view", rendo tutti i campi readonly
-            $('input, select, textarea').prop('readonly', true).prop('disabled', true);
-            // Disabilito anche il bottone del form
-            $('button[type="submit"]').prop('disabled', true);
-        }
-
-    });
-</script>
 <?= $this->endSection() ?>

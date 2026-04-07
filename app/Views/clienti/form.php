@@ -76,7 +76,7 @@ $backTo = $backTo ?? back_to_url(base_url('/clienti'));
                 <label
                     for="figlio_sn"
                     class="form-check-label form-label">
-                    Cliente interno
+                    Cliente Figlio
                 </label>
                 <input type="hidden" name="figlio_sn" value="0" />
                 <input
@@ -146,17 +146,7 @@ $backTo = $backTo ?? back_to_url(base_url('/clienti'));
         const mode = form.dataset.mode || "edit"; // default "edit" se non esiste
         console.log("Modalità:", mode);
 
-        if (mode === "view") {
-            // Se la modalità è "view", rendo tutti i campi readonly/disabled
-            form.querySelectorAll("input, select, textarea").forEach(el => {
-                el.readOnly = true;
-                el.disabled = true;
-            });
-            // Disabilito anche il bottone del form
-            form.querySelectorAll('button[type="submit"]').forEach(btn => {
-                btn.disabled = true;
-            });
-        }
+        // Il blocco readonly/disabled per la modalità "view" è gestito globalmente dal layout.
 
         // Aggancio eventi alla checkbox figlio_sn
         const figlio_sn = document.getElementById("figlio_sn");
