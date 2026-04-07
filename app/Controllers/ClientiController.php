@@ -17,7 +17,7 @@ class ClientiController extends BaseController
     {
         $this->ClientiModel = new ClientiModel();
         $this->LicenzeModel = new LicenzeModel();
-        $this->backTo = base_url('/clienti');
+        $this->backTo = url_to('clienti_index');
     }
 
 
@@ -50,23 +50,26 @@ class ClientiController extends BaseController
 
     public function show($id)
     {
-        $this->backTo = base_url('clienti');
+        $this->backTo = url_to('clienti_index');
         $session = session();
         $session->set('backTo', $this->backTo);
 
-        $data['cliente'] = $this->ClientiModel->getClientiById($id);
-        $session->set('current_cliente_id', $data['cliente']["id"]);
-        $session->set('current_padre_id', $data['cliente']["padre_id"]);
+        $cliente = $this->ClientiModel->getClientiById($id);
+        $session->set('current_cliente_id', $cliente["id"]);
+        $session->set('current_padre_id', $cliente["padre_id"]);
 
-        if ($data['cliente']["padre_id"]) {
-            $padre = $this->ClientiModel->getClientiById($data['cliente']['padre_id']);
-            $data['cliente']['padre_nome'] = $padre['nome'] ?? null;
+        $licenze = $this->LicenzeModel->getLicenzeByCliente($id);
+
+        if ($cliente["padre_id"]) {
+            $padre = $this->ClientiModel->getClientiById($cliente['padre_id']);
+            $cliente['padre_nome'] = $padre['nome'] ?? null;
         }
 
         $data = [
             'title' => 'Scheda Cliente ',
             'mode' => 'view',
-            'cliente' => $data['cliente'],
+            'cliente' => $cliente,
+            'licenze' => $licenze,
             'backTo' => $this->backTo,
             'form' => [
                 'action' => site_url('clienti'),
@@ -80,7 +83,7 @@ class ClientiController extends BaseController
 
     public function create()
     {
-        $backTo = $this->resolveBackTo(base_url('/clienti'));
+        $backTo = $this->resolveBackTo(url_to('clienti_index'));
         $internal_code = $this->ClientiModel->generateInternalCode();
         $selectValues = $this->ClientiModel->getClientiPadre();
         return view('clienti/form', [
@@ -110,7 +113,7 @@ class ClientiController extends BaseController
         if ($this->ClientiModel->save($data)) {
             $clienteID = $this->ClientiModel->getInsertID();
             return redirect()->to(
-                $this->resolveBackTo(base_url('/clienti/' . $clienteID))
+                $this->resolveBackTo(url_to('clienti_show', $clienteID))
             )->with('success', 'Cliente creato con successo.');
         } else {
             return redirect()->back()->with('error', 'Errore durante la creazione del cliente.')->withInput();
@@ -119,7 +122,7 @@ class ClientiController extends BaseController
 
     public function edit($id)
     {
-        $backTo = $this->resolveBackTo(base_url('/clienti'));
+        $backTo = $this->resolveBackTo(url_to('clienti_index'));
         $cliente = $this->ClientiModel->getClientiById($id);
         $selectValues = $this->ClientiModel->getClientiPadre();
         $data = [
@@ -146,7 +149,7 @@ class ClientiController extends BaseController
         $data['id'] = $id; // Aggiungo l'ID per la modifica
         if ($this->ClientiModel->save($data)) {
             return redirect()->to(
-                $this->resolveBackTo(base_url('/clienti/' . $id))
+                $this->resolveBackTo(url_to('clienti_show', $id))
             )->with('success', 'Cliente aggiornato con successo.');
         } else {
             return redirect()->back()->with('error', 'Errore durante l\'aggiornamento del cliente.')->withInput();
@@ -156,7 +159,7 @@ class ClientiController extends BaseController
     public function delete($id)
     {
         if ($this->ClientiModel->delete($id)) {
-            return redirect()->to($this->resolveBackTo(base_url('/clienti')))
+            return redirect()->to($this->resolveBackTo(url_to('clienti_index')))
                 ->with('success', 'Cliente eliminato con successo.');
         } else {
             return redirect()->back()->with('error', 'Errore durante l\'eliminazione del cliente.');

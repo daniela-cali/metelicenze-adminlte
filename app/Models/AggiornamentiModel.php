@@ -33,7 +33,7 @@ class AggiornamentiModel extends AuditModel
             ->where('aggiornamenti.licenze_id', $id_licenza)
             ->orderBy('aggiornamenti.dt_agg', 'DESC')
             ->findAll();
-        //log_message('info', 'AggiornamentiModel::getByLicenza - Query: ' . $this->getLastQuery());
+        log_message('info', 'AggiornamentiModel::getByLicenza - Query: ' . $this->getLastQuery());
         // Esegui la query e restituisci i risultati
         log_message('info', 'AggiornamentiModel::getByLicenza - Risultati: ' . print_r($aggiornamenti, true));
 
@@ -57,26 +57,6 @@ class AggiornamentiModel extends AuditModel
         return $aggiornamento;
     }
 
-    /*function getLastAggiornamenti()
-    {
-        $db = \Config\Database::connect();
-        $subquery = $db->table('aggiornamenti a2')
-            ->select('MAX(a2.dt_agg)')
-            ->where('a2.licenze_id = aggiornamenti.licenze_id')
-            ->getCompiledSelect();
-
-        $builder = $db->table('aggiornamenti')
-            ->select('aggiornamenti.id as aggiornamento_id, aggiornamenti.dt_agg as ultimo_aggiornamento, versioni.id AS versione_id, versioni.codice AS versione_codice, versioni.ultima AS ultima, licenze.codice AS licenza_codice, licenze.id AS licenza_id, licenze.clienti_id AS cliente_id ')
-            ->join('versioni', 'aggiornamenti.versioni_id = versioni.id')
-            ->join('licenze', 'aggiornamenti.licenze_id = licenze.id')
-            ->where("aggiornamenti.dt_agg = ($subquery)", null, false);
-
-        $query = $builder->get();
-        $ultimiAggiornamenti = $query->getResult('array');
-        //dd($ultimiAggiornamenti);
-        //log_message('info', 'AggiornamentiModel::getLastAggiornamenti - Risultati: ' . print_r($ultimiAggiornamenti, true));
-        return $ultimiAggiornamenti;
-    }*/
     function getLastAggiornamenti()
     {
         return $this->select('aggiornamenti.id as aggiornamento_id, aggiornamenti.dt_agg as ultimo_aggiornamento, versioni.id AS versione_id, versioni.codice AS versione_codice, versioni.ultima AS ultima, licenze.codice AS licenza_codice, licenze.id AS licenza_id, licenze.clienti_id AS cliente_id ')
@@ -89,10 +69,5 @@ class AggiornamentiModel extends AuditModel
             })
             ->findAll();
     }
-    function modelSave($data){
-        log_message('info', 'AggiornamentiModel::modelSave - Dati ricevuti: ' . print_r($data, true));
-        $result = $this->save($data);
-        log_message('info', 'AggiornamentiModel::modelSave - Risultato save: ' . print_r($result, true));
-        return $result;
-    }
+
 }

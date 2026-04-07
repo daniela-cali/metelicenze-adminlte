@@ -58,6 +58,8 @@ class LicenzeModel extends AuditModel
 
     public function getLicenzeById($idLicenza)
     {   //Sto cercando per chiave primaria pertanto non serve il where
+    //$licenza = $this->find($idLicenza);
+          //dd($licenza);
         return $this->find($idLicenza);
     }
 

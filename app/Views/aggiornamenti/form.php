@@ -1,15 +1,24 @@
 <?= $this->extend('layouts/main') ?>
 
+<?= $this->section('breadcrumb') ?>
+<ol class="breadcrumb float-sm-end">
+    <li class="breadcrumb-item"><a href="<?= base_url('/') ?>">Dashboard</a></li>
+    <li class="breadcrumb-item active"><?= esc($title) ?></li>
+</ol>
+<?= $this->endSection() ?>
+
 <?= $this->section('content') ?>
-<div class="container my-5">
-    <div class="card shadow-sm">
-        <div class="card-header bg-primary  d-flex justify-content-between align-items-center">
-            <h5 class="mb-0"><i class="bi bi-key-fill"></i> <?= esc($title) ?> </h5>           
-        </div>
+<div class="card shadow-sm">
+    <div class="card-header card-header-muted d-flex align-items-center">
+        <h5 class="mb-0"><i class="bi bi-arrow-repeat"></i> <?= esc($title) ?></h5>
+        <a href="<?= esc($backTo) ?>" class="btn btn-light btn-sm ms-auto">
+            <i class="bi bi-arrow-left"></i> Indietro
+        </a>
+    </div>
 
         <div class="card-body">
             <!--Aggiungo la modalità di creazione o modifica per il js-->
-            <form action="<?= $action ?>" method="post" data-mode="<?= $mode ?>">
+            <form action="<?= $form['action'] ?>" method="<?= $form['method'] ?>" data-mode="<?= $mode ?>">
                 <input type="hidden" name="backTo" value="<?= esc($backTo) ?>">
                 <input type="hidden" name="id" value="<?= isset($aggiornamento->id) ? esc($aggiornamento->id) : '' ?>">
 
@@ -44,7 +53,6 @@
                 </div>
             </form>
         </div>
-    </div>
 </div>
 <?= $this->endSection() ?>
 <?= $this->section('scripts') ?>

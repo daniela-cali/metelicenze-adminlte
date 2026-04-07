@@ -18,7 +18,7 @@
     <!-- Clienti -->
     <div class="col-12 col-sm-4">
         <div class="info-box shadow-sm">
-            <span class="info-box-icon text-bg-secondary">
+            <span class="info-box-icon text-bg-success">
                 <i class="bi bi-people-fill"></i>
             </span>
             <div class="info-box-content">
@@ -32,7 +32,7 @@
     <!-- Licenze -->
     <div class="col-12 col-sm-4">
         <div class="info-box shadow-sm">
-            <span class="info-box-icon text-bg-secondary">
+            <span class="info-box-icon text-bg-primary">
                 <i class="bi bi-key-fill"></i>
             </span>
             <div class="info-box-content">
@@ -46,7 +46,7 @@
     <!-- Versioni -->
     <div class="col-12 col-sm-4">
         <div class="info-box shadow-sm">
-            <span class="info-box-icon text-bg-secondary">
+            <span class="info-box-icon text-bg-warning">
                 <i class="bi bi-tags-fill"></i>
             </span>
             <div class="info-box-content">

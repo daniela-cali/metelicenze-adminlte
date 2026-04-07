@@ -105,20 +105,21 @@ class FornitoriController extends BaseController
     {
         $fornitore = $this->FornitoriModel->getFornitoriById($id);
         $backTo = $this->resolveBackTo(base_url('/fornitori'));
-        return view('fornitori/form', [
+        $data = [
             'mode' => 'edit',
             'fornitore' => $fornitore,
-            'action' => 'fornitori/' . $id . '/edit',
+
             'title' => 'Modifica Fornitore ' . $fornitore["nome"],
             'backTo' => $backTo,
             'form' => [
-                'action' => site_url('fornitori/' . $id),
+                'action' => url_to('fornitori_salva', $id),
                 'method' => 'POST',
                 'spoof' => 'PUT',
                 'submitText' => 'Aggiorna',
                 'readonly' => false,
             ],
-        ]);
+        ];
+        return view('fornitori/form', $data);
     }
 
     public function update($id)

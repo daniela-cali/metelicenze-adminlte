@@ -21,7 +21,7 @@ class TipiLicenzeModel extends AuditModel
         'created_at',
         'updated_at',
     ];
-    protected $afterFind = ['decode_user', 'decode_categoria'];
+    protected $afterFind = ['decode_categoria'];
 
     public function getTipiLicenza()
     {

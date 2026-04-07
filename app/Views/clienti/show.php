@@ -126,7 +126,7 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0"><i class="bi bi-key-fill"></i> Licenze</h5>
-            <a href="<?= base_url("/licenze/crea/" . $cliente["id"]) ?>" class="btn btn-light btn-outline-secondary btn-sm" title="Nuova Licenza per il cliente">
+            <a href="<?= url_to('licenze_crea', $cliente["id"]) ?>" class="btn btn-light btn-outline-secondary btn-sm" title="Nuova Licenza per il cliente">
                 <i class="bi bi-key-fill"></i> Nuova Licenza
             </a>
         </div>
@@ -159,15 +159,13 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <a href="/aggiornamenti/crea/<?= $licenza["padre_lic_id"] ?>/<?= $licenza["tipo"] ?> " class="btn btn-sm btn-outline-primary" title="Crea Aggiornamento">
+                                    <a href="<?= url_to('aggiornamenti_crea', $licenza["padre_lic_id"], $licenza["tipo"]) ?>" class="btn btn-sm btn-outline-primary" title="Crea Aggiornamento">
                                         <i class="bi bi-clock-history"></i>
                                     </a>
-                                        <a href="/licenze/modifica/<?= $licenza["id"] //Modifico la licenza stessa
-                                                                    ?>" class="btn btn-sm btn-outline-secondary" title="Modifica">
+                                        <a href="<?= url_to('licenze_modifica', $licenza["id"]) ?>" class="btn btn-sm btn-outline-secondary" title="Modifica">
                                             <i class="bi bi-pencil"></i>
                                         </a>
-                                        <a href="/licenze/elimina/<?= $licenza["id"]     //Elimino la licenza stessa
-                                                                    ?>" class="btn btn-sm btn-outline-danger" title="Elimina" onclick=" return confirm('Sei sicuro di voler eliminare questa licenza?');">
+                                        <a href="<?= url_to('licenze_elimina', $licenza["id"]) ?>" class="btn btn-sm btn-outline-danger" title="Elimina" onclick=" return confirm('Sei sicuro di voler eliminare questa licenza?');">
                                             <i class="bi bi-trash"></i>
                                         </a>
                                 </td>

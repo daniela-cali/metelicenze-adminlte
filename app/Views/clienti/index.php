@@ -60,92 +60,93 @@
 </div>
 <div>
 
-                <?php if (!empty($clienti)): ?>
-                    <?php //dd($clienti) ?>
+    <?php if (!empty($clienti)): ?>
+        <?php //dd($clienti) 
+        ?>
 
-                    <table class="table table-bordered table-striped table-hover align-middle datatable" id="clientiTable">
-                        <thead class="table-secondary">
-                            <tr>
-                                <th>ID</th>
-                                <th>Codice cliente</th>
-                                <th>Nome</th>
-                                <th>Email</th>
-                                <th>Telefono</th>
-                                <th class="notexport">Città</th>
-                                <th>N°</th>
-                                <th>Tipi</th>
-                                <th class="notexport">Azioni</th>
-                                <th class="notexport">Gruppo</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($clienti as $cliente): ?>
-                                <tr class="cliente-row"
-                                data-id="<?= esc($cliente["id"]) ?>"
-                                <?= audit_tooltip($cliente) ?>>
-                                    <td><?= esc($cliente["id"]) ?></td>
-                                    <td><?= esc($cliente["codice"]) ?></td>
-                                    <td><?= esc($cliente["nome"]) ?></td>
-                                    <td><?= esc($cliente["email"]) ?></td>
-                                    <td><?= esc($cliente["telefono"]) ?></td>
-                                    <td><?= esc($cliente["citta"]) ?></td>
-                                    <td>
-                                        <?php if ($cliente["numLicenze"] > 0):
-                                        ?>
-                                            <span class="badge bg-success">
-                                                <?php echo $cliente["numLicenze"] ?> </span>
-                                        <?php else:
-                                        ?>
-                                            <span class="badge bg-secondary">0</span>
-                                        <?php endif;
-                                        ?>
-                                    </td>
-                                    <td>
-                                        <?php // Visualizzo i tipi di licenze come lista
-                                        foreach ($cliente["tipiLicenze"] as $tipo): ?>
-                                            <span class="badge d-block bg-transparent text-dark"><?= esc($tipo) ?></span>
-                                        <?php endforeach; ?>
-                                    </td>
-                                    <td>
-                                        <button class="btn dropdown-toggle" type="button" id="azione" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="bi bi-list"></i>
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                            <li>
-                                                <a class="dropdown-item" href="<?= url_to('clienti_scheda', $cliente["id"]) ?>">
-                                                    <i class="bi bi-person-vcard"></i>
-                                                    Scheda Cliente
-                                                </a>
-                                            </li>
-
-                                            <li>
-                                                <a class="dropdown-item" href="<?= url_to('clienti_modifica', $cliente["id"]) ?>">
-                                                    <i class="bi bi-pencil"></i>
-                                                    Modifica
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <hr class="dropdown-divider">
-                                            </li>
-
-                                            <li class="">
-                                                <a class="dropdown-item text-danger" href="<?= url_to('clienti_elimina', $cliente["id"]) ?>">
-                                                    <i class="bi bi-trash"></i>
-                                                    Elimina
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </td>
-                                    <td><?= esc($cliente["gruppo"]) ?></td>
-                                </tr>
+        <table class="table table-bordered table-striped table-hover align-middle datatable" id="clientiTable">
+            <thead class="table-secondary">
+                <tr>
+                    <th>ID</th>
+                    <th>Codice cliente</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Telefono</th>
+                    <th class="notexport">Città</th>
+                    <th>N°</th>
+                    <th>Tipi</th>
+                    <th class="notexport">Azioni</th>
+                    <th class="notexport">Gruppo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($clienti as $cliente): ?>
+                    <tr class="cliente-row"
+                        data-id="<?= esc($cliente["id"]) ?>"
+                        <?= audit_tooltip($cliente) ?>>
+                        <td><?= esc($cliente["id"]) ?></td>
+                        <td><?= esc($cliente["codice"]) ?></td>
+                        <td><?= esc($cliente["nome"]) ?></td>
+                        <td><?= esc($cliente["email"]) ?></td>
+                        <td><?= esc($cliente["telefono"]) ?></td>
+                        <td><?= esc($cliente["citta"]) ?></td>
+                        <td>
+                            <?php if ($cliente["numLicenze"] > 0):
+                            ?>
+                                <span class="badge bg-success">
+                                    <?php echo $cliente["numLicenze"] ?> </span>
+                            <?php else:
+                            ?>
+                                <span class="badge bg-secondary">0</span>
+                            <?php endif;
+                            ?>
+                        </td>
+                        <td>
+                            <?php // Visualizzo i tipi di licenze come lista
+                            foreach ($cliente["tipiLicenze"] as $tipo): ?>
+                                <span class="badge d-block bg-transparent text-dark"><?= esc($tipo) ?></span>
                             <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                <?php else: ?>
-                    <div class="alert alert-info">
-                        <i class="bi bi-info-circle"></i> Nessun cliente trovato nel database.
-                    </div>
-                <?php endif; ?>
+                        </td>
+                        <td>
+                            <button class="btn dropdown-toggle" type="button" id="azione" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-list"></i>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li>
+                                    <a class="dropdown-item" href="<?= url_to('clienti_scheda', $cliente["id"]) ?>">
+                                        <i class="bi bi-person-vcard"></i>
+                                        Scheda Cliente
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="dropdown-item" href="<?= url_to('clienti_modifica', $cliente["id"]) ?>">
+                                        <i class="bi bi-pencil"></i>
+                                        Modifica
+                                    </a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+
+                                <li class="">
+                                    <a class="dropdown-item text-danger" href="<?= url_to('clienti_elimina', $cliente["id"]) ?>">
+                                        <i class="bi bi-trash"></i>
+                                        Elimina
+                                    </a>
+                                </li>
+                            </ul>
+                        </td>
+                        <td><?= esc($cliente["gruppo"]) ?></td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php else: ?>
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> Nessun cliente trovato nel database.
+        </div>
+    <?php endif; ?>
 </div>
 
 <?= $this->endSection() ?>
@@ -181,10 +182,16 @@
         // inizializza la DataTable
         const table = $('#clientiTable').DataTable($.extend(true, {}, datatableDefaults, {
             order: [],
-            columnDefs: [
-                { targets: 9, visible: false } // colonna "Gruppo" nascosta, usata solo per raggruppamento
+            columnDefs: [{
+                    targets: 9,
+                    visible: false
+                } // colonna "Gruppo" nascosta, usata solo per raggruppamento
             ],
-            orderFixed: { pre: [[9, 'asc']] }, // forza sort per gruppo come primo criterio
+            orderFixed: {
+                pre: [
+                    [9, 'asc']
+                ]
+            }, // forza sort per gruppo come primo criterio
             drawCallback: function() {
                 // Tooltip (ripetuto perché questo drawCallback sovrascrive quello dei defaults)
                 document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function(el) {
@@ -194,7 +201,9 @@
                 // Aggiorna i conteggi rispettando i filtri attivi
                 const api = this.api();
                 const gruppiCountFiltered = {};
-                api.rows({ search: 'applied' }).every(function() {
+                api.rows({
+                    search: 'applied'
+                }).every(function() {
                     const gruppo = this.data()[9];
                     gruppiCountFiltered[gruppo] = (gruppiCountFiltered[gruppo] || 0) + 1;
                 });
@@ -202,7 +211,9 @@
                 // Inietta header di gruppo, bordo di chiusura e classe sui membri
                 let lastGruppo = null;
                 let lastNode = null;
-                api.rows({ page: 'current' }).every(function() {
+                api.rows({
+                    page: 'current'
+                }).every(function() {
                     const gruppo = this.data()[9];
                     const node = this.node();
                     if (gruppo !== lastGruppo) {

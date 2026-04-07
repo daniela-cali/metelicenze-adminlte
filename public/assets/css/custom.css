@@ -84,6 +84,11 @@ tr.group-member td {
     background-color: #f1f3f5 !important;
 }
 
+/* Card header con grigio lievemente più marcato di bg-light (#f8f9fa → #e9ecef = gray-200 Bootstrap) */
+.card-header-muted {
+    background-color: #e9ecef;
+}
+
 /* Logo navbar */
 .navbar .logo-navbar {
     max-height: 50px;

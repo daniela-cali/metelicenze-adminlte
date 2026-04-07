@@ -34,21 +34,22 @@ $routes->group('clienti', ['filter' => 'notpending'], function($routes) {
 
 $routes->group('licenze', ['filter' => 'notpending'], function($routes) {
     $routes->get('/', 'LicenzeController::index', ['as' => 'licenze_index']);
-    $routes->get('crea/(:num)', 'LicenzeController::crea/$1', ['as' => 'licenze_crea']);
-    $routes->get('modifica/(:num)', 'LicenzeController::modifica/$1', ['as' => 'licenze_modifica']);
-    $routes->get('elimina/(:num)', 'LicenzeController::elimina/$1', ['as' => 'licenze_elimina']);
-    $routes->get('visualizza/(:num)', 'LicenzeController::visualizza/$1', ['as' => 'licenze_visualizza']);
-    $routes->post('salva/(:num)/', 'LicenzeController::salva/$1', ['as' => 'licenze_salva_IDCli']);
-    $routes->post('salva/(:num)/(:num)/', 'LicenzeController::salva/$1/$2', ['as' => 'licenze_salva_IDCli_IDLic']);
+    $routes->get('(:num)', 'LicenzeController::show/$1', ['as' => 'licenze_scheda']);
+    $routes->get('crea/(:num)', 'LicenzeController::create/$1', ['as' => 'licenze_crea']); // Passo l'ID del cliente alla funzione create
+    $routes->post('/', 'LicenzeController::store', ['as' => 'licenze_salva']);
+    $routes->get('modifica/(:num)', 'LicenzeController::edit/$1', ['as' => 'licenze_modifica']);
+    $routes->put('(:num)', 'LicenzeController::update/$1', ['as' => 'licenze_aggiorna']);
+    $routes->get('elimina/(:num)', 'LicenzeController::delete/$1', ['as' => 'licenze_elimina']);
 });
+
 
 $routes->group('aggiornamenti', ['filter' => 'notpending'], function($routes) {
     $routes->get('byLicenza/(:num)', 'AggiornamentiController::getByLicenza/$1', ['as' => 'aggiornamenti_byLicenza']);
-    $routes->get('crea/(:num)/(:segment)', 'AggiornamentiController::crea/$1/$2', ['as' => 'aggiornamenti_crea']);
-    $routes->get('modifica/(:num)', 'AggiornamentiController::modifica/$1', ['as' => 'aggiornamenti_modifica']);
-    $routes->get('elimina/(:num)', 'AggiornamentiController::elimina/$1', ['as' => 'aggiornamenti_elimina']);
-    $routes->get('visualizza/(:num)', 'AggiornamentiController::visualizza/$1', ['as' => 'aggiornamenti_visualizza']);
-    $routes->post('salva/(:num)', 'AggiornamentiController::salva/$1', ['as' => 'aggiornamenti_salva']);
+    $routes->get('(:num)', 'AggiornamentiController::show/$1', ['as' => 'aggiornamenti_scheda']);
+    $routes->get('crea/(:num)/(:segment)', 'AggiornamentiController::create/$1/$2', ['as' => 'aggiornamenti_crea']);
+    $routes->post('salva/(:num)', 'AggiornamentiController::store/$1', ['as' => 'aggiornamenti_salva']);
+    $routes->get('modifica/(:num)', 'AggiornamentiController::edit/$1', ['as' => 'aggiornamenti_modifica']);
+    $routes->get('elimina/(:num)', 'AggiornamentiController::delete/$1', ['as' => 'aggiornamenti_elimina']);
 });
 
 $routes->group('versioni', ['filter' => 'notpending'], function($routes) {
