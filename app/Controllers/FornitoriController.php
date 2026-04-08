@@ -43,9 +43,6 @@ class FornitoriController extends BaseController
         }
         unset($fornitore); // Termina la referenza*/
         $data['title'] = 'Elenco Fornitori';
-        $data['route'] = 'fornitori';
-        //session()->set(['route'=>'fornitori']);
-        //dd($data);
         return view('fornitori/index', $data);
     }
 

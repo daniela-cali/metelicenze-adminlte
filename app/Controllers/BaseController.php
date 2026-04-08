@@ -56,6 +56,18 @@ abstract class BaseController extends Controller
         // E.g.: $this->session = service('session');
     }
 
+    /**
+     * Override del metodo view() per passare automaticamente il route
+     * Es: FornitoriController => route = 'fornitori'
+     */
+    protected function view(string $name, array $data = [], array $options = []): string
+    {
+        $controllerName = strtolower(str_replace('Controller', '', class_basename($this::class)));
+        $data['route'] = $data['route'] ?? $controllerName;
+
+        return view($name, $data, $options);
+    }
+
     protected function resolveBackTo(string $fallback): string
     {
         $candidate = $this->request->getGet('backTo')

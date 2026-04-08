@@ -145,9 +145,10 @@
   <script src="https://cdn.datatables.net/searchpanes/2.3.5/js/searchPanes.bootstrap5.min.js"></script>
 
 
-  <!-- baseUrl per i file locali -->
+  <!-- Variabili globali per JS -->
   <script>
-    const baseUrl = "<?= base_url() ?>";
+    window.baseUrl = "<?= base_url() ?>";
+    window.route = "<?= $route ?? '' ?>";
   </script>
 
   <!-- Inizializzazione tooltip Bootstrap -->

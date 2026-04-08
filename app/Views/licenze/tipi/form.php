@@ -40,7 +40,7 @@ $backTo = $backTo ?? back_to_url(base_url('/tipi'));
                 </div>
                 <div class="mb-3">
                     <label for="descrizione" class="form-label">Descrizione</label>
-                    <input type="text" name="descrizione" id="descrizione" class="form-control" value="<?= isset($tipoLicenza) ? esc($tipoLicenza['descrizione']) : '' ?>" required>
+                    <textarea rows="5" name="descrizione" id="descrizione" class="form-control"><?= isset($tipoLicenza) ? esc($tipoLicenza['descrizione']) : '' ?></textarea>
                 </div>
                 <div class="mb-3 form-check">
                     <label class="form-check-label" class="form-label" for="stato">Attivo</label>

@@ -6,7 +6,7 @@ const datatableDefaults = {
     //Disabilito ordinamento per ID
     order: [],
     language: {
-        url: baseUrl + 'assets/datatables/i18n/it-IT.json',
+        url: window.baseUrl + 'assets/datatables/i18n/it-IT.json',
 
     },
     buttons: [
