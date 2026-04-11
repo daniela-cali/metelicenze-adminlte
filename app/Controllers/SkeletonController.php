@@ -70,11 +70,16 @@ class SkeletonController extends BaseController
         // }
 
         $data = [
-            'mode'   => 'view',
             'title'  => 'Scheda TODO',
-            'action' => '',
-            'backTo' => $this->resolveBackTo(base_url('TODO')),
+            'mode'   => 'view',
             // 'record' => $record,
+            'backTo' => $this->resolveBackTo(base_url('TODO')),
+            'form'   => [
+                'action'   => site_url('TODO'),
+                'method'   => 'post',
+                'spoof'    => null,
+                'readonly' => true,
+            ]
         ];
 
         return view('TODO/form', $data);
@@ -88,11 +93,17 @@ class SkeletonController extends BaseController
     public function create()
     {
         $data = [
-            'mode'   => 'create',
-            'title'  => 'Crea TODO',
-            'action' => base_url('TODO'),   // punta al POST store()
-            'backTo' => $this->resolveBackTo(base_url('TODO')),
-            'record' => null,
+            'title'   => 'Crea TODO',
+            'mode'    => 'create',
+            'record'  => null,
+            'backTo'  => $this->resolveBackTo(base_url('TODO')),
+            'form'    => [
+                'action'     => site_url('TODO'),
+                'method'     => 'post',
+                'spoof'      => null,
+                'submitText' => 'Salva',
+                'readonly'   => false,
+            ]
         ];
 
         return view('TODO/form', $data);
@@ -142,11 +153,17 @@ class SkeletonController extends BaseController
         // }
 
         $data = [
-            'mode'   => 'edit',
             'title'  => 'Modifica TODO (ID: ' . esc($id) . ')',
-            'action' => base_url('TODO/' . $id),  // punta al PUT update()
-            'backTo' => $this->resolveBackTo(base_url('TODO')),
+            'mode'   => 'edit',
             // 'record' => $record,
+            'backTo' => $this->resolveBackTo(base_url('TODO')),
+            'form'   => [
+                'action'     => site_url('TODO/' . $id),
+                'method'     => 'post',
+                'spoof'      => null,
+                'submitText' => 'Salva',
+                'readonly'   => false,
+            ]
         ];
 
         return view('TODO/form', $data);
