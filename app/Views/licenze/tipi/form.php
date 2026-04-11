@@ -10,7 +10,7 @@
 
 <?= $this->section('content') ?>
 <?php
-$backTo = $backTo ?? back_to_url(base_url('/tipi'));
+$backTo = $backTo ?? base_url('/tipi');
 ?>
 <div class="card shadow-sm">
     <div class="card-header card-header-muted d-flex align-items-center">
@@ -23,7 +23,7 @@ $backTo = $backTo ?? back_to_url(base_url('/tipi'));
         <div class="card-body">
             <form action="<?= $form["action"] ?>" method="POST" data-mode="<?= $mode ?>">
                 <input type="hidden" name="_method" value="<?= $mode === 'edit' ? 'PUT' : 'POST' ?>">
-                <input type="hidden" name="backTo" value="<?= isset($backTo) ? esc($backTo) : '' ?>">
+                <input type="hidden" name="backTo" value="<?= esc($backTo) ?>">
 
                                 <div class="mb-3">
                     <label for="categoria" class="form-label">Categoria</label>

@@ -10,7 +10,7 @@
 
 <?= $this->section('content') ?>
 <?php
-$backTo = $backTo ?? back_to_url(base_url('/versioni'));
+$backTo = $backTo ?? base_url('/versioni');
 ?>
 <div class="card shadow-sm">
     <div class="card-header card-header-muted d-flex align-items-center">

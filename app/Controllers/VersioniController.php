@@ -15,28 +15,38 @@ class VersioniController extends BaseController
 
     public function index()
     {
-        $data['versioni'] = $this->VersioniModel->getVersioni();
-        $data['title'] = 'Elenco Versioni';
-
+        $data = [
+            'versioni' => $this->VersioniModel->getVersioni(),
+            'title' => 'Elenco Versioni'
+        ];
         return view('versioni/index', $data);
     }
 
-    public function visualizza($idVersione)
+    public function show($idVersione)
     {
         $versione = $this->VersioniModel->getVersioneById($idVersione);
-        $backTo = $this->resolveBackTo(base_url('/versioni'));
-        return view('versioni/form', [
+        $backTo = $this->getBackTo(base_url('/versioni'));
+
+        $data = [
             'mode' => 'view',
-            'action' => '', // Nessuna azione in visualizzazione
-            'versione' => $versione, // Non abbiamo una versione esistente da modificare
-            'title' => 'Dettagli Versione ' . esc($versione["codice"]),
+            'versione' => $versione,
+            'title' => 'Versione ' . esc($versione["codice"]) . ' - ' . esc($versione["nome"]),
+                        'form' => [
+                'action' => '', // Nessuna azione in visualizzazione
+                'method' => 'get',
+                'spoof' => null,
+                'submitText' => '',
+                'readonly' => true,
+            ],
+
             'backTo' => $backTo,
-        ]);
+        ];
+        return view('versioni/form', $data);
     }
 
-    public function crea()
+    public function create()
     {
-        $backTo = $this->resolveBackTo(base_url('/versioni'));
+        $backTo = $this->getBackTo(base_url('/versioni'));
         return view('versioni/form', [
             'mode' => 'create',
             'action' => base_url('/versioni/salva'), // Non ha ancora ID
@@ -52,7 +62,7 @@ class VersioniController extends BaseController
         if (!$versione) {
             return redirect()->to('/versioni')->with('error', 'Versione non trovata.');
         }
-        $backTo = $this->resolveBackTo(base_url('/versioni'));
+        $backTo = $this->getBackTo(base_url('/versioni'));
 
         return view('versioni/form', [
             'mode' => 'edit',
@@ -85,7 +95,7 @@ class VersioniController extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->VersioniModel->errors());
         }
         // Se non ci sono errori, reindirizziamo alla lista delle versioni
-        return redirect()->to($this->resolveBackTo(base_url('/versioni')))
+        return redirect()->to($this->getBackTo(base_url('/versioni')))
             ->with('success', 'Versione salvata con successo!');
     }
     public function elimina($idVersione)
@@ -96,7 +106,7 @@ class VersioniController extends BaseController
         }
 
         $this->VersioniModel->delete($idVersione);
-        return redirect()->to($this->resolveBackTo(base_url('/versioni')))
+        return redirect()->to($this->getBackTo(base_url('/versioni')))
             ->with('success', 'Versione eliminata con successo.');
     }
 }

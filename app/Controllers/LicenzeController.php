@@ -63,7 +63,7 @@ class LicenzeController extends BaseController
     {
         // Logica per visualizzare i dettagli di una licenza
         $licenza = $this->LicenzeModel->getLicenzeById($id);
-        $backTo = $this->resolveBackTo(base_url('/licenze'));
+        $backTo = $this->getBackTo(base_url('/licenze'));
         $cliente_nome = $this->ClientiModel->select('nome')->where('id', $id)->first()['nome'];
 
         $data = [
@@ -118,7 +118,7 @@ class LicenzeController extends BaseController
             'cliente' => $cliente,
             'licenza' => null,
             'title' => 'Crea Licenza per Cliente ' . esc($cliente["nome"]) . ' [ID: ' . esc($idCliente) . ']',
-            'backTo' => $this->resolveBackTo(url_to('licenze_index')),
+            'backTo' => $this->getBackTo(url_to('licenze_index')),
         ];
 
         log_message('info', 'LicenzeController::crea - Creazione licenza per Cliente ID: ' . $idCliente . ' con questi dati inviati alla view: ' . print_r($data, true));
@@ -135,7 +135,7 @@ class LicenzeController extends BaseController
         if ($this->LicenzeModel->save($data)) {
             $licenzaID = $this->LicenzeModel->getInsertID();
             return redirect()->to(
-                $this->resolveBackTo(url_to('licenze_show', ['id' => $licenzaID]))
+                $this->getBackTo(url_to('licenze_show', ['id' => $licenzaID]))
             )->with('success', 'Licenza creata con successo.');
         } else {
             return redirect()->back()->with('error', 'Errore durante la creazione della licenza.')->withInput();
@@ -156,7 +156,7 @@ class LicenzeController extends BaseController
             'mode' => 'edit',
             'title' => 'Modifica Licenza ' . esc($codice) . ' (ID: ' . esc($id) . ')',
             'action' => base_url('/licenze/salva/' . $idCliente . '/' . $id),
-            'backTo' => $this->resolveBackTo(url_to('licenze_index')),
+            'backTo' => $this->getBackTo(url_to('licenze_index')),
         ];
 
         return view('licenze/form', $data);
@@ -172,7 +172,7 @@ class LicenzeController extends BaseController
         $data['id'] = $id; // Aggiungo l'ID per la modifica
         if ($this->LicenzeModel->save($data)) {
             return redirect()->to(
-                $this->resolveBackTo(url_to('licenze_show', ['id' => $id]))
+                $this->getBackTo(url_to('licenze_show', ['id' => $id]))
             )->with('success', 'Licenza aggiornata con successo.');
         } else {
             return redirect()->back()->with('error', 'Errore durante l\'aggiornamento della licenza.')->withInput();
@@ -184,7 +184,7 @@ class LicenzeController extends BaseController
         // Logica per eliminare una licenza
         $this->LicenzeModel->delete($id);
         // Redirect o mostra un messaggio di successo
-        return redirect()->to($this->resolveBackTo(url_to('licenze_index')))
+        return redirect()->to($this->getBackTo(url_to('licenze_index')))
             ->with('success', 'Licenza eliminata con successo.');
     }
 }

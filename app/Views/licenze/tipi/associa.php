@@ -2,7 +2,7 @@
 
 <?= $this->section('content') ?>
 <?php
-$backTo = $backTo ?? back_to_url(base_url('/tipi'));
+$backTo = $backTo ?? base_url('/tipi');
 ?>
 
 <div class="container my-5">
@@ -17,7 +17,7 @@ $backTo = $backTo ?? back_to_url(base_url('/tipi'));
         <div class="card-body">
             <!--Aggiungo la modalità di creazione o modifica per il js-->
             <form action="<?= $action ?>" method="post" data-mode="<?= $mode ?>">
-                <input type="hidden" name="backTo" value="<?= isset($backTo) ? esc($backTo) : '' ?>">
+                <input type="hidden" name="backTo" value="<?= esc($backTo) ?>">
 
                 <div class="mb-3" >
                     <label for="tipo" class="form-label">Tipo</label>

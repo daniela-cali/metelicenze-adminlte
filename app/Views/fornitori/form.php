@@ -10,7 +10,7 @@
 
 <?= $this->section('content') ?>
 <?php
-$backTo = $backTo ?? back_to_url(base_url('/fornitori'));
+$backTo = $backTo ?? base_url('/fornitori');
 ?>
 <div class="card shadow-sm">
     <div class="card-header card-header-muted d-flex align-items-center">
@@ -24,7 +24,7 @@ $backTo = $backTo ?? back_to_url(base_url('/fornitori'));
             <!--Aggiungo la modalità di creazione o modifica per il js-->
             <form action="<?= $form['action'] ?>" method="<?= $form['method'] ?>" data-mode="<?= $mode ?>">
                 <input type="hidden" name="_method" value="<?= $form['spoof'] ?>">
-                <input type="hidden" name="backTo" value="<?= isset($backTo) ? esc($backTo) : '' ?>">
+                <input type="hidden" name="backTo" value="<?= esc($backTo) ?>">
                 
 
                 <div class="mb-3">

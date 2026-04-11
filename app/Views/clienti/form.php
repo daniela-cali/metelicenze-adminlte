@@ -10,7 +10,7 @@
 
 <?= $this->section('content') ?>
 <?php
-$backTo = $backTo ?? back_to_url(base_url('/clienti'));
+$backTo = $backTo ?? base_url('/clienti');
 //dd(get_defined_vars());
 ?>
 <div class="card shadow-sm">
@@ -24,7 +24,7 @@ $backTo = $backTo ?? back_to_url(base_url('/clienti'));
     <div class="card-body">
         <!--Aggiungo la modalità di creazione o modifica per il js-->
         <form action="<?= $form["action"] ?>" method="post" data-mode="<?= $mode ?>">
-            <input type="hidden" name="backTo" value="<?= isset($backTo) ? esc($backTo) : '' ?>">
+            <input type="hidden" name="backTo" value="<?= esc($backTo) ?>">
 
             <div class="mb-3">
                 <label for="codice" class="form-label">Codice Cliente</label>

@@ -13,31 +13,25 @@ class FornitoriController extends BaseController
     protected $FornitoriModel;
     protected $tipiLicenzeModel;
     protected $fornitoriTipi_map;
-    protected $backTo;
+
     public function __construct()
     {
         $this->FornitoriModel = new FornitoriModel();
         $this->tipiLicenzeModel = new \App\Models\TipiLicenzeModel();
         $this->fornitoriTipi_map = new \App\Models\FornitoriTipilicenzeMapModel();
-        $this->backTo = base_url('/fornitori');
     }
 
 
     public function index(): string
     {
-        $data['fornitori'] = $this->FornitoriModel->getFornitori();
-
-        /*foreach ($data['fornitori'] as &$fornitore) {
-            $idFornitore = $fornitore['id'];
-            $fornitore['tipiLicenze'] = $tipiLicenzeModel->getTipiLicenzaByFornitore($idFornitore);
-        }*/
-
+        $data = [
+            'fornitori' => $this->FornitoriModel->getFornitori(),
+            'title' => 'Elenco Fornitori'
+        ];
 
         foreach ($data['fornitori'] as &$fornitore) {
             $id = $fornitore["id"];
             log_message('info', '==============Elaboro il fornitore con ID: ' . $id . ' - Nome: ' . $fornitore["nome"]);
-            //log_message('info', 'Numero di licenze trovate: ' . ($licenzeCount[$id] ?? 0));    
-            //$fornitore["numLicenze"] = $licenzeCount[$id] ?? 0;    
             $fornitore["tipiLicenze"] = $this->tipiLicenzeModel->getTipiLicenzeByFornitore($id);
             //log_message('info', '==============Fornitore ID elaborato con successo: ' . $fornitore["id"] . ' - Nome: ' . $fornitore["nome"] . ' - NumLicenze: ' . $fornitore["numLicenze"] . ' - TipiLicenze: ' . print_r($fornitore["tipiLicenze"], true));
         }
@@ -48,25 +42,32 @@ class FornitoriController extends BaseController
 
     public function show($id)
     {
-        $this->backTo = base_url('fornitori'); // Imposto il path di ritorno alla lista dei fornitori
+        $fornitore = $this->FornitoriModel->getFornitoriById($id);
+        $data = [
+            'mode' => 'view',
+            'fornitori' => $fornitore,
+            'title' => 'Scheda Fornitore' . $fornitore["nome"],
+            'selectData' => $this->tipiLicenzeModel->getTipiLicenzaForSelect(),
+            'licenzeFornite' => $this->tipiLicenzeModel->getTipiLicenzeByFornitore($id),
+            'form' => [
+                'action' => '', // Nessuna azione in visualizzazione
+                'method' => 'get',
+                'spoof' => null,
+                'submitText' => '',
+                'readonly' => true,
+            ]
+        ];
 
-        $session = session();
-        $session->set('backTo', $this->backTo);
-        $data['fornitore'] = $this->FornitoriModel->getFornitoriById($id);
-        $data['selectData'] = $this->tipiLicenzeModel->getTipiLicenzaForSelect();
-        $data['licenzeFornite'] = $this->tipiLicenzeModel->getTipiLicenzeByFornitore($id);
-        $data['mode'] = 'show';
 
 
-        $data['title'] = 'Scheda Fornitore';
 
         return view('fornitori/show', $data);
     }
 
     public function create()
     {
-        $backTo = $this->resolveBackTo(base_url('/fornitori'));
-        return view('fornitori/form', [
+        $backTo = $this->getBackTo(url_to('fornitori_index'));
+        $data = [
             'title' => 'Crea Nuovo Fornitore',
             'mode' => 'create',
             'fornitore' => null,
@@ -78,8 +79,9 @@ class FornitoriController extends BaseController
                 'submitText' => 'Salva',
                 'readonly' => false,
 
-            ],
-        ]);
+            ]
+        ];
+        return view('fornitori/form', $data );
     }
 
     public function store()
@@ -91,7 +93,7 @@ class FornitoriController extends BaseController
         if ($this->FornitoriModel->save($data)) {
             $fornitoreID = $this->FornitoriModel->getInsertID();
             return redirect()->to(
-                $this->resolveBackTo(base_url('/fornitori/' . $fornitoreID))
+                $this->getBackTo(base_url('/fornitori/' . $fornitoreID))
             )->with('success', 'Fornitore creato con successo.');
         } else {
             return redirect()->back()->with('error', 'Errore durante la creazione del fornitore.')->withInput();
@@ -101,7 +103,7 @@ class FornitoriController extends BaseController
     public function edit($id)
     {
         $fornitore = $this->FornitoriModel->getFornitoriById($id);
-        $backTo = $this->resolveBackTo(base_url('/fornitori'));
+        $backTo = $this->getBackTo(base_url('/fornitori'));
         $data = [
             'mode' => 'edit',
             'fornitore' => $fornitore,
@@ -125,7 +127,7 @@ class FornitoriController extends BaseController
         $data['id'] = $id; // Aggiungo l'ID per la modifica
         if ($this->FornitoriModel->save($data)) {
             return redirect()->to(
-                $this->resolveBackTo(base_url('/fornitori/' . $id))
+                $this->getBackTo(base_url('/fornitori/' . $id))
             )->with('success', 'Fornitore aggiornato con successo.');
         } else {
             return redirect()->back()->with('error', 'Errore durante l\'aggiornamento del fornitore.')->withInput();
@@ -135,7 +137,7 @@ class FornitoriController extends BaseController
     public function delete($id)
     {
         if ($this->FornitoriModel->delete($id)) {
-            return redirect()->to($this->resolveBackTo(base_url('/fornitori')))
+            return redirect()->to($this->getBackTo(base_url('/fornitori')))
                 ->with('success', 'Fornitore eliminato con successo.');
         } else {
             return redirect()->back()->with('error', 'Errore durante l\'eliminazione del fornitore.');

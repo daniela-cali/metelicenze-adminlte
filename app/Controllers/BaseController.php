@@ -68,17 +68,29 @@ abstract class BaseController extends Controller
         return view($name, $data, $options);
     }
 
-    protected function resolveBackTo(string $fallback): string
+    /**
+     * Restituisce l'URL a cui tornare dopo un'azione (salvataggio, eliminazione, ecc.).
+     *
+     * Il meccanismo è volutamente semplice e si basa su due soli casi:
+     *
+     *  - Richiesta GET (form di creazione o modifica):
+     *      getPost('backTo') è vuoto, quindi si usa previous_url() — la pagina
+     *      da cui l'utente è arrivato. Questo valore viene passato alla view
+     *      e inserito in un <input type="hidden" name="backTo">.
+     *
+     *  - Richiesta POST (salvataggio o eliminazione):
+     *      il form ha portato con sé il campo nascosto "backTo", quindi
+     *      getPost('backTo') restituisce esattamente la pagina di provenienza.
+     *
+     * Se nessuno dei due è disponibile si usa il $fallback fornito.
+     *
+     * @param string $fallback URL di default (es. url_to('fornitori_index'))
+     * @return string L'URL a cui redirigere l'utente
+     */
+    protected function getBackTo(string $fallback): string
     {
-        $candidate = $this->request->getGet('backTo')
-            ?? $this->request->getPost('backTo')
-            ?? session()->get('backTo')
-            ?? previous_url();
-
-        if (is_string($candidate) && $candidate !== '') {
-            session()->set('backTo', $candidate);
-        }
-
-        return back_to_url($fallback);
+        return $this->request->getPost('backTo')
+            ?: previous_url()
+            ?: $fallback;
     }
 }

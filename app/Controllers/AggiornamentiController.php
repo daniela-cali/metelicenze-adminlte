@@ -10,14 +10,12 @@ class AggiornamentiController extends BaseController
     protected $VersioniModel;
     protected $AggiornamentiModel;
     protected $LicenzeModel;
-    protected $backTo;
 
     public function __construct()
     {
         $this->VersioniModel = new \App\Models\VersioniModel();
         $this->AggiornamentiModel = new \App\Models\AggiornamentiModel();
         $this->LicenzeModel = new \App\Models\LicenzeModel();
-        $this->backTo = base_url('/licenze');
     }
 
     public function getByLicenza($idLicenza)
@@ -41,7 +39,7 @@ class AggiornamentiController extends BaseController
 
     public function show($id)
     {
-        $this->backTo = $this->resolveBackTo(base_url('/licenze'));
+        $backTo = $this->getBackTo(base_url('/licenze'));
         // Logica per visualizzare i dettagli di una licenza
         $aggiornamento = $this->AggiornamentiModel->getById($id);
         $versioni = $this->VersioniModel->getVersioni();
@@ -58,7 +56,7 @@ class AggiornamentiController extends BaseController
             'aggiornamento' => $aggiornamento,
             'versioni' => $versioni,
             'title' => 'Dettagli aggiornamento del ' . date('d/m/Y', strtotime($aggiornamento['dt_agg'])),
-            'backTo' => $this->backTo, // Aggiungo il path di provenienza per il bottone indietro
+            'backTo' => $backTo, // Aggiungo il path di provenienza per il bottone indietro
         ];
 
         return view('aggiornamenti/form', $data);
@@ -66,7 +64,7 @@ class AggiornamentiController extends BaseController
     public function create($idLicenza = null, $tipo = null)
     {
   
-        $this->backTo = $this->resolveBackTo(base_url('/licenze'));
+        $backTo = $this->getBackTo(base_url('/licenze'));
         //log_message('info', 'AggiornamentiController::crea - Tipo: ' . $tipo);
         //log_message('info', 'AggiornamentiController::crea - ID Licenza: ' . $idLicenza);
         // Se non è fornito un ID licenza, non posso creare un aggiornamento
@@ -84,7 +82,7 @@ class AggiornamentiController extends BaseController
             'licenza_id' => $idLicenza,
             'title' => 'Crea Aggiornamento per Licenza ' . esc($info['codice']) . ' ID ' . esc($idLicenza),
             'versioni' => $versioni,
-            'backTo' => $this->backTo, // Aggiungo il path di provenienza per il bottone indietro
+            'backTo' => $backTo, // Aggiungo il path di provenienza per il bottone indietro
             'form' => [
                 'action' => url_to('aggiornamenti_salva', $idLicenza), // Azione per il salvataggio dell'aggiornamento
                 'method' => 'post',
@@ -100,7 +98,7 @@ class AggiornamentiController extends BaseController
 
     public function edit($id)
     {
-        $this->backTo = $this->resolveBackTo(base_url('/licenze'));
+        $backTo = $this->getBackTo(base_url('/licenze'));
 
         $aggiornamento = $this->AggiornamentiModel->getById($id);
         $versioni = $this->VersioniModel->getVersioni();
@@ -116,7 +114,7 @@ class AggiornamentiController extends BaseController
             ],
             'aggiornamento' => $aggiornamento,
             'versioni' => $versioni,
-            'backTo' => $this->backTo, // Aggiungo il path di provenienza per il bottone indietro
+            'backTo' => $backTo, // Aggiungo il path di provenienza per il bottone indietro
         ];
 
         return view('aggiornamenti/form', $data);
@@ -145,10 +143,10 @@ class AggiornamentiController extends BaseController
 
     public function delete($id)
     {
-        $this->backTo = $this->resolveBackTo(base_url('/licenze'));
+        $backTo = $this->getBackTo(base_url('/licenze'));
         // Logica per eliminare una licenza
         $this->AggiornamentiModel->delete($id);
         // Redirect o mostra un messaggio di successo
-        return redirect()->to($this->backTo)->with('success', 'Aggiornamento eliminato con successo.');
+        return redirect()->to($backTo)->with('success', 'Aggiornamento eliminato con successo.');
     }
 }

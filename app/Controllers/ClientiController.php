@@ -12,12 +12,11 @@ class ClientiController extends BaseController
 
     protected $ClientiModel;
     protected $LicenzeModel;
-    protected $backTo;
+
     public function __construct()
     {
         $this->ClientiModel = new ClientiModel();
         $this->LicenzeModel = new LicenzeModel();
-        $this->backTo = url_to('clienti_index');
     }
 
 
@@ -50,10 +49,6 @@ class ClientiController extends BaseController
 
     public function show($id)
     {
-        $this->backTo = url_to('clienti_index');
-        $session = session();
-        $session->set('backTo', $this->backTo);
-
         $cliente = $this->ClientiModel->getClientiById($id);
         $session->set('current_cliente_id', $cliente["id"]);
         $session->set('current_padre_id', $cliente["padre_id"]);
@@ -83,7 +78,7 @@ class ClientiController extends BaseController
 
     public function create()
     {
-        $backTo = $this->resolveBackTo(url_to('clienti_index'));
+        $backTo = $this->getBackTo(url_to('clienti_index'));
         $internal_code = $this->ClientiModel->generateInternalCode();
         $selectValues = $this->ClientiModel->getClientiPadre();
         return view('clienti/form', [
@@ -113,7 +108,7 @@ class ClientiController extends BaseController
         if ($this->ClientiModel->save($data)) {
             $clienteID = $this->ClientiModel->getInsertID();
             return redirect()->to(
-                $this->resolveBackTo(url_to('clienti_show', $clienteID))
+                $this->getBackTo(url_to('clienti_show', $clienteID))
             )->with('success', 'Cliente creato con successo.');
         } else {
             return redirect()->back()->with('error', 'Errore durante la creazione del cliente.')->withInput();
@@ -122,7 +117,7 @@ class ClientiController extends BaseController
 
     public function edit($id)
     {
-        $backTo = $this->resolveBackTo(url_to('clienti_index'));
+        $backTo = $this->getBackTo(url_to('clienti_index'));
         $cliente = $this->ClientiModel->getClientiById($id);
         $selectValues = $this->ClientiModel->getClientiPadre();
         $data = [
@@ -149,7 +144,7 @@ class ClientiController extends BaseController
         $data['id'] = $id; // Aggiungo l'ID per la modifica
         if ($this->ClientiModel->save($data)) {
             return redirect()->to(
-                $this->resolveBackTo(url_to('clienti_show', $id))
+                $this->getBackTo(url_to('clienti_show', $id))
             )->with('success', 'Cliente aggiornato con successo.');
         } else {
             return redirect()->back()->with('error', 'Errore durante l\'aggiornamento del cliente.')->withInput();
@@ -159,7 +154,7 @@ class ClientiController extends BaseController
     public function delete($id)
     {
         if ($this->ClientiModel->delete($id)) {
-            return redirect()->to($this->resolveBackTo(url_to('clienti_index')))
+            return redirect()->to($this->getBackTo(url_to('clienti_index')))
                 ->with('success', 'Cliente eliminato con successo.');
         } else {
             return redirect()->back()->with('error', 'Errore durante l\'eliminazione del cliente.');

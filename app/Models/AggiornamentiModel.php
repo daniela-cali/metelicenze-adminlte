@@ -23,8 +23,6 @@ class AggiornamentiModel extends AuditModel
         'deleted_by',
     ];
 
-
-
     function getByLicenza($id_licenza)
     {
         log_message('info', 'AggiornamentiModel::getByLicenza - ID Licenza: ' . $id_licenza);

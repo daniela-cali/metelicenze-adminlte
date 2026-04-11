@@ -8,15 +8,14 @@ use CodeIgniter\HTTP\ResponseInterface;
 class TipiLicenzeController extends BaseController
 {
     protected $TipiLicenzeModel;
-    protected $FornitoriTipilicenzeMapModel;   
-    protected $FornitoriModel; 
-    protected $backTo;
+    protected $FornitoriTipilicenzeMapModel;
+    protected $FornitoriModel;
+
     public function __construct()
     {
         $this->TipiLicenzeModel = new \App\Models\TipiLicenzeModel();
         $this->FornitoriTipilicenzeMapModel = new \App\Models\FornitoriTipilicenzeMapModel();
         $this->FornitoriModel = new \App\Models\FornitoriModel();
-        $this->backTo = base_url('/tipi');
     }
     public function index()
     {
@@ -46,7 +45,7 @@ class TipiLicenzeController extends BaseController
         $data = array(
             'mode' => 'create',
             'title' => 'Crea Nuova Tipologia di Licenza',
-            'backTo' => $this->resolveBackTo(base_url('/tipi')),
+            'backTo' => $this->getBackTo(base_url('/tipi')),
             'form' => [
                 'action' => url_to('tipi_store'),
                 'method' => 'POST',
@@ -64,7 +63,7 @@ class TipiLicenzeController extends BaseController
             return redirect()->back()->with('error', 'Dati mancanti per creare il tipo di licenza.');
         }
         if ($this->TipiLicenzeModel->insert($data)) {
-            return redirect()->to($this->resolveBackTo(base_url('/tipi')))
+            return redirect()->to($this->getBackTo(base_url('/tipi')))
                 ->with('success', 'Tipo di licenza creato con successo.');
         } else {
             return redirect()->back()->with('error', 'Errore durante la creazione del tipo di licenza.')->withInput();
@@ -77,7 +76,7 @@ class TipiLicenzeController extends BaseController
             'mode' => 'edit',
             'tipoLicenza' => $tipoLicenza,
             'title' => 'Modifica Tipo Licenza: ' . $tipoLicenza["nome"],
-            'backTo' => $this->resolveBackTo(base_url('/tipi')),
+            'backTo' => $this->getBackTo(base_url('/tipi')),
             'form' => [
                 'action' => url_to('tipi_aggiorna', $id),
                 'method' => 'POST',
@@ -94,7 +93,7 @@ class TipiLicenzeController extends BaseController
         $data = $this->request->getPost();
         $data['id'] = $id; // Aggiungo l'ID per la modifica
         if ($this->TipiLicenzeModel->save($data)) {
-            return redirect()->to($this->resolveBackTo(base_url('/tipi/' . $id)))
+            return redirect()->to($this->getBackTo(base_url('/tipi/' . $id)))
                 ->with('success', 'Tipo di licenza aggiornato con successo.');
         } else {
             return redirect()->back()->with('error', 'Errore durante l\'aggiornamento del tipo di licenza.')->withInput();
@@ -104,7 +103,7 @@ class TipiLicenzeController extends BaseController
     public function delete($id)
     {
         if($this->TipiLicenzeModel->delete($id)) {
-            return redirect()->to($this->resolveBackTo(base_url('/tipi')))
+            return redirect()->to($this->getBackTo(base_url('/tipi')))
                 ->with('success', 'Tipo di licenza eliminato con successo.');
         } else {
             return redirect()->back()->with('error', 'Errore durante l\'eliminazione del tipo di licenza.');

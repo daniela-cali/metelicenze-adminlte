@@ -34,7 +34,7 @@
                 </ul>
                 <ul class="navbar-nav ms-auto">
                     <li>
-                        <a href="<?= esc(back_to_url(base_url('/clienti'))) ?>" id="navigation" class="btn btn-light btn-outline-secondary btn-sm">
+                        <a href="<?= esc(base_url('/clienti')) ?>" id="navigation" class="btn btn-light btn-outline-secondary btn-sm">
                             <i class="bi bi-arrow-left-circle"></i> Torna indietro
                         </a>
                     </li>
@@ -145,7 +145,7 @@
                     </thead>
                     <tbody>
                         <?php foreach ($licenze as $licenza): ?>
-                            <tr class="licenza-row"
+                            <tr class="data-row"
                             <?= audit_tooltip($licenza) ?>
                             data-id="<?= esc($licenza["padre_lic_id"]) //linko il padre per il fetch aggiornamenti 
                                                                 ?>" style="cursor:pointer;">
@@ -294,7 +294,7 @@
                 console.error('DT error:', message);
             });
         // Event listener per il click sulle righe delle licenze
-        const licenzeRows = document.querySelectorAll('.licenza-row');
+        const licenzeRows = document.querySelectorAll('.data-row');
         //console.log('Licenze Rows:', licenzeRows);
         let selectedLicenzaId = null;
         // Selezione licenza
@@ -356,21 +356,7 @@
                 }
             });
 
-            /*$('#tabella-aggiornamenti').on('dblclick', '.aggiornamento-row', function(e) {
-                // evita che il click sui bottoni scatti anche sulla riga
-                //if (e.target.closest('button')) return;
 
-                const selectedAggiornamento = this.dataset.id;
-                console.log('Click riga aggiornamento', selectedAggiornamento);
-                const baseUrl = "<?= base_url() ?>";
-                window.location.href = `${baseUrl}/aggiornamenti/modifica/${selectedAggiornamento}`;
-            });
-            row.addEventListener('dblclick', function() {
-                const baseUrl = "<?= base_url() ?>";
-                selectedLicenzaId = this.getAttribute('data-id');
-                window.location.href = `${baseUrl}/licenze/modifica/${selectedLicenzaId}`;
-
-            });*/
         });
         const aggiornamentiRows = document.querySelectorAll('.aggiornamento-row');
         aggiornamentiRows.forEach(row => {
