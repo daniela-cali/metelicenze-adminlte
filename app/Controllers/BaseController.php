@@ -57,13 +57,29 @@ abstract class BaseController extends Controller
     }
 
     /**
-     * Override del metodo view() per passare automaticamente il route
-     * Es: FornitoriController => route = 'fornitori'
+     * Override del metodo view() per passare automaticamente $route a ogni view.
+     *
+     * Deriva il valore dal nome completo della classe, includendo il sotto-namespace,
+     * così i controller in Admin\ ottengono il prefisso corretto senza override manuali.
+     *
+     * Esempi:
+     *   App\Controllers\ClientiController       → route = 'clienti'
+     *   App\Controllers\Admin\UsersController   → route = 'admin/users'
+     *   App\Controllers\Admin\SettingsController → route = 'admin/settings'
      */
     protected function view(string $name, array $data = [], array $options = []): string
     {
-        $controllerName = strtolower(str_replace('Controller', '', class_basename($this::class)));
-        $data['route'] = $data['route'] ?? $controllerName;
+        // Rimuove il namespace base "App\Controllers\" e separa le parti rimanenti.
+        // Es: "App\Controllers\Admin\UsersController" → ["Admin", "UsersController"]
+        $relative = str_replace('App\\Controllers\\', '', $this::class);
+        $parts    = explode('\\', $relative);
+
+        // L'ultimo elemento è il nome del controller; tutto il resto è il sotto-namespace.
+        $controllerName = strtolower(str_replace('Controller', '', array_pop($parts)));
+        $namespaceParts = array_map('strtolower', $parts);
+
+        // Unisce sotto-namespace e nome controller: ["admin", "users"] → "admin/users"
+        $data['route'] = $data['route'] ?? implode('/', [...$namespaceParts, $controllerName]);
 
         return view($name, $data, $options);
     }

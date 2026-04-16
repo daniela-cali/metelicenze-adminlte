@@ -59,7 +59,7 @@ class AggiornamentiController extends BaseController
             'backTo' => $backTo, // Aggiungo il path di provenienza per il bottone indietro
         ];
 
-        return view('aggiornamenti/form', $data);
+        return $this->view('aggiornamenti/form', $data);
     }
     public function create($idLicenza = null, $tipo = null)
     {
@@ -93,7 +93,7 @@ class AggiornamentiController extends BaseController
         ];
 
 
-        return view('aggiornamenti/form', $data);
+        return $this->view('aggiornamenti/form', $data);
     }
 
     public function edit($id)
@@ -117,7 +117,7 @@ class AggiornamentiController extends BaseController
             'backTo' => $backTo, // Aggiungo il path di provenienza per il bottone indietro
         ];
 
-        return view('aggiornamenti/form', $data);
+        return $this->view('aggiornamenti/form', $data);
     }
 
     public function store($idLicenza = null)

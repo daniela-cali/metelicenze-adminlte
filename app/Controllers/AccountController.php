@@ -9,6 +9,6 @@ class AccountController extends BaseController
 {
     public function pending()
     {
-        return view('account/pending');
+        return $this->view('account/pending');
     }
 }

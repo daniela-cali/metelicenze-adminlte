@@ -51,7 +51,7 @@ class SkeletonController extends BaseController
             // 'records' => $records,
         ];
 
-        return view('TODO/index', $data);
+        return $this->view('TODO/index', $data);
     }
 
     /**
@@ -82,7 +82,7 @@ class SkeletonController extends BaseController
             ]
         ];
 
-        return view('TODO/form', $data);
+        return $this->view('TODO/form', $data);
     }
 
     /**
@@ -106,7 +106,7 @@ class SkeletonController extends BaseController
             ]
         ];
 
-        return view('TODO/form', $data);
+        return $this->view('TODO/form', $data);
     }
 
     /**
@@ -166,7 +166,7 @@ class SkeletonController extends BaseController
             ]
         ];
 
-        return view('TODO/form', $data);
+        return $this->view('TODO/form', $data);
     }
 
     /**

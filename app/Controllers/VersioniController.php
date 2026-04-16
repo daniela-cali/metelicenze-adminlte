@@ -19,7 +19,7 @@ class VersioniController extends BaseController
             'versioni' => $this->VersioniModel->getVersioni(),
             'title' => 'Elenco Versioni'
         ];
-        return view('versioni/index', $data);
+        return $this->view('versioni/index', $data);
     }
 
     public function show($idVersione)
@@ -41,13 +41,13 @@ class VersioniController extends BaseController
 
             'backTo' => $backTo,
         ];
-        return view('versioni/form', $data);
+        return $this->view('versioni/form', $data);
     }
 
     public function create()
     {
         $backTo = $this->getBackTo(base_url('/versioni'));
-        return view('versioni/form', [
+        return $this->view('versioni/form', [
             'mode' => 'create',
             'action' => base_url('/versioni/salva'), // Non ha ancora ID
             'versione' => null, // Non abbiamo una versione esistente da modificare
@@ -64,7 +64,7 @@ class VersioniController extends BaseController
         }
         $backTo = $this->getBackTo(base_url('/versioni'));
 
-        return view('versioni/form', [
+        return $this->view('versioni/form', [
             'mode' => 'edit',
             'action' => base_url('/versioni/salva/' . $idVersione),
             'versione' => $versione,

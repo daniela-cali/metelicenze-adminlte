@@ -44,12 +44,13 @@ class ClientiController extends BaseController
         $data['title'] = 'Elenco Clienti';
         //session()->set(['route'=>'clienti']);
 
-        return view('clienti/index', $data);
+        return $this->view('clienti/index', $data);
     }
 
     public function show($id)
     {
         $cliente = $this->ClientiModel->getClientiById($id);
+        $session = service('session');
         $session->set('current_cliente_id', $cliente["id"]);
         $session->set('current_padre_id', $cliente["padre_id"]);
 
@@ -65,7 +66,7 @@ class ClientiController extends BaseController
             'mode' => 'view',
             'cliente' => $cliente,
             'licenze' => $licenze,
-            'backTo' => $this->backTo,
+            'backTo' => $this->getBackTo(url_to('clienti_index')),
             'form' => [
                 'action' => site_url('clienti'),
                 'method' => 'post',
@@ -73,7 +74,7 @@ class ClientiController extends BaseController
                 'readonly' => true,
             ]
         ];
-        return view('clienti/show', $data);
+        return $this->view('clienti/show', $data);
     }
 
     public function create()
@@ -81,7 +82,7 @@ class ClientiController extends BaseController
         $backTo = $this->getBackTo(url_to('clienti_index'));
         $internal_code = $this->ClientiModel->generateInternalCode();
         $selectValues = $this->ClientiModel->getClientiPadre();
-        return view('clienti/form', [
+        return $this->view('clienti/form', [
             'title' => 'Crea Nuovo Cliente',
             'mode' => 'create',
             'cliente' => null,
@@ -135,7 +136,7 @@ class ClientiController extends BaseController
             'selectValues' => $selectValues,
             'backTo' => $backTo,
         ];
-        return view('clienti/form', $data);
+        return $this->view('clienti/form', $data);
     }
 
     public function update($id)

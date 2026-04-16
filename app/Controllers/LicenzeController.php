@@ -56,7 +56,7 @@ class LicenzeController extends BaseController
             'title' => 'Elenco Licenze'
         ];
 
-        return view('licenze/index', $data);
+        return $this->view('licenze/index', $data);
     }
 
     public function show($id)
@@ -73,7 +73,7 @@ class LicenzeController extends BaseController
             'title' => 'Licenza ' . esc($licenza["codice"]) . ' - ' . esc($cliente_nome),
             'backTo' => $backTo,
         ];
-        return view('licenze/form', $data);
+        return $this->view('licenze/form', $data);
     }
 
     public function create($idCliente = null)
@@ -124,7 +124,7 @@ class LicenzeController extends BaseController
         log_message('info', 'LicenzeController::crea - Creazione licenza per Cliente ID: ' . $idCliente . ' con questi dati inviati alla view: ' . print_r($data, true));
 
 
-        return view('licenze/form', $data);
+        return $this->view('licenze/form', $data);
     }
     public function store()
     {
@@ -159,7 +159,7 @@ class LicenzeController extends BaseController
             'backTo' => $this->getBackTo(url_to('licenze_index')),
         ];
 
-        return view('licenze/form', $data);
+        return $this->view('licenze/form', $data);
 
         // Redirect o mostra un messaggio di successo
         return redirect()->to(url_to('clienti_show', ['id' => $idCliente]))

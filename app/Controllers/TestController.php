@@ -13,7 +13,7 @@ class TestController extends BaseController
         // Esegui il metodo specificato
         if (method_exists($model, $metodo)) {
             $test = $model->$metodo();
-            return view('test/test', ['test' => $test]);
+            return $this->view('test/test', ['test' => $test]);
         } else {
             return redirect()->back()->with('error', 'Metodo non trovato.');
         }
