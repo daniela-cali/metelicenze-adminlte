@@ -1,6 +1,6 @@
 <?php
 // app/Controllers/DatabaseInfoController.php
-namespace App\Controllers;
+namespace App\Controllers\Admin;
 
 helper('db_status');
 
@@ -98,7 +98,7 @@ class DatabaseInfoController extends BaseController
             }
         }
 
-        return view('database/dbConnectionTest', [
+        return $this->view('database/dbConnectionTest', [
             'databases' => $databases,
         ]);
     }
@@ -180,14 +180,14 @@ class DatabaseInfoController extends BaseController
                 fn($field) => $field !== 'id'
             );
 
-            return view('database/dbFields', [
+            return $this->view('database/dbFields', [
                 'fields' => $result,
                 'table_name' => $tableName,
                 'allowed_fields' => $allowedFields
             ]);
         } catch (\Exception $e) {
             log_message('error', 'Errore nel recupero campi: ' . $e->getMessage());
-            return view('database/dbFields', [
+            return $this->view('database/dbFields', [
                 'error' => $e->getMessage(),
                 'table_name' => $tableName
             ]);
@@ -220,7 +220,7 @@ class DatabaseInfoController extends BaseController
             $lines = file($file, FILE_IGNORE_NEW_LINES);
         }
 
-        return view('log_database', [
+        return $this->view('log_database', [
             'file_name' => basename($file),
             'log_lines' => $lines
         ]);
@@ -313,9 +313,9 @@ class DatabaseInfoController extends BaseController
                 'database' => $connectionGroup,
             ];
 
-            return view('database/dbInfo', $data);
+            return $this->view('database/dbInfo', $data);
         } catch (\Exception $e) {
-            return view('database/dbTest', ['error' => $e->getMessage()]);
+            return $this->view('database/dbTest', ['error' => $e->getMessage()]);
         }
     }
 }

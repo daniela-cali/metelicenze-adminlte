@@ -3,7 +3,7 @@
 <?= $this->section('breadcrumb') ?>
 <ol class="breadcrumb float-sm-end">
     <li class="breadcrumb-item"><a href="<?= base_url('/') ?>">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="<?= url_to('utenti_index') ?>">Utenti</a></li>
+    <li class="breadcrumb-item"><a href="<?= url_to('users_index') ?>">Utenti</a></li>
     <li class="breadcrumb-item active"><?= esc($title) ?></li>
 </ol>
 <?= $this->endSection() ?>
@@ -11,7 +11,7 @@
 <?= $this->section('content') ?>
 <?php
 // Fallback nel caso in cui $backTo non venga passato esplicitamente
-$backTo = $backTo ?? url_to('utenti_index');
+$backTo = $backTo ?? url_to('users_index');
 ?>
 <div class="card shadow-sm">
     <div class="card-header card-header-muted d-flex align-items-center">

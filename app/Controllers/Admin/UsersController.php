@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
 use CodeIgniter\Shield\Models\UserModel;
@@ -23,12 +23,11 @@ class UsersController extends BaseController
         $data = [
             'title'     => 'Gestione Utenti',
             'usersList' => $usersList,
-            // Il BaseController deriva $route da "UsersController" → "users", ma la URL group è "utenti".
-            // Sovrascriviamo qui per far funzionare il dblclick centralizzato di table-manager.js.
-            'route'     => 'utenti',
+            // $route viene derivato automaticamente da BaseController::view():
+            // Admin\UsersController → "admin/users"
         ];
 
-        return view('users/index', $data);
+        return $this->view('users/index', $data);
     }
 
     public function show($id)
@@ -40,10 +39,10 @@ class UsersController extends BaseController
             ->find($id);
 
         if (!$user) {
-            return redirect()->to(url_to('utenti_index'))->with('error', 'Utente non trovato.');
+            return redirect()->to(url_to('users_index'))->with('error', 'Utente non trovato.');
         }
 
-        $backTo = $this->getBackTo(url_to('utenti_index'));
+        $backTo = $this->getBackTo(url_to('users_index'));
         $data = [
             'title'   => 'Dettagli Utente: ' . esc($user->username),
             'mode'    => 'view',
@@ -59,19 +58,19 @@ class UsersController extends BaseController
             'allGroups'      => config('AuthGroups')->groups,
             'allPermissions' => config('AuthGroups')->permissions,
         ];
-        return view('users/form', $data);
+        return $this->view('users/form', $data);
     }
 
     public function create()
     {
-        $backTo = $this->getBackTo(url_to('utenti_index'));
+        $backTo = $this->getBackTo(url_to('users_index'));
         $data = [
             'title'  => 'Crea Nuovo Utente',
             'mode'   => 'create',
             'user'   => null,
             'backTo' => $backTo,
             'form'   => [
-                'action'     => site_url('utenti'),
+                'action'     => url_to('users_salva'),
                 'method'     => 'post',
                 'spoof'      => null,
                 'submitText' => 'Salva',
@@ -80,7 +79,7 @@ class UsersController extends BaseController
             'allGroups'      => config('AuthGroups')->groups,
             'allPermissions' => config('AuthGroups')->permissions,
         ];
-        return view('users/form', $data);
+        return $this->view('users/form', $data);
     }
 
     public function edit($id)
@@ -92,19 +91,19 @@ class UsersController extends BaseController
             ->find($id);
 
         if (!$user) {
-            return redirect()->to(url_to('utenti_index'))->with('error', 'Utente non trovato.');
+            return redirect()->to(url_to('users_index'))->with('error', 'Utente non trovato.');
         }
 
-        $backTo = $this->getBackTo(url_to('utenti_index'));
-        return view('users/form', [
+        $backTo = $this->getBackTo(url_to('users_index'));
+        return $this->view('users/form', [
             'title'   => 'Modifica Utente: ' . esc($user->username),
             'mode'    => 'edit',
             'user'    => $user,
             'backTo'  => $backTo,
             'form'    => [
-                // url_to('utenti_aggiorna', $id) genera /utenti/{id} (la rotta PUT ha il placeholder (:num)).
+                // url_to('users_aggiorna', $id) genera /admin/users/{id} (la rotta PUT ha il placeholder (:num)).
                 // Il form invia POST con spoof _method=PUT, che CI4 instradia su put('(:num)') → update()
-                'action'     => url_to('utenti_aggiorna', $id),
+                'action'     => url_to('users_aggiorna', $id),
                 'method'     => 'POST',
                 'spoof'      => 'PUT',
                 'submitText' => 'Aggiorna',
@@ -220,7 +219,7 @@ class UsersController extends BaseController
         }
 
         return redirect()->to(
-            $this->getBackTo(url_to('utenti_index'))
+            $this->getBackTo(url_to('users_index'))
         )->with('success', 'Utente creato con successo.');
     }
 
@@ -235,7 +234,7 @@ class UsersController extends BaseController
 
         $user = $users->find($id);
         if (!$user) {
-            return redirect()->to(url_to('utenti_index'))->with('error', 'Utente non trovato.');
+            return redirect()->to(url_to('users_index'))->with('error', 'Utente non trovato.');
         }
 
         $user->username = $post['username'];
@@ -273,7 +272,7 @@ class UsersController extends BaseController
         }
 
         return redirect()->to(
-            $this->getBackTo(url_to('utenti_index'))
+            $this->getBackTo(url_to('users_index'))
         )->with('success', 'Utente aggiornato con successo.');
     }
 
@@ -283,17 +282,17 @@ class UsersController extends BaseController
         $user  = $users->find($id);
 
         if (!$user) {
-            return redirect()->to(url_to('utenti_index'))->with('error', 'Utente non trovato.');
+            return redirect()->to(url_to('users_index'))->with('error', 'Utente non trovato.');
         }
 
         try {
             $users->delete($id);
         } catch (DatabaseException) {
-            return redirect()->to(url_to('utenti_index'))
+            return redirect()->to(url_to('users_index'))
                 ->with('error', 'Errore nell\'eliminazione utente.');
         }
 
-        return redirect()->to(url_to('utenti_index'))
+        return redirect()->to(url_to('users_index'))
             ->with('success', 'Utente eliminato con successo.');
     }
 
@@ -330,21 +329,19 @@ class UsersController extends BaseController
             return redirect()->back()->with('success', 'Password aggiornata con successo.');
         }
 
-        return view('users/changePassword');
+        return $this->view('users/changePassword');
     }
 
     public function approva($id)
     {
         $users      = auth()->getProvider();
         $user       = $users->withGroups()->withPermissions()->find($id);
-        $siteConfig = config('SiteConfig');
-
         if (!$user) {
-            return redirect()->to(url_to('utenti_index'))->with('error', 'Utente non trovato.');
+            return redirect()->to(url_to('users_index'))->with('error', 'Utente non trovato.');
         }
 
         if (!in_array('pending', $user->getGroups())) {
-            return redirect()->to(url_to('utenti_index'))
+            return redirect()->to(url_to('users_index'))
                 ->with('error', 'L\'utente non è in stato pending.');
         }
 
@@ -353,7 +350,7 @@ class UsersController extends BaseController
             $user->addGroup('user');
 
             // ==== Invio email di notifica approvazione ====
-            $admin = config('SiteConfig')->adminEmail;
+            $admin = setting('SiteConfig.adminEmail');
             $email = \Config\Services::email();
             $email->setFrom($admin, 'MeTe Licenze Admin');
             $email->setTo($user->email);
@@ -361,7 +358,7 @@ class UsersController extends BaseController
             $content = "
                 <p>Ciao <strong>" . esc($user->username) . "</strong>,</p>
                 <p>Il tuo account è stato approvato. Ora puoi effettuare il login.</p>
-                <p><a href='{$siteConfig->siteURL}/login' class='button'>Accedi al gestionale</a></p>
+                <p><a href='" . setting('SiteConfig.siteURL') . "/login' class='button'>Accedi al gestionale</a></p>
             ";
             $message = view('emails/layout', [
                 'title'   => 'Account approvato su MeTe Licenze',
@@ -374,11 +371,11 @@ class UsersController extends BaseController
             }
         } catch (DatabaseException $e) {
             log_message('error', "Errore nell'approvare utente $id: " . $e->getMessage());
-            return redirect()->to(url_to('utenti_index'))
+            return redirect()->to(url_to('users_index'))
                 ->with('error', 'Errore nell\'approvazione utente.');
         }
 
-        return redirect()->to(url_to('utenti_index'))
+        return redirect()->to(url_to('users_index'))
             ->with('success', 'Utente approvato con successo.');
     }
 }
