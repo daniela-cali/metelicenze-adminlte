@@ -3,7 +3,7 @@
 <?= $this->section('breadcrumb') ?>
 <ol class="breadcrumb float-sm-end">
     <li class="breadcrumb-item"><a href="<?= base_url('/') ?>">Dashboard</a></li>
-    <li class="breadcrumb-item"><a href="<?= url_to('tipi_index') ?>">Tipi Licenze</a></li>
+    <li class="breadcrumb-item"><a href="<?= url_to('tipilicenze_index') ?>">Tipi Licenze</a></li>
     <li class="breadcrumb-item active"><?= esc($title) ?></li>
 </ol>
 <?= $this->endSection() ?>

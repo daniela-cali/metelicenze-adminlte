@@ -11,7 +11,7 @@
 <?php $this->section('content') ?>
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h5 class="mb-0"><i class="bi bi-tags-fill"></i> Elenco Tipi Licenze</h5>
-    <a href="<?= url_to('tipi_crea') ?>" class="btn btn-outline-secondary btn-sm" title="Aggiungi nuovo tipo di licenza">
+    <a href="<?= url_to('tipilicenze_crea') ?>" class="btn btn-outline-secondary btn-sm" title="Aggiungi nuovo tipo di licenza">
         <i class="bi bi-plus-circle"></i> Nuovo tipo di licenza
     </a>
 </div>
@@ -43,18 +43,18 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a class="dropdown-item" href="<?= url_to('tipi_scheda', $tipo["id"]) ?>">
+                                        <a class="dropdown-item" href="<?= url_to('tipilicenze_scheda', $tipo["id"]) ?>">
                                             <i class="bi bi-eye"></i> Visualizza
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" href="<?= url_to('tipi_modifica', $tipo["id"]) ?>">
+                                        <a class="dropdown-item" href="<?= url_to('tipilicenze_modifica', $tipo["id"]) ?>">
                                             <i class="bi bi-pencil"></i> Modifica
                                         </a>
                                     </li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
-                                        <a class="dropdown-item text-danger" href="<?= url_to('tipi_elimina', $tipo["id"]) ?>">
+                                        <a class="dropdown-item text-danger" href="<?= url_to('tipilicenze_elimina', $tipo["id"]) ?>">
                                             <i class="bi bi-trash"></i> Elimina
                                         </a>
                                     </li>
@@ -83,7 +83,7 @@
         document.querySelectorAll('.clickable').forEach(function(input) {
             input.addEventListener('dblclick', function() {
                 const ID = this.getAttribute('data-id');
-                window.location.href = "<?= base_url('tipi/edit/') ?>" + ID;
+                window.location.href = "<?= base_url('tipilicenze/edit/') ?>" + ID;
             });
         });
     });

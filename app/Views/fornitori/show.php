@@ -113,7 +113,7 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0"><i class="bi bi-key-fill"></i> Tipi Licenze fornite</h5>
-            <a href="<?= url_to('tipi_link', $fornitore["id"]) ?>" class="btn btn-light btn-outline-secondary btn-sm" title="Associa Nuova tipologia per il fornitore" data-bs-toggle="modal" data-bs-target="#TipiModal">
+            <a href="<?= url_to('tipilicenze_link', $fornitore["id"]) ?>" class="btn btn-light btn-outline-secondary btn-sm" title="Associa Nuova tipologia per il fornitore" data-bs-toggle="modal" data-bs-target="#TipiModal">
                 Associa Tipo Licenza <i class="bi bi-link"></i>
             </a>
 
@@ -148,7 +148,7 @@
                                     </span>
                                 </td>
                                 <td>
-                                  <a href="<?= url_to('tipi_modifica', $tipo["id"]) ?>" class="btn btn-light btn-outline-secondary btn-sm" title="Modifica Tipologia di Licenza">
+                                  <a href="<?= url_to('tipilicenze_modifica', $tipo["id"]) ?>" class="btn btn-light btn-outline-secondary btn-sm" title="Modifica Tipologia di Licenza">
                                       <i class="bi bi-pencil"></i>
                                   </a>
                                 </td>
@@ -176,7 +176,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="<?= url_to('tipi_link', $fornitore["id"]) ?>" method="POST">
+                <form action="<?= url_to('tipilicenze_link', $fornitore["id"]) ?>" method="POST">
                     <input type="hidden" name="backTo" value="<?= url_to('fornitori_scheda', $fornitore["id"]) ?>">
                     <select name="id_licenza" id="id_licenza" class="form-select" required>
                         <?php foreach ($selectData as $option): ?>

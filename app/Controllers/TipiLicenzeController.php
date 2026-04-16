@@ -21,7 +21,7 @@ class TipiLicenzeController extends BaseController
     {
         $data['tipiLicenze'] = $this->TipiLicenzeModel->getTipiLicenza();
         $data['title'] = 'Elenco Tipi Licenze';
-        return view('licenze/tipi/index', $data);
+        return $this->view('licenze/tipi/index', $data);
     }
     public function show($id)
     {
@@ -37,7 +37,7 @@ class TipiLicenzeController extends BaseController
             'spoof' => null,
             'readonly' => true
             ];
-        return view('licenze/tipi/show', $data);
+        return $this->view('licenze/tipi/show', $data);
     }
 
     public function create()
@@ -47,14 +47,14 @@ class TipiLicenzeController extends BaseController
             'title' => 'Crea Nuova Tipologia di Licenza',
             'backTo' => $this->getBackTo(base_url('/tipi')),
             'form' => [
-                'action' => url_to('tipi_store'),
+                'action' => url_to('tipilicenze_store'),
                 'method' => 'POST',
                 'spoof' => null,
                 'submitText' => 'Salva',
                 'readonly' => false,
             ]
         );
-        return view('licenze/tipi/form', $data);
+        return $this->view('licenze/tipi/form', $data);
     }
     public function store()
     {
@@ -78,14 +78,14 @@ class TipiLicenzeController extends BaseController
             'title' => 'Modifica Tipo Licenza: ' . $tipoLicenza["nome"],
             'backTo' => $this->getBackTo(base_url('/tipi')),
             'form' => [
-                'action' => url_to('tipi_aggiorna', $id),
+                'action' => url_to('tipilicenze_aggiorna', $id),
                 'method' => 'POST',
                 'spoof' => 'PUT',
                 'submitText' => 'Aggiorna',
                 'readonly' => false,
             ]
         );
-        return view('licenze/tipi/form', $data);
+        return $this->view('licenze/tipi/form', $data);
     }
 
     public function update($id)
