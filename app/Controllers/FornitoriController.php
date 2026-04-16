@@ -58,9 +58,6 @@ class FornitoriController extends BaseController
             ]
         ];
 
-
-
-
         return view('fornitori/show', $data);
     }
 

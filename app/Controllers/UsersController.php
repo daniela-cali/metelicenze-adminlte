@@ -20,13 +20,18 @@ class UsersController extends BaseController
             ->withPermissions()
             ->findAll();
 
-        return view('users/index', [
+        $data = [
             'title'     => 'Gestione Utenti',
             'usersList' => $usersList,
-        ]);
+            // Il BaseController deriva $route da "UsersController" → "users", ma la URL group è "utenti".
+            // Sovrascriviamo qui per far funzionare il dblclick centralizzato di table-manager.js.
+            'route'     => 'utenti',
+        ];
+
+        return view('users/index', $data);
     }
 
-    public function visualizza($id)
+    public function show($id)
     {
         $users = auth()->getProvider();
         $user  = $users
@@ -35,23 +40,50 @@ class UsersController extends BaseController
             ->find($id);
 
         if (!$user) {
-            return redirect()->to('/utenti')->with('alert', [
-                'type'    => 'danger',
-                'message' => 'Utente non trovato.',
-            ]);
+            return redirect()->to(url_to('utenti_index'))->with('error', 'Utente non trovato.');
         }
 
-        return view('users/form', [
-            'title'          => 'Dettagli Utente: ' . esc($user->username),
-            'mode'           => 'view',
-            'action'         => '',
-            'user'           => $user,
+        $backTo = $this->getBackTo(url_to('utenti_index'));
+        $data = [
+            'title'   => 'Dettagli Utente: ' . esc($user->username),
+            'mode'    => 'view',
+            'user'    => $user,
+            'backTo'  => $backTo,
+            'form'    => [
+                'action'     => '',
+                'method'     => 'get',
+                'spoof'      => null,
+                'submitText' => '',
+                'readonly'   => true,
+            ],
             'allGroups'      => config('AuthGroups')->groups,
             'allPermissions' => config('AuthGroups')->permissions,
-        ]);
+        ];
+        return view('users/form', $data);
     }
 
-    public function modifica($id)
+    public function create()
+    {
+        $backTo = $this->getBackTo(url_to('utenti_index'));
+        $data = [
+            'title'  => 'Crea Nuovo Utente',
+            'mode'   => 'create',
+            'user'   => null,
+            'backTo' => $backTo,
+            'form'   => [
+                'action'     => site_url('utenti'),
+                'method'     => 'post',
+                'spoof'      => null,
+                'submitText' => 'Salva',
+                'readonly'   => false,
+            ],
+            'allGroups'      => config('AuthGroups')->groups,
+            'allPermissions' => config('AuthGroups')->permissions,
+        ];
+        return view('users/form', $data);
+    }
+
+    public function edit($id)
     {
         $users = auth()->getProvider();
         $user  = $users
@@ -60,80 +92,162 @@ class UsersController extends BaseController
             ->find($id);
 
         if (!$user) {
-            return redirect()->to('/utenti')->with('alert', [
-                'type'    => 'danger',
-                'message' => 'Utente non trovato.',
-            ]);
+            return redirect()->to(url_to('utenti_index'))->with('error', 'Utente non trovato.');
         }
 
+        $backTo = $this->getBackTo(url_to('utenti_index'));
         return view('users/form', [
-            'title'          => 'Modifica Utente: ' . esc($user->username),
-            'mode'           => 'edit',
-            'action'         => base_url('/utenti/salva/' . $id),
-            'user'           => $user,
+            'title'   => 'Modifica Utente: ' . esc($user->username),
+            'mode'    => 'edit',
+            'user'    => $user,
+            'backTo'  => $backTo,
+            'form'    => [
+                // url_to('utenti_aggiorna', $id) genera /utenti/{id} (la rotta PUT ha il placeholder (:num)).
+                // Il form invia POST con spoof _method=PUT, che CI4 instradia su put('(:num)') → update()
+                'action'     => url_to('utenti_aggiorna', $id),
+                'method'     => 'POST',
+                'spoof'      => 'PUT',
+                'submitText' => 'Aggiorna',
+                'readonly'   => false,
+            ],
             'allGroups'      => config('AuthGroups')->groups,
             'allPermissions' => config('AuthGroups')->permissions,
         ]);
     }
-    public function elimina($id)
+
+    /**
+     * store() — crea un nuovo utente da backoffice (POST /utenti/).
+     *
+     * Shield tiene separati i dati base (username → tabella `users`) dalle
+     * credenziali di accesso (email + password hashata → tabella `auth_identities`).
+     * Assegnando email e password sull'entità prima del save(), Shield provvede
+     * a creare entrambi i record in automatico.
+     */
+    public function store()
     {
         $users = auth()->getProvider();
-        $user  = $users->find($id);
+        $post  = $this->request->getPost();
 
-        if (!$user) {
-            return redirect()->to('/utenti')->with('alert', [
-                'type'    => 'danger',
-                'message' => 'Utente non trovato.',
-            ]);
+        // ------------------------------------------------------------------
+        // Passo 1 — Validazione.
+        // Verifichiamo formato e unicità dello username prima di toccare il DB.
+        // La regola `strong_password` è registrata da Shield (già usata in
+        // changePassword). Per l'email lasciamo che Shield restituisca l'errore
+        // se risulta duplicata in auth_identities (evita una query ridondante).
+        // ------------------------------------------------------------------
+        $rules = [
+            'username' => [
+                'label' => 'Username',
+                'rules' => 'required|min_length[3]|max_length[30]|is_unique[users.username]',
+            ],
+            'email' => [
+                'label' => 'Email',
+                'rules' => 'required|valid_email',
+            ],
+            'password' => [
+                'label' => 'Password',
+                'rules' => 'required|min_length[8]|strong_password',
+            ],
+        ];
+
+        if (!$this->validate($rules)) {
+            return redirect()->back()->withInput()
+                ->with('errors', $this->validator->getErrors());
         }
 
-        try {
-            $users->delete($id);
-        } catch (DatabaseException $e) {
-            return redirect()->to('/utenti')->with('alert', [
-                'type'    => 'danger',
-                'message' => 'Errore nell\'eliminazione utente.',
-            ]);
+        // ------------------------------------------------------------------
+        // Passo 2 — Creazione entità User.
+        // Lo username va nel costruttore; email e password si assegnano
+        // tramite i setter dell'entità, che segnalano internamente a Shield
+        // che l'identità email_password va creata insieme all'utente.
+        // ------------------------------------------------------------------
+        $user           = new User(['username' => $post['username']]);
+        $user->email    = $post['email'];
+        $user->password = $post['password']; // Shield lo hasha con bcrypt prima del salvataggio
+
+        // ------------------------------------------------------------------
+        // Passo 3 — Salvataggio via Shield UserModel.
+        // save() scrive sia in `users` che in `auth_identities` in modo atomico.
+        // Se fallisce (es. email già presente) restituisce false e popola errors().
+        // ------------------------------------------------------------------
+        if (!$users->save($user)) {
+            return redirect()->back()->withInput()
+                ->with('errors', $users->errors());
         }
 
-        return redirect()->to('/utenti')->with('alert', [
-            'type'    => 'success',
-            'message' => 'Utente eliminato con successo.',
-        ]);
+        // ------------------------------------------------------------------
+        // Passo 4 — Recupero utente appena creato.
+        // Dopo il save() abbiamo solo l'ID auto-generato; ricarichiamo l'entità
+        // completa perché addGroup() e addPermission() operano sull'oggetto idratato.
+        // ------------------------------------------------------------------
+        $newUser = $users->find($users->getInsertID());
+
+        // ------------------------------------------------------------------
+        // Passo 5 — Attivazione immediata.
+        // Nel flusso di registrazione normale Shield richiede la verifica email.
+        // Da backoffice l'admin già conosce l'utente: activate() marca l'identità
+        // come verificata direttamente sul DB, saltando l'invio del link.
+        // ------------------------------------------------------------------
+        $newUser->activate();
+
+        // ------------------------------------------------------------------
+        // Passo 6 — Assegnazione gruppi.
+        // Su un nuovo utente non serve la DELETE preventiva (non ha ancora gruppi),
+        // ma usiamo lo stesso approccio di update() per simmetria.
+        // ------------------------------------------------------------------
+        $selectedGroups = $post['groups'] ?? [];
+        foreach ($selectedGroups as $group) {
+            try {
+                $newUser->addGroup($group);
+            } catch (DatabaseException $e) {
+                log_message('error', "Errore nell'aggiungere utente al gruppo $group: " . $e->getMessage());
+            }
+        }
+
+        // ------------------------------------------------------------------
+        // Passo 7 — Assegnazione permessi utente-level.
+        // I permessi individuali vivono in `auth_permissions_users`.
+        // addPermission() di Shield gestisce l'inserimento; su un nuovo utente
+        // non serve la delete preventiva perché non ha permessi preesistenti.
+        // ------------------------------------------------------------------
+        $selectedPermissions = $post['permissions'] ?? [];
+        foreach ($selectedPermissions as $permission) {
+            try {
+                $newUser->addPermission($permission);
+            } catch (DatabaseException $e) {
+                log_message('error', "Errore nell'aggiungere permesso $permission all'utente: " . $e->getMessage());
+            }
+        }
+
+        return redirect()->to(
+            $this->getBackTo(url_to('utenti_index'))
+        )->with('success', 'Utente creato con successo.');
     }
-    
-    public function salva($id = null)
-    {
-        if (!$id) {
-            return redirect()->to('/utenti')->with('alert', [
-                'type'    => 'warning',
-                'message' => 'La creazione utenti avviene solo dal frontend.',
-            ]);
-        }
 
+    /**
+     * update() — salva le modifiche a un utente esistente (PUT /utenti/:id).
+     * Riceve l'ID dall'URL tramite method spoofing dal form di modifica.
+     */
+    public function update($id)
+    {
         $users = auth()->getProvider();
-        $data  = $this->request->getPost();
+        $post  = $this->request->getPost();
 
         $user = $users->find($id);
         if (!$user) {
-            return redirect()->to('/utenti')->with('alert', [
-                'type'    => 'danger',
-                'message' => 'Utente non trovato.',
-            ]);
+            return redirect()->to(url_to('utenti_index'))->with('error', 'Utente non trovato.');
         }
 
-        // Aggiornamento campi base
-        $user->username = $data['username'];
-        $user->email    = $data['email'];
+        $user->username = $post['username'];
+        $user->email    = $post['email'];
 
         if (!$users->save($user)) {
-            return redirect()->back()->withInput()->with('alert', [
-                'type'    => 'danger',
-                'message' => $users->errors(),
-            ]);
+            return redirect()->back()->withInput()
+                ->with('error', implode(', ', $users->errors()));
         }
 
-        // Gestione gruppi selezionati
+        // Gestione gruppi: elimina tutti i gruppi attuali e riassegna quelli selezionati nel form.
+        // Si opera direttamente su DB perché Shield non espone un metodo "setGroups" atomico.
         $db = db_connect();
         $db->table('auth_groups_users')->where('user_id', $id)->delete();
         $selectedGroups = $this->request->getPost('groups') ?? [];
@@ -145,13 +259,45 @@ class UsersController extends BaseController
             }
         }
 
-        return redirect()->to('/utenti')->with('alert', [
-            'type'    => 'success',
-            'message' => 'Utente aggiornato con successo.',
-        ]);
+        // Gestione permessi utente-level: stessa logica dei gruppi.
+        // I permessi individuali vivono in `auth_permissions_users`; azzeriamo e
+        // riassegnamo così un permesso deselezionato nel form viene effettivamente rimosso.
+        $db->table('auth_permissions_users')->where('user_id', $id)->delete();
+        $selectedPermissions = $this->request->getPost('permissions') ?? [];
+        foreach ($selectedPermissions as $permission) {
+            try {
+                $user->addPermission($permission);
+            } catch (DatabaseException $e) {
+                log_message('error', "Errore nell'aggiungere permesso $permission all'utente $id: " . $e->getMessage());
+            }
+        }
+
+        return redirect()->to(
+            $this->getBackTo(url_to('utenti_index'))
+        )->with('success', 'Utente aggiornato con successo.');
     }
 
-     public function changePassword()
+    public function delete($id)
+    {
+        $users = auth()->getProvider();
+        $user  = $users->find($id);
+
+        if (!$user) {
+            return redirect()->to(url_to('utenti_index'))->with('error', 'Utente non trovato.');
+        }
+
+        try {
+            $users->delete($id);
+        } catch (DatabaseException) {
+            return redirect()->to(url_to('utenti_index'))
+                ->with('error', 'Errore nell\'eliminazione utente.');
+        }
+
+        return redirect()->to(url_to('utenti_index'))
+            ->with('success', 'Utente eliminato con successo.');
+    }
+
+    public function changePassword()
     {
         $user = auth()->user();
         log_message('info', 'Request method: ' . $this->request->getMethod());
@@ -189,59 +335,50 @@ class UsersController extends BaseController
 
     public function approva($id)
     {
-        $users = auth()->getProvider();
-        $user  = $users->withGroups()->withPermissions()->find($id);
+        $users      = auth()->getProvider();
+        $user       = $users->withGroups()->withPermissions()->find($id);
         $siteConfig = config('SiteConfig');
 
         if (!$user) {
-            return redirect()->to('/utenti')->with('alert', [
-                'type'    => 'danger',
-                'message' => 'Utente non trovato.',
-            ]);
+            return redirect()->to(url_to('utenti_index'))->with('error', 'Utente non trovato.');
         }
 
-        if (in_array('pending', $user->getGroups())) {
-            try {
-                $user->removeGroup('pending');
-                $user->addGroup('user');
-                // ==== Invio email di notifica approvazione ====
-                $admin = config('SiteConfig')->adminEmail;
-                $email = \Config\Services::email();
-                $email->setFrom($admin, 'MeTe Licenze Admin');
-                $email->setTo($user->email);
-                $email->setSubject('Account Approvato');
-                $content = "
-                    <p>Ciao <strong>" . esc($user->username) . "</strong>,</p>
-                    <p>Il tuo account è stato approvato. Ora puoi effettuare il login.</p>
-                     <p><a href='{$siteConfig->siteURL}/login' class='button'>Accedi al gestionale</a></p>
-                    ";
-                $message = view('emails/layout', [
-                    'title'   => 'Account approvato su MeTe Licenze',
-                    'content' => $content
-                ]);
-                $email->setMessage($message);
+        if (!in_array('pending', $user->getGroups())) {
+            return redirect()->to(url_to('utenti_index'))
+                ->with('error', 'L\'utente non è in stato pending.');
+        }
 
-                $email->setMailType('html');
-                if (!$email->send()) {
-                    log_message('error', "Errore nell'invio della mail di approvazione a {$user->email}: " . $email->printDebugger(['headers', 'subject', 'body']));
-                }
-            } catch (DatabaseException $e) {
-                log_message('error', "Errore nell'approvare utente $id: " . $e->getMessage());
-                return redirect()->to('/utenti')->with('alert', [
-                    'type'    => 'danger',
-                    'message' => 'Errore nell\'approvazione utente.',
-                ]);
+        try {
+            $user->removeGroup('pending');
+            $user->addGroup('user');
+
+            // ==== Invio email di notifica approvazione ====
+            $admin = config('SiteConfig')->adminEmail;
+            $email = \Config\Services::email();
+            $email->setFrom($admin, 'MeTe Licenze Admin');
+            $email->setTo($user->email);
+            $email->setSubject('Account Approvato');
+            $content = "
+                <p>Ciao <strong>" . esc($user->username) . "</strong>,</p>
+                <p>Il tuo account è stato approvato. Ora puoi effettuare il login.</p>
+                <p><a href='{$siteConfig->siteURL}/login' class='button'>Accedi al gestionale</a></p>
+            ";
+            $message = view('emails/layout', [
+                'title'   => 'Account approvato su MeTe Licenze',
+                'content' => $content,
+            ]);
+            $email->setMessage($message);
+            $email->setMailType('html');
+            if (!$email->send()) {
+                log_message('error', "Errore nell'invio della mail di approvazione a {$user->email}: " . $email->printDebugger(['headers', 'subject', 'body']));
             }
-        } else {
-            return redirect()->to('/utenti')->with('alert', [
-                'type'    => 'info',
-                'message' => 'L\'utente non è in stato pending.',
-            ]);
+        } catch (DatabaseException $e) {
+            log_message('error', "Errore nell'approvare utente $id: " . $e->getMessage());
+            return redirect()->to(url_to('utenti_index'))
+                ->with('error', 'Errore nell\'approvazione utente.');
         }
 
-        return redirect()->to('/utenti')->with('alert', [
-            'type'    => 'success',
-            'message' => 'Utente approvato con successo.',
-        ]);
+        return redirect()->to(url_to('utenti_index'))
+            ->with('success', 'Utente approvato con successo.');
     }
 }
