@@ -1,6 +1,5 @@
 <?php
-$config   = config('SiteConfig');
-$siteName = $config->siteName ?? 'MeTe Licenze';
+$siteName = setting('SiteConfig.siteName') ?? 'MeTe Licenze';
 
 // Rileva la URI corrente per evidenziare la voce attiva
 $currentUri = '/' . ltrim(service('uri')->getPath(), '/');
@@ -16,7 +15,7 @@ $currentUri = '/' . ltrim(service('uri')->getPath(), '/');
   <!-- Brand nella sidebar (visibile su mobile o quando la navbar brand è nascosta) -->
   <div class="sidebar-brand">
     <a href="<?= base_url() ?>" class="brand-link d-flex align-items-center">
-      <img src="<?= esc($config->logoPath) ?>" alt="logo"
+      <img src="<?= esc(setting('SiteConfig.logoPath')) ?>" alt="logo"
            class="brand-image opacity-75 shadow" style="max-height: 33px; width: auto;">
       <span class="brand-text fw-light ms-2"><?= esc($siteName) ?></span>
     </a>
@@ -52,8 +51,8 @@ $currentUri = '/' . ltrim(service('uri')->getPath(), '/');
         </li>
 
         <!-- Fornitori (con sottomenu) -->
-        <li class="nav-item <?= str_starts_with($currentUri, '/fornitori') || str_starts_with($currentUri, '/tipi') ? 'menu-open' : '' ?>">
-          <a href="#" class="nav-link <?= str_starts_with($currentUri, '/fornitori') || str_starts_with($currentUri, '/tipi') ? 'active' : '' ?>">
+        <li class="nav-item <?= str_starts_with($currentUri, '/fornitori') || str_starts_with($currentUri, '/tipilicenze') ? 'menu-open' : '' ?>">
+          <a href="#" class="nav-link <?= str_starts_with($currentUri, '/fornitori') || str_starts_with($currentUri, '/tipilicenze') ? 'active' : '' ?>">
             <i class="nav-icon bi bi-building"></i>
             <p>
               Fornitori
@@ -72,7 +71,7 @@ $currentUri = '/' . ltrim(service('uri')->getPath(), '/');
               </a>
             </li>
             <li class="nav-item">
-              <a href="<?= base_url('tipi/') ?>" class="nav-link <?= str_starts_with($currentUri, '/tipi') ? 'active' : '' ?>">
+              <a href="<?= base_url('tipilicenze/') ?>" class="nav-link <?= str_starts_with($currentUri, '/tipilicenze') ? 'active' : '' ?>">
                 <i class="nav-icon bi bi-circle"></i>
                 <p>Tipi Licenze</p>
               </a>
@@ -100,8 +99,8 @@ $currentUri = '/' . ltrim(service('uri')->getPath(), '/');
         <li class="nav-header">AMMINISTRAZIONE</li>
 
         <!-- Admin (con sottomenu) -->
-        <li class="nav-item <?= str_starts_with($currentUri, '/database') || str_starts_with($currentUri, '/utenti') || str_starts_with($currentUri, '/admin') ? 'menu-open' : '' ?>">
-          <a href="#" class="nav-link <?= str_starts_with($currentUri, '/database') || str_starts_with($currentUri, '/utenti') || str_starts_with($currentUri, '/admin') ? 'active' : '' ?>">
+        <li class="nav-item <?= str_starts_with($currentUri, '/admin') ? 'menu-open' : '' ?>">
+          <a href="#" class="nav-link <?= str_starts_with($currentUri, '/admin') ? 'active' : '' ?>">
             <i class="nav-icon bi bi-shield-lock-fill"></i>
             <p>
               Admin
@@ -110,13 +109,13 @@ $currentUri = '/' . ltrim(service('uri')->getPath(), '/');
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="<?= base_url('database/') ?>" class="nav-link <?= str_starts_with($currentUri, '/database') && !str_starts_with($currentUri, '/database/log') ? 'active' : '' ?>">
+              <a href="<?= base_url('admin/databaseinfo') ?>" class="nav-link <?= str_starts_with($currentUri, '/admin/databaseinfo') && !str_starts_with($currentUri, '/admin/databaseinfo/showlog') ? 'active' : '' ?>">
                 <i class="nav-icon bi bi-circle"></i>
                 <p>Test Connessioni</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="<?= base_url('utenti/') ?>" class="nav-link <?= str_starts_with($currentUri, '/utenti') ? 'active' : '' ?>">
+              <a href="<?= base_url('admin/users') ?>" class="nav-link <?= str_starts_with($currentUri, '/admin/users') ? 'active' : '' ?>">
                 <i class="nav-icon bi bi-circle"></i>
                 <p>Utenti</p>
               </a>
@@ -134,7 +133,7 @@ $currentUri = '/' . ltrim(service('uri')->getPath(), '/');
               </a>
             </li>
             <li class="nav-item">
-              <a href="<?= base_url('database/log') ?>" class="nav-link <?= str_starts_with($currentUri, '/database/log') ? 'active' : '' ?>">
+              <a href="<?= base_url('admin/databaseinfo/showlog') ?>" class="nav-link <?= str_starts_with($currentUri, '/admin/databaseinfo/showlog') ? 'active' : '' ?>">
                 <i class="nav-icon bi bi-circle"></i>
                 <p>Log Database</p>
               </a>

@@ -73,7 +73,7 @@ Events::on('register', static function (User $user) {
     // Mittente (Impostato in Config/Email.php)
 
     // Destinatario: admin
-    $admin = config('SiteConfig')->adminEmail;
+    $admin = setting('SiteConfig.adminEmail');
     $email->setTo($admin);
     $email->setSubject('Nuova registrazione utente su MeTe Licenze');
 

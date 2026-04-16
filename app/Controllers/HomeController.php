@@ -10,7 +10,6 @@ class HomeController extends BaseController
 {
     public function index(): string
     {
-        $config   = config('SiteConfig');
         $loggedIn = auth()->loggedIn();
 
         // Le query vengono eseguite solo se l'utente è autenticato.
@@ -40,10 +39,10 @@ class HomeController extends BaseController
             $distribuzione = [];
         }
 
-        return view('home', [
+        return $this->view('home', [
             'title'         => 'Dashboard',
-            'siteName'      => $config->siteName,
-            'siteTheme'     => $config->siteTheme,
+            'siteName'      => setting('SiteConfig.siteName'),
+            'siteTheme'     => setting('SiteConfig.siteTheme'),
             'totClienti'    => $totClienti,
             'totLicenze'    => $totLicenze,
             'totVersioni'   => $totVersioni,

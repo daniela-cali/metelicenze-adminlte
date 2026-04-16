@@ -90,11 +90,11 @@
 
             <!-- Header scuro con logo e nome dell'applicazione -->
             <div class="modal-header">
-                <img src="<?= config('SiteConfig')->logoPath ?>"
-                     alt="<?= esc(config('SiteConfig')->siteName) ?>"
+                <img src="<?= setting('SiteConfig.logoPath') ?>"
+                     alt="<?= esc(setting('SiteConfig.siteName')) ?>"
                      class="me-3">
                 <h5 class="modal-title mb-0" id="loginModalLabel">
-                    <?= esc(config('SiteConfig')->siteName) ?> — Accesso
+                    <?= esc(setting('SiteConfig.siteName')) ?> — Accesso
                 </h5>
             </div>
 

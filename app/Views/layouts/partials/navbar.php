@@ -1,6 +1,5 @@
 <?php
-$config   = config('SiteConfig');
-$siteName = $config->siteName ?? 'MeTe Licenze';
+$siteName = setting('SiteConfig.siteName') ?? 'MeTe Licenze';
 ?>
 
 <!--
@@ -24,7 +23,7 @@ $siteName = $config->siteName ?? 'MeTe Licenze';
       </li>
       <li class="nav-item d-none d-md-flex align-items-center ms-2">
         <a class="navbar-brand d-flex align-items-center" href="<?= base_url() ?>">
-          <img src="<?= esc($config->logoPath) ?>" alt="logo" style="max-height: 32px; width: auto;" class="me-2">
+          <img src="<?= esc(setting('SiteConfig.logoPath')) ?>" alt="logo" style="max-height: 32px; width: auto;" class="me-2">
           <span class="fw-semibold"><?= esc($siteName) ?></span>
         </a>
       </li>
@@ -43,7 +42,7 @@ $siteName = $config->siteName ?? 'MeTe Licenze';
           </a>
           <ul class="dropdown-menu dropdown-menu-end">
             <li>
-              <a class="dropdown-item" href="<?= base_url('utenti/visualizza/' . auth()->user()->id) ?>">
+              <a class="dropdown-item" href="<?= url_to('users_scheda', auth()->user()->id) ?>">
                 <i class="bi bi-person me-2"></i> Profilo
               </a>
             </li>
