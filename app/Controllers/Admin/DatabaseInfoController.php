@@ -1,6 +1,8 @@
 <?php
-// app/Controllers/DatabaseInfoController.php
+
 namespace App\Controllers\Admin;
+
+use App\Controllers\BaseController;
 
 helper('db_status');
 
