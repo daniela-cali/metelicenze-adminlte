@@ -37,7 +37,7 @@ class FornitoriController extends BaseController
         }
         unset($fornitore); // Termina la referenza*/
         $data['title'] = 'Elenco Fornitori';
-        return view('fornitori/index', $data);
+        return $this->view('fornitori/index', $data);
     }
 
     public function show($id)
@@ -45,7 +45,7 @@ class FornitoriController extends BaseController
         $fornitore = $this->FornitoriModel->getFornitoriById($id);
         $data = [
             'mode' => 'view',
-            'fornitori' => $fornitore,
+            'fornitore' => $fornitore,
             'title' => 'Scheda Fornitore' . $fornitore["nome"],
             'selectData' => $this->tipiLicenzeModel->getTipiLicenzaForSelect(),
             'licenzeFornite' => $this->tipiLicenzeModel->getTipiLicenzeByFornitore($id),
@@ -58,7 +58,7 @@ class FornitoriController extends BaseController
             ]
         ];
 
-        return view('fornitori/show', $data);
+        return $this->view('fornitori/show', $data);
     }
 
     public function create()
@@ -78,7 +78,7 @@ class FornitoriController extends BaseController
 
             ]
         ];
-        return view('fornitori/form', $data );
+        return $this->view('fornitori/form', $data );
     }
 
     public function store()
@@ -115,7 +115,7 @@ class FornitoriController extends BaseController
                 'readonly' => false,
             ],
         ];
-        return view('fornitori/form', $data);
+        return $this->view('fornitori/form', $data);
     }
 
     public function update($id)

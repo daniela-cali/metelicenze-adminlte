@@ -34,7 +34,7 @@
                 </ul>
                 <ul class="navbar-nav ms-auto">
                     <li>
-                        <a href="<?= esc(base_url('/clienti')) ?>" id="navigation" class="btn btn-light btn-outline-secondary btn-sm">
+                        <a href="<?= esc($backTo) ?>" id="navigation" class="btn btn-light btn-outline-secondary btn-sm">
                             <i class="bi bi-arrow-left-circle"></i> Torna indietro
                         </a>
                     </li>
