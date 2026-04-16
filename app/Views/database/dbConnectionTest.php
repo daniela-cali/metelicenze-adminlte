@@ -24,12 +24,17 @@
                     <div class="card-body">
                         <div class="mb-2"><span class="text-muted">Nome DB:</span> <code class="ms-2"><?= esc($dbInfo['db_name']) ?></code></div>
                         <div class="mb-2"><span class="text-muted">Connection Group:</span> <code class="ms-2"><?= esc($dbInfo['connection_group']) ?></code></div>
-                        <div class="mb-2"><span class="text-muted">Encoding:</span> <span class="badge bg-success"><?= esc($dbInfo['encoding']) ?></span></div>
+                        <div class="mb-2"><span class="text-muted">Encoding:</span> <code class="ms-2"><?= esc($dbInfo['encoding']) ?></code></div>
                         <div class="mb-2"><span class="text-muted">Collation:</span> <code class="ms-2"><?= esc($dbInfo['collation']) ?></code></div>
                         <div class="mb-2"><span class="text-muted">CType:</span> <code class="ms-2"><?= esc($dbInfo['ctype']) ?></code></div>
                         <div class="mb-3"><span class="text-muted">Driver:</span> <code class="ms-2"><?= esc($dbInfo['driver']) ?></code></div>
                         <div class="mb-3"><span class="text-muted">Hostname:</span> <code class="ms-2"><?= esc($dbInfo['hostname']) ?></code></div>
-                        <div class="mb-3"><span class="text-muted">Status:</span> <code class="ms-2"><?= esc($dbInfo['status']) ?></code></div>
+                        <div class="mb-3"><span class="text-muted">Status:</span> 
+                        <?= 
+                        $dbInfo['status'] === 'Raggiungibile' 
+                            ? '<span class="badge bg-success">Connessione riuscita</span>' 
+                            : '<span class="badge bg-danger">Connessione fallita</span>';
+                        ?></div>
                             
                         <!-- Pulsanti -->
                         <div class="d-flex justify-content-center gap-2 mt-3">
