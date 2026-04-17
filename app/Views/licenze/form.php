@@ -24,6 +24,10 @@ $backTo = $backTo ?? base_url('/licenze');
             <!--Aggiungo la modalità di creazione o modifica per il js-->
             <form action="<?= $action ?>" method="post" data-mode="<?= $mode ?>">
                 <input type="hidden" name="backTo" value="<?= esc($backTo) ?>">
+                <input type="hidden" name="clienti_id" value="<?= esc($licenza['clienti_id'] ?? $id_cliente ?? '') ?>">
+                <?php if ($mode === 'edit'): ?>
+                <input type="hidden" name="_method" value="PUT">
+                <?php endif; ?>
 
                 <div class="mb-3" data-licenza="Common">
                     <label for="tipo" class="form-label">Tipo</label>
