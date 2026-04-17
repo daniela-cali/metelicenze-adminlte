@@ -127,7 +127,7 @@ $currentUri = '/' . ltrim(service('uri')->getPath(), '/');
               </a>
             </li>
             <li class="nav-item">
-              <a href="<?= base_url('admin/import_clienti') ?>" class="nav-link <?= str_starts_with($currentUri, '/admin/import_clienti') ? 'active' : '' ?>">
+              <a href="<?= base_url('admin/importClienti') ?>" class="nav-link <?= str_starts_with($currentUri, '/admin/importClienti') ? 'active' : '' ?>">
                 <i class="nav-icon bi bi-circle"></i>
                 <p>Importa Clienti</p>
               </a>

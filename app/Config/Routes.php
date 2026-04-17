@@ -77,13 +77,22 @@ $routes->group('tipilicenze', ['filter' => 'notpending'], function($routes) {
 });
 
 $routes->group('admin', ['filter' => 'group:superadmin,admin'], function($routes) {
-    $routes->get('import_clienti', 'Admin\ImportClientiController::index');
-    $routes->post('import_clienti', 'Admin\ImportClientiController::importClienti');
+    /**
+     * Importazione Clienti 
+     */
+    $routes->get('importClienti', 'Admin\ImportClientiController::index');
+    $routes->post('importClienti', 'Admin\ImportClientiController::importClienti');
+
+    /**
+     * Impostazioni sito 
+     */
     $routes->get('settings', 'Admin\SettingsController::index');
     $routes->post('settings/save', 'Admin\SettingsController::save');
 
-    // Utenti — spostati sotto /admin/users/ e rinominati da utenti_* a users_*
-    // per allinearsi al nome del controller Admin\UsersController
+    /**
+     * Gestione utenti — rotte per CRUD completo su utenti, con approvazione e eliminazione.
+     * Il filter 'group:superadmin,admin' assicura che solo gli amministratori possano accedere a queste rotte.
+     */
     $routes->get('users',                'Admin\UsersController::index',       ['as' => 'users_index']);
     $routes->get('users/(:num)',          'Admin\UsersController::show/$1',     ['as' => 'users_scheda']);
     $routes->get('users/crea',           'Admin\UsersController::create',      ['as' => 'users_crea']);
@@ -93,8 +102,10 @@ $routes->group('admin', ['filter' => 'group:superadmin,admin'], function($routes
     $routes->get('users/elimina/(:num)',  'Admin\UsersController::delete/$1',  ['as' => 'users_elimina']);
     $routes->get('users/approva/(:num)', 'Admin\UsersController::approva/$1', ['as' => 'users_approva']);
 
-    // Database info — spostato sotto /admin/databaseinfo/ per allinearsi al nome
-    // del controller Admin\DatabaseInfoController
+    /**
+     * Database Info — rotte per testare la connessione al database esterno e visualizzare informazioni utili per debug e sviluppo.
+     * Queste rotte sono protette dal filter 'group:superadmin,admin' perché espongono dettagli tecnici che non dovrebbero essere accessibili a utenti non amministratori.
+     */
     $routes->get('databaseinfo',                               'Admin\DatabaseInfoController::connectionTest');
     $routes->get('databaseinfo/info/(:segment)',               'Admin\DatabaseInfoController::info/$1');
     $routes->get('databaseinfo/fields/(:segment)/(:segment)', 'Admin\DatabaseInfoController::getTableFields/$1/$2');
@@ -117,6 +128,7 @@ $routes->group('test', function($routes) {
 // 'GruppoController' con il nome del controller corrispondente.
 // Il filter 'notpending' richiede che l'utente non sia in stato pending;
 // usare 'group:superadmin,admin' per le aree riservate agli amministratori.
+// Inoltre, se controller e route hanno lo stesso nome, tablemanager.js aggiunge automaticamente i link alle rotte standard, quindi è importante usare nomi coerenti per controller e rotte (es. 'FornitoriController' e 'fornitori').
 // =============================================================================
 //
 // $routes->group('gruppo', ['filter' => 'notpending'], function($routes) {
