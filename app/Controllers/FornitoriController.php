@@ -44,17 +44,18 @@ class FornitoriController extends BaseController
     {
         $fornitore = $this->FornitoriModel->getFornitoriById($id);
         $data = [
-            'mode' => 'view',
-            'fornitore' => $fornitore,
-            'title' => 'Scheda Fornitore' . $fornitore["nome"],
-            'selectData' => $this->tipiLicenzeModel->getTipiLicenzaForSelect(),
+            'mode'          => 'view',
+            'fornitore'     => $fornitore,
+            'title'         => 'Scheda Fornitore: ' . $fornitore["nome"],
+            'backTo'        => $this->getBackTo(url_to('fornitori_index')),
+            'selectData'    => $this->tipiLicenzeModel->getTipiLicenzaForSelect(),
             'licenzeFornite' => $this->tipiLicenzeModel->getTipiLicenzeByFornitore($id),
             'form' => [
-                'action' => '', // Nessuna azione in visualizzazione
-                'method' => 'get',
-                'spoof' => null,
+                'action'     => '',
+                'method'     => 'get',
+                'spoof'      => null,
                 'submitText' => '',
-                'readonly' => true,
+                'readonly'   => true,
             ]
         ];
 
