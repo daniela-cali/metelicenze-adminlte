@@ -12,7 +12,7 @@
 
 <div id="scheda-fornitore">
 
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    <div class="d-flex align-items-center mb-3">
         <p class="lead mb-0">Dettagli e gestione del fornitore</p>
         <a href="<?= url_to('fornitori_index') ?>" class="btn btn-light btn-outline-secondary btn-sm">
             <i class="bi bi-arrow-left-circle"></i> Torna all'elenco fornitori
@@ -44,9 +44,9 @@
 <!--Card Anagrafica-->
 <div class="container-fluid mt-4 p-0" id="anagrafica">
     <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
+        <div class="card-header d-flex align-items-center">
             <h5 class="mb-0"><i class="bi bi-person-badge"></i> Dati Anagrafici</h5>
-            <a href="<?= url_to('fornitori_modifica', $fornitore["id"]) ?>" class="btn btn-light btn-outline-secondary btn-sm" title="Modifica">
+            <a href="<?= url_to('fornitori_modifica', $fornitore["id"]) ?>" class="btn btn-light btn-outline-secondary btn-sm ms-auto" title="Modifica">
                 Modifica <i class="bi bi-pencil"></i>
             </a>
         </div>
@@ -94,7 +94,7 @@
                     </dl>
                 </div>
             </div>
-            <a href="#scheda-fornitore" id="navigation" class="btn btn-light btn-outline-secondary btn-sm">
+            <a href="#scheda-fornitore" class="btn btn-light btn-outline-secondary btn-sm mt-3">
                 <i class="bi bi-arrow-up-square"></i> Torna in cima
             </a>
         </div>
@@ -104,9 +104,9 @@
 <!--Card Tipi Licenze-->
 <div class="container-fluid mt-4 p-0" id="licenze">
     <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
+        <div class="card-header d-flex align-items-center">
             <h5 class="mb-0"><i class="bi bi-key-fill"></i> Tipi Licenze fornite</h5>
-            <a href="<?= url_to('tipilicenze_link', $fornitore["id"]) ?>" class="btn btn-light btn-outline-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#TipiModal">
+            <a href="<?= url_to('tipilicenze_link', $fornitore["id"]) ?>" class="btn btn-light btn-outline-secondary btn-sm ms-auto" data-bs-toggle="modal" data-bs-target="#TipiModal">
                 Associa Tipo Licenza <i class="bi bi-link"></i>
             </a>
         </div>
@@ -139,9 +139,22 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <a href="<?= url_to('tipilicenze_modifica', $tipo["id"]) ?>" class="btn btn-sm btn-outline-secondary" title="Modifica">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
+                                    <button class="btn dropdown-toggle" type="button" id="azione-<?= $tipo['id'] ?>" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-list"></i>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="azione-<?= $tipo['id'] ?>">
+                                        <li>
+                                            <a class="dropdown-item" href="<?= url_to('tipilicenze_modifica', $tipo["id"]) ?>">
+                                                <i class="bi bi-pencil"></i> Modifica
+                                            </a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <a class="dropdown-item text-danger" href="<?= url_to('tipilicenze_unlink', $tipo["id"]) ?>" onclick="return confirm('Rimuovere questa tipologia dal fornitore?');">
+                                                <i class="bi bi-link-45deg"></i> Scollega
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -152,7 +165,7 @@
                     <i class="bi bi-exclamation-triangle"></i> Nessuna tipologia di licenza associata a questo fornitore.
                 </div>
             <?php endif; ?>
-            <a href="#scheda-fornitore" id="navigation" class="btn btn-light btn-outline-secondary btn-sm">
+            <a href="#scheda-fornitore" class="btn btn-light btn-outline-secondary btn-sm mt-3">
                 <i class="bi bi-arrow-up-square"></i> Torna in cima
             </a>
         </div>

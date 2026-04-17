@@ -12,7 +12,7 @@
 
 <div id="scheda-cliente">
 
-<div class="d-flex justify-content-between align-items-center mb-3">
+<div class="d-flex align-items-center mb-3">
     <p class="lead mb-0">Dettagli e gestione del cliente</p>
     <a href="<?= base_url("/clienti") ?>" class="btn btn-light btn-outline-secondary btn-sm">
         <i class="bi bi-arrow-left-circle"></i> Torna all'elenco clienti
@@ -49,9 +49,9 @@
 <!--Card Anagrafica-->
 <div class="container-fluid mt-4 p-0" id="anagrafica">
     <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
+        <div class="card-header d-flex align-items-center">
             <h5 class="mb-0"><i class="bi bi-person-badge"></i> Dati Anagrafici</h5>
-            <a href="<?= url_to('clienti_modifica', $cliente["id"]) ?>" class="btn btn-light btn-outline-secondary btn-sm" title="Modifica">
+            <a href="<?= url_to('clienti_modifica', $cliente["id"]) ?>" class="btn btn-light btn-outline-secondary btn-sm ms-auto" title="Modifica">
                 Modifica <i class="bi bi-pencil"></i>
             </a>
         </div>
@@ -112,7 +112,7 @@
                 </div>
 
             </div>
-            <a href="#scheda-cliente" id="navigation" class="btn btn-light btn-outline-secondary btn-sm">
+            <a href="#scheda-cliente" class="btn btn-light btn-outline-secondary btn-sm mt-3">
                 <i class="bi bi-arrow-up-square"></i> Torna in cima
             </a>
         </div> <!--Fine Card Body Anagrafica-->
@@ -124,9 +124,9 @@
 <!--Card Licenze-->
 <div class="container-fluid mt-4 p-0" id="licenze">
     <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
+        <div class="card-header d-flex align-items-center">
             <h5 class="mb-0"><i class="bi bi-key-fill"></i> Licenze</h5>
-            <a href="<?= url_to('licenze_crea', $cliente["id"]) ?>" class="btn btn-light btn-outline-secondary btn-sm" title="Nuova Licenza per il cliente">
+            <a href="<?= url_to('licenze_crea', $cliente["id"]) ?>" class="btn btn-light btn-outline-secondary btn-sm ms-auto" title="Nuova Licenza per il cliente">
                 <i class="bi bi-key-fill"></i> Nuova Licenza
             </a>
         </div>
@@ -160,15 +160,27 @@
                                     </span>
                                 </td>
                                 <td>
-                                    <a href="<?= url_to('aggiornamenti_crea', $licenza["padre_lic_id"], $licenza["tipo"]) ?>" class="btn btn-sm btn-outline-primary" title="Crea Aggiornamento">
-                                        <i class="bi bi-clock-history"></i>
-                                    </a>
-                                        <a href="<?= url_to('licenze_modifica', $licenza["id"]) ?>" class="btn btn-sm btn-outline-secondary" title="Modifica">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                        <a href="<?= url_to('licenze_elimina', $licenza["id"]) ?>" class="btn btn-sm btn-outline-danger" title="Elimina" onclick=" return confirm('Sei sicuro di voler eliminare questa licenza?');">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
+                                    <button class="btn dropdown-toggle" type="button" id="azione-<?= $licenza['id'] ?>" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-list"></i>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="azione-<?= $licenza['id'] ?>">
+                                        <li>
+                                            <a class="dropdown-item" href="<?= url_to('aggiornamenti_crea', $licenza["padre_lic_id"], $licenza["tipo"]) ?>">
+                                                <i class="bi bi-clock-history"></i> Crea Aggiornamento
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="<?= url_to('licenze_modifica', $licenza["id"]) ?>">
+                                                <i class="bi bi-pencil"></i> Modifica
+                                            </a>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <a class="dropdown-item text-danger" href="<?= url_to('licenze_elimina', $licenza["id"]) ?>" onclick="return confirm('Sei sicuro di voler eliminare questa licenza?');">
+                                                <i class="bi bi-trash"></i> Elimina
+                                            </a>
+                                        </li>
+                                    </ul>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
@@ -179,7 +191,7 @@
                     <i class="bi bi-exclamation-triangle"></i> Nessuna licenza associata a questo cliente.
                 </div>
             <?php endif; ?>
-            <a href="#scheda-cliente" id="navigation" class="btn btn-light btn-outline-secondary btn-sm">
+            <a href="#scheda-cliente" class="btn btn-light btn-outline-secondary btn-sm mt-3">
                 <i class="bi bi-arrow-up-square"></i> Torna in cima
             </a>
         </div>
@@ -189,7 +201,7 @@
 <!--Card Aggiornamenti-->
 <div class="container-fluid mt-4 p-0" id="aggiornamenti">
     <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
+        <div class="card-header d-flex align-items-center">
             <h5 class="mb-0"><i class="bi bi-person-badge"></i> Aggiornamenti</h5>
 
         </div>
