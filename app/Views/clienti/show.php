@@ -147,8 +147,9 @@
                         <?php foreach ($licenze as $licenza): ?>
                             <tr class="data-row"
                             <?= audit_tooltip($licenza) ?>
-                            data-id="<?= esc($licenza["padre_lic_id"]) //linko il padre per il fetch aggiornamenti 
-                                                                ?>" style="cursor:pointer;">
+                            data-route="licenze"
+                            data-id="<?= esc($licenza["padre_lic_id"]) /* padre_lic_id = id per licenze padre; usato anche dal fetch aggiornamenti via click */ ?>"
+                            style="cursor:pointer;">
                                 <td><?= esc($licenza["id"]) ?></td>
                                 <td><?= $licenza["codice"] ? esc($licenza["codice"]) : esc($licenza["ambiente"]) ?></td>
                                 <td><?= esc($licenza["tipo"]) ?></td>
