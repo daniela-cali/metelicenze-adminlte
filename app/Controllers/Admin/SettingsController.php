@@ -27,7 +27,7 @@ class SettingsController extends BaseController
             ],
         ];
 
-        return $this->view('admin/settings_form', $data);
+        return $this->view('admin/settings/settings_form', $data);
     }
 
     /**

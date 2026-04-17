@@ -100,7 +100,7 @@ class DatabaseInfoController extends BaseController
             }
         }
 
-        return $this->view('database/dbConnectionTest', [
+        return $this->view('admin/database/dbConnectionTest', [
             'databases' => $databases,
         ]);
     }
@@ -182,14 +182,14 @@ class DatabaseInfoController extends BaseController
                 fn($field) => $field !== 'id'
             );
 
-            return $this->view('database/dbFields', [
+            return $this->view('admin/database/dbFields', [
                 'fields' => $result,
                 'table_name' => $tableName,
                 'allowed_fields' => $allowedFields
             ]);
         } catch (\Exception $e) {
             log_message('error', 'Errore nel recupero campi: ' . $e->getMessage());
-            return $this->view('database/dbFields', [
+            return $this->view('admin/database/dbFields', [
                 'error' => $e->getMessage(),
                 'table_name' => $tableName
             ]);
@@ -315,9 +315,9 @@ class DatabaseInfoController extends BaseController
                 'database' => $connectionGroup,
             ];
 
-            return $this->view('database/dbInfo', $data);
+            return $this->view('admin/database/dbInfo', $data);
         } catch (\Exception $e) {
-            return $this->view('database/dbTest', ['error' => $e->getMessage()]);
+            return $this->view('admin/database/dbInfo', ['error' => $e->getMessage()]);
         }
     }
 }

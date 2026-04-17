@@ -27,7 +27,7 @@ class UsersController extends BaseController
             // Admin\UsersController → "admin/users"
         ];
 
-        return $this->view('users/index', $data);
+        return $this->view('admin/users/index', $data);
     }
 
     public function show($id)
@@ -58,7 +58,7 @@ class UsersController extends BaseController
             'allGroups'      => config('AuthGroups')->groups,
             'allPermissions' => config('AuthGroups')->permissions,
         ];
-        return $this->view('users/form', $data);
+        return $this->view('admin/users/form', $data);
     }
 
     public function create()
@@ -79,7 +79,7 @@ class UsersController extends BaseController
             'allGroups'      => config('AuthGroups')->groups,
             'allPermissions' => config('AuthGroups')->permissions,
         ];
-        return $this->view('users/form', $data);
+        return $this->view('admin/users/form', $data);
     }
 
     public function edit($id)
@@ -95,7 +95,7 @@ class UsersController extends BaseController
         }
 
         $backTo = $this->getBackTo(url_to('users_index'));
-        return $this->view('users/form', [
+        return $this->view('admin/users/form', [
             'title'   => 'Modifica Utente: ' . esc($user->username),
             'mode'    => 'edit',
             'user'    => $user,
@@ -329,7 +329,7 @@ class UsersController extends BaseController
             return redirect()->back()->with('success', 'Password aggiornata con successo.');
         }
 
-        return $this->view('users/changePassword');
+        return $this->view('admin/users/changePassword');
     }
 
     public function approva($id)
