@@ -114,7 +114,8 @@ class AggiornamentiController extends BaseController
             ],
             'aggiornamento' => $aggiornamento,
             'versioni' => $versioni,
-            'backTo' => $backTo, // Aggiungo il path di provenienza per il bottone indietro
+            'title' => 'Modifica Aggiornamento del ' . date('d/m/Y', strtotime($aggiornamento['dt_agg'])),
+            'backTo' => $backTo,
         ];
 
         return $this->view('aggiornamenti/form', $data);
