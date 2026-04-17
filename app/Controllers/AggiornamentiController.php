@@ -22,10 +22,21 @@ class AggiornamentiController extends BaseController
     {
         $rows = $this->AggiornamentiModel->getByLicenza($idLicenza);
 
-        //Formatto le date in d/m/Y
+        // Formatto le date e genero il dropdown azioni lato PHP, così il JS non gestisce né rotte né HTML
         foreach ($rows as &$row) {
-            $date = new \DateTime($row["dt_agg"]);
-            $row["dt_agg"] = $date->format('d/m/Y');
+            $row["dt_agg"] = (new \DateTime($row["dt_agg"]))->format('d/m/Y');
+
+            $id = $row['id'];
+            $row['actions'] =
+                '<button class="btn dropdown-toggle" type="button" id="azione-agg-' . $id . '" data-bs-toggle="dropdown" aria-expanded="false">' .
+                    '<i class="bi bi-list"></i>' .
+                '</button>' .
+                '<ul class="dropdown-menu" aria-labelledby="azione-agg-' . $id . '">' .
+                    '<li><a class="dropdown-item" href="' . url_to('aggiornamenti_scheda', $id) . '"><i class="bi bi-eye"></i> Visualizza</a></li>' .
+                    '<li><a class="dropdown-item" href="' . url_to('aggiornamenti_modifica', $id) . '"><i class="bi bi-pencil"></i> Modifica</a></li>' .
+                    '<li><hr class="dropdown-divider"></li>' .
+                    '<li><a class="dropdown-item text-danger" href="' . url_to('aggiornamenti_elimina', $id) . '" onclick="return confirm(\'Eliminare questo aggiornamento?\')"><i class="bi bi-trash"></i> Elimina</a></li>' .
+                '</ul>';
         }
         log_message('info', 'AggiornamentiController::getByLicenza - Risultato query: ' . print_r($rows, true));
         $result = $this->response->setJSON([

@@ -235,19 +235,6 @@
 
 <?php $this->section('scripts'); ?>
 <script>
-    function actionButtons(id) {
-        return `
-            <a href="/aggiornamenti/visualizza/${id}" class="btn btn-sm btn-outline-primary" title="Visualizza">
-                <i class="bi bi-eye"></i>       
-            </a>
-            <a href="/aggiornamenti/modifica/${id}" class="btn btn-sm btn-outline-secondary" title="Modifica">
-                <i class="bi bi-pencil"></i>        
-            </a>
-            <a href="/aggiornamenti/elimina/${id}" class="btn btn-sm btn-outline-danger" title="Elimina" onclick=" return confirm('Sei sicuro di voler eliminare questo aggiornamento?');">
-                <i class="bi bi-trash"></i>     
-            </a>
-            `;
-    }
                                 
     function tooltipFormatter(row, aggiornamento, type='display') {
         //console.log('Tooltip formatter - DOM element Row: ', row);
@@ -344,7 +331,7 @@
                                     aggiornamento.dt_agg,
                                     aggiornamento.versione,
                                     aggiornamento.note,
-                                    actionButtons(aggiornamento.id),
+                                    aggiornamento.actions,
                                 ]).draw(false).node();
                                 tooltipFormatter(rowNode, aggiornamento) // Applico il tooltip
                                 rowNode.classList.add('aggiornamento-row');
