@@ -21,7 +21,7 @@ class VersioniModel extends AuditModel
         'updated_by',
         'deleted_at',
         'deleted_by',
-];
+    ];
 
 
 
@@ -31,21 +31,34 @@ class VersioniModel extends AuditModel
     public function getVersioni()
     {
         return $this->orderBy('dt_rilascio', 'DESC')
-            ->findAll();    
+            ->findAll();
     }
+
+    /**
+     * Recupera tutte le versioni di un tipo specifico
+     */
 
     public function getVersioniByTipo($tipo)
     {
-        return $this->select(['id', 'codice', 'dt_rilascio','release'])->where('tipo', $tipo)->orderBy('dt_rilascio', 'DESC')
-            ->findAll();    
+        return $this->select(['id', 'codice', 'dt_rilascio', 'release'])->where('tipo', $tipo)->orderBy('dt_rilascio', 'DESC')
+            ->findAll();
     }
 
+    /**
+     * Recupera una versione specifica per ID
+     *  */
     public function getVersioneById($idVersione)
     {
-        return $this->orderBy('dt_rilascio', 'DESC')
-            ->where('id', $idVersione)
-            ->first();    
+        return $this->where('id', $idVersione)
+            ->first();
     }
 
+    /**
+     * Recupera solo le versioni contrassegnate come "ultima" distincte per tipo
+     */
+    public function getUltimeVersioni()
+    {
+        return $this->distinct()->where('ultima', 1)->findAll();
+    }
 
 }

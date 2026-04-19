@@ -16,30 +16,27 @@ class HomeController extends BaseController
         // Quando non loggato, la home mostra la struttura dell'UI ma senza dati reali:
         // il contenuto del DOM non conterrà numeri sensibili leggibili dai dev tools.
         if ($loggedIn) {
-            $clientiModel = new ClientiModel();
-            $licenzeModel = new LicenzeModel();
 
-            $totClienti  = $clientiModel->countAll();
-            $totLicenze  = $licenzeModel->countAll();
+            $totClienti  = (new ClientiModel())->countAll();
+            $totLicenze  = (new LicenzeModel())->countAll();
             $totVersioni = (new VersioniModel())->countAll();
 
-            $db = \Config\Database::connect();
-            $distribuzione = $db->table('licenze')
-                ->select('tipo AS nome, COUNT(id) AS totale')
-                ->where('deleted_at IS NULL')
-                ->groupBy('tipo')
-                ->orderBy('totale', 'DESC')
-                ->get()
-                ->getResultArray();
+            $distribuzione = (new LicenzeModel())->getDistribuzionePerTipo();
+            $versioni = (new VersioniModel())->getUltimeVersioni();
         } else {
             // Dati vuoti: nessuna query al DB, nessun dato nel DOM
             $totClienti    = '—';
             $totLicenze    = '—';
             $totVersioni   = '—';
             $distribuzione = [];
+            $versioni = [];
         }
-
-        return $this->view('home', [
+        $tipoColori = [
+            'Sigla'  => '#008FFB',
+            'VarHub' => '#FEB019',
+            'SKNT'   => '#00E396',
+        ];
+        $data = [
             'title'         => 'Dashboard',
             'siteName'      => setting('SiteConfig.siteName'),
             'siteTheme'     => setting('SiteConfig.siteTheme'),
@@ -47,7 +44,10 @@ class HomeController extends BaseController
             'totLicenze'    => $totLicenze,
             'totVersioni'   => $totVersioni,
             'distribuzione' => $distribuzione,
+            'versioni'      => $versioni,
             'loggedIn'      => $loggedIn,
-        ]);
+            'tipoColori'    => $tipoColori,
+        ];
+        return $this->view('home', $data);
     }
 }

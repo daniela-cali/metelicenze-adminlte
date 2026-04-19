@@ -141,4 +141,13 @@ class LicenzeModel extends AuditModel
         //log_message('info', 'tipoLicenzaPerCliente: ' . print_r($result, true));
         return $result;
     }
+
+    public function getDistribuzionePerTipo()
+    {
+        return $this->select('tipo as nome, COUNT(ID) AS totale')
+        ->groupBy('tipo')
+        ->orderby('totale', 'DESC')
+        ->get()
+        ->getResultArray();
+    }
 }
