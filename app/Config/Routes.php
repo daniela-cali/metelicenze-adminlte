@@ -106,10 +106,10 @@ $routes->group('admin', ['filter' => 'group:superadmin,admin'], function($routes
      * Database Info — rotte per testare la connessione al database esterno e visualizzare informazioni utili per debug e sviluppo.
      * Queste rotte sono protette dal filter 'group:superadmin,admin' perché espongono dettagli tecnici che non dovrebbero essere accessibili a utenti non amministratori.
      */
-    $routes->get('databaseinfo',                               'Admin\DatabaseInfoController::connectionTest');
-    $routes->get('databaseinfo/info/(:segment)',               'Admin\DatabaseInfoController::info/$1');
-    $routes->get('databaseinfo/fields/(:segment)/(:segment)', 'Admin\DatabaseInfoController::getTableFields/$1/$2');
-    $routes->get('databaseinfo/showlog',                       'Admin\DatabaseInfoController::showLog');
+    $routes->get('databaseinfo',                               'Admin\DatabaseInfoController::connectionTest', ['as' => 'databaseinfo_connectiontest']);
+    $routes->get('databaseinfo/info/(:segment)',               'Admin\DatabaseInfoController::info/$1', ['as' => 'databaseinfo_info']);
+    $routes->get('databaseinfo/fields/(:segment)/(:segment)', 'Admin\DatabaseInfoController::getTableFields/$1/$2', ['as' => 'databaseinfo_fields']);
+    $routes->get('databaseinfo/showlog',                       'Admin\DatabaseInfoController::showLog', ['as' => 'databaseinfo_showlog']);
 });
 
 $routes->group('account', function($routes) {

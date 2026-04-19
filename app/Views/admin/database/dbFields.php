@@ -10,38 +10,60 @@
             <p class="lead mb-0">MeTe Licenze elenco campi</p>
         </div>
         <!-- Content -->
-        <div class="p-4">
+        <div id="start" class="p-4">
+
             <h2>Campi trovati</h2>
             <p>Di seguito l'elenco dei campi trovati nella tabella <strong><?= esc($table_name) ?></strong>:</p>
+            <!-- Back Button -->
+            <div class="d-flex flex-column align-items-end gap-2 my-4">
+                <button type="button" onclick="history.back()" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Torna alla pagina precedente
+                </button>
+                <a href="<?= url_to('databaseinfo_connectiontest') ?>" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Torna al Test Database
+                </a>
+            </div>
 
-            <?php if (!empty($fields)): ?>
-                <ul class="list-group">
-                    <?php foreach ($fields as $field): ?>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <?= esc($field["column_name"]) ?>
-                            <?php if (strpos($field["column_name"], '_id_pk') !== false || $field["column_name"] === 'id'): ?>
-                                <span class="badge bg-warning">Chiave primaria</span>
+            <table id="primary" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Chiave</th>
+                        <th>Campo</th>
+                        <th>Tipo</th>
+                        <th>Null</th>
+                        <th>Default</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (!empty($fields)): ?>
+                        <?php foreach ($fields as $field): ?>
+                            <tr>
+                                <td><?= (strpos($field["column_name"], '_id_pk') !== false || $field["column_name"] === 'id') ?
+                                        '<span class="badge bg-warning">Chiave primaria</span>' :
+                                        '<span class="badge bg-secondary">Campo</span>' ?></td>
+                                <td><?= esc($field["column_name"]) ?></td>
+                                <td><?= esc($field["data_type"]) ?></td>
+                                <td><?= esc($field["is_nullable"]) ?></td>
+                                <td><?= $field["column_default"] !== null ? esc($field["column_default"]) : '<i>null</i>' ?></td>
+                            </tr>
+                        <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php endif; ?>
+        <?php if (empty($fields)): ?>
+            <div class="alert alert-info mt-3">
+                <i class="bi bi-info-circle"></i> Nessun campo trovato nella tabella <strong><?= esc($table_name) ?></strong>
+            </div>
+        <?php endif; ?>
 
 
-                            <?php else: ?>
-                                <span class="badge bg-secondary">Campo</span>
-                            <?php endif; ?>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            <?php endif; ?>
-            <?php if (empty($fields)): ?>
-                <div class="alert alert-info mt-3">
-                    <i class="bi bi-info-circle"></i> Nessun campo trovato nella tabella <strong><?= esc($table_name) ?></strong>
-                </div>
-            <?php endif; ?>
         </div>
         <div class="p-4">
             <?php if (!empty($allowed_fields)): ?>
                 <h2>Genera $allowedFields</h2>
                 <p>Di seguito il codice per generare l'array <code>$allowedFields</code>:</p>
                 <?php
-                echo '<pre> protected $allowedFields = ['; 
+                echo '<pre>protected $allowedFields = [';
                 echo "\n";
 
                 foreach ($allowed_fields as $field) {
@@ -56,19 +78,11 @@
                 </div>
             <?php endif; ?>
         </div>
-        <!-- Back Button -->
-        <div class="mt-2">
-            <button type="button" onclick="history.back()" class="btn btn-custom">
-                <i class="bi bi-arrow-left"></i> Torna alla pagina precedente
-            </button>
-        </div>
-
-        <div class="mt-2">
-            <a href="/database" class="btn btn-custom">
-                <i class="bi bi-arrow-left"></i> Torna al Test Database
+        <div class="mt-4 p-4">
+            <a href="#start" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-up"></i> Torna in cima
             </a>
         </div>
     </div>
-</div>
 
-<?php $this->endSection() ?>
+    <?php $this->endSection() ?>

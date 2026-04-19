@@ -38,7 +38,7 @@
                             
                         <!-- Pulsanti -->
                         <div class="d-flex justify-content-center gap-2 mt-3">
-                            <a href="<?= base_url('admin/databaseinfo/info/' . $dbInfo['connection_group']) ?>" class="btn btn-outline-primary">
+                            <a href="<?= url_to('databaseinfo_info', $dbInfo['connection_group']) ?>" class="btn btn-outline-primary">
                                 <i class="bi bi-info-circle"></i> Info DB e Tabelle
                             </a>
 

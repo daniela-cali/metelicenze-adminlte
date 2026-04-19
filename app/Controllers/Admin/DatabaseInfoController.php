@@ -183,15 +183,17 @@ class DatabaseInfoController extends BaseController
             );
 
             return $this->view('admin/database/dbFields', [
-                'fields' => $result,
-                'table_name' => $tableName,
-                'allowed_fields' => $allowedFields
+                'fields'         => $result,
+                'table_name'     => $tableName,
+                'allowed_fields' => $allowedFields,
+                'database'       => $database,
             ]);
         } catch (\Exception $e) {
             log_message('error', 'Errore nel recupero campi: ' . $e->getMessage());
             return $this->view('admin/database/dbFields', [
-                'error' => $e->getMessage(),
-                'table_name' => $tableName
+                'error'      => $e->getMessage(),
+                'table_name' => $tableName,
+                'database'   => $database,
             ]);
         }
     }
@@ -256,7 +258,7 @@ class DatabaseInfoController extends BaseController
                 ")->getRow();
 
                     // Normalizzo le proprietà per la view
-                    $dbInfo = (object)[
+                    $dbInfo = [
                         'db_name'   => $dbInfoRaw->db_name,
                         'encoding'  => $dbInfoRaw->charset,
                         'collation' => $dbInfoRaw->collation,
@@ -269,7 +271,7 @@ class DatabaseInfoController extends BaseController
                     FROM information_schema.tables
                     WHERE table_schema = ?
                     ORDER BY table_name
-                ", [$dbInfo->db_name])->getResult();
+                ", [$dbInfo['db_name']])->getResultArray();
                     break;
 
                 case 'Postgre':
@@ -287,7 +289,7 @@ class DatabaseInfoController extends BaseController
                 ")->getRow();
 
                     // Normalizzo le proprietà per la view
-                    $dbInfo = (object)[
+                    $dbInfo = [
                         'db_name'   => $dbInfoRaw->db_name,
                         'encoding'  => $dbInfoRaw->encoding,
                         'collation' => $dbInfoRaw->collation,
@@ -300,7 +302,7 @@ class DatabaseInfoController extends BaseController
                     FROM pg_tables 
                     WHERE schemaname = ? 
                     ORDER BY tablename
-                ", [$schema])->getResult();
+                ", [$schema])->getResultArray();
                     break;
 
                 default:

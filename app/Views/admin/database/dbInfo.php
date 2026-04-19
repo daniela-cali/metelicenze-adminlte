@@ -31,7 +31,7 @@
                             <div class="row mb-2">
                                 <div class="col-5"><strong>Database:</strong></div>
                                 <div class="col-7">
-                                    <span class="table-name"><?= esc($dbInfo->db_name) ?></span>
+                                    <span class="table-name"><?= esc($dbInfo['db_name']) ?></span>
                                 </div>
                             </div>
                             <div class="row mb-2">
@@ -43,19 +43,19 @@
                             <div class="row mb-2">
                                 <div class="col-5"><strong>Encoding:</strong></div>
                                 <div class="col-7">
-                                    <span class="badge bg-primary"><?= esc($dbInfo->encoding) ?></span>
+                                    <span class="badge bg-primary"><?= esc($dbInfo['encoding']) ?></span>
                                 </div>
                             </div>
                             <div class="row mb-2">
                                 <div class="col-5"><strong>Collation:</strong></div>
                                 <div class="col-7">
-                                    <span class="table-name"><?= esc($dbInfo->collation) ?></span>
+                                    <span class="table-name"><?= esc($dbInfo['collation']) ?></span>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-5"><strong>CType:</strong></div>
                                 <div class="col-7">
-                                    <span class="table-name"><?= esc($dbInfo->ctype) ?></span>
+                                    <span class="table-name"><?= esc($dbInfo['ctype']) ?></span>
                                 </div>
                             </div>
                         </div>
@@ -105,12 +105,12 @@
                                 <div class="tables-list-container p-3">
                                     <?php foreach ($tables as $table): ?>
                                         <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <span><i class="bi bi-table me-2"></i><?= esc($table->tablename) ?></span>
+                                            <span><i class="bi bi-table me-2"></i><?= esc($table['tablename']) ?></span>
                                             
-                                                <a href="<?= site_url('database/fields/' . $database . '/' . urlencode($table->tablename)) ?>">
+                                                <a href="<?= url_to('databaseinfo_fields', $database, urlencode($table['tablename'])) ?>">
 
                                                 <span class="table-name">
-                                                    <?= esc($schema ? $schema . '.' : '') ?><?= esc($table->tablename) ?>
+                                                    <?= esc($schema ? $schema . '.' : '') ?><?= esc($table['tablename']) ?>
                                                 </span>
                                             </a>
                                         </div>
@@ -126,7 +126,7 @@
 
             <!-- Back Button -->
             <div class="mt-4">
-                <a href="/database" class="btn btn-custom">
+                <a href="<?= url_to('databaseinfo_connectiontest'); ?>" class="btn btn-outline-secondary">
                     <i class="bi bi-arrow-left"></i> Torna al Test Database
                 </a>
             </div>
