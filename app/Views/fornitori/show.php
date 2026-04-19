@@ -14,7 +14,7 @@
 
     <div class="d-flex align-items-center mb-3">
         <p class="lead mb-0">Dettagli e gestione del fornitore</p>
-        <a href="<?= url_to('fornitori_index') ?>" class="btn btn-light btn-outline-secondary btn-sm">
+        <a href="<?= url_to('fornitori_index') ?>" class="btn btn-light btn-outline-secondary btn-sm ms-auto">
             <i class="bi bi-arrow-left-circle"></i> Torna all'elenco fornitori
         </a>
     </div>
