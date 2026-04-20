@@ -61,7 +61,7 @@ class TableTipilicenze extends Migration
 
         $this->forge->addField($fields);
         $this->forge->addKey('id', true);
-        $this->forge->createTable('tipilicenze');
+        $this->forge->createTable('tipilicenze', true);
     }
 
     public function down()

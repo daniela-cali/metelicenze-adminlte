@@ -106,7 +106,7 @@ class TableFornitori extends Migration
 
         $this->forge->addField($fields);
         $this->forge->addKey('id', true);
-        $this->forge->createTable('fornitori');
+        $this->forge->createTable('fornitori', true);
     }
 
     public function down()

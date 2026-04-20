@@ -31,7 +31,7 @@ class TableFornitoriTipilicenzeMap extends Migration
         $this->forge->addKey('tipilicenze_id');
         $this->forge->addForeignKey('fornitori_id',   'fornitori',   'id', 'CASCADE', 'CASCADE');
         $this->forge->addForeignKey('tipilicenze_id', 'tipilicenze', 'id', 'CASCADE', 'CASCADE');
-        $this->forge->createTable('fornitori_tipilicenze_map');
+        $this->forge->createTable('fornitori_tipilicenze_map', true);
     }
 
     public function down()
