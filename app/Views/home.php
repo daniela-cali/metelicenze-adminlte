@@ -81,7 +81,7 @@
         <div class="card shadow-sm">
             <div class="card-header">
                 <h5 class="card-title mb-0">
-                    <i class="bi bi-tags-fill me-2"></i> Ultime versioni rilasciate
+                    <i class="bi bi-tags-fill me-2"></i> Ultime versioni
                 </h5>
             </div>
             <div class="card-body">

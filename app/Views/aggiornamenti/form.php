@@ -20,7 +20,7 @@
             <!--Aggiungo la modalità di creazione o modifica per il js-->
             <form action="<?= $form['action'] ?>" method="<?= $form['method'] ?>" data-mode="<?= $mode ?>">
                 <input type="hidden" name="backTo" value="<?= esc($backTo) ?>">
-                <input type="hidden" name="id" value="<?= isset($aggiornamento->id) ? esc($aggiornamento->id) : '' ?>">
+                <input type="hidden" name="id" value="<?= isset($aggiornamento['id']) ? esc($aggiornamento['id']) : '' ?>">
 
                 <div class="mb-3">
                     <label for="dt_agg" class="form-label">Data Aggiornamento</label>

@@ -51,7 +51,7 @@
     <div class="card">
         <div class="card-header d-flex align-items-center">
             <h5 class="mb-0"><i class="bi bi-person-badge"></i> Dati Anagrafici</h5>
-            <a href="<?= url_to('clienti_modifica', $cliente["id"]) ?>" class="btn btn-light btn-outline-secondary btn-sm ms-auto" title="Modifica">
+            <a href="<?= url_to('clienti_edit', $cliente["id"]) ?>" class="btn btn-light btn-outline-secondary btn-sm ms-auto" title="Modifica">
                 Modifica <i class="bi bi-pencil"></i>
             </a>
         </div>
@@ -126,7 +126,7 @@
     <div class="card">
         <div class="card-header d-flex align-items-center">
             <h5 class="mb-0"><i class="bi bi-key-fill"></i> Licenze</h5>
-            <a href="<?= url_to('licenze_crea', $cliente["id"]) ?>" class="btn btn-light btn-outline-secondary btn-sm ms-auto" title="Nuova Licenza per il cliente">
+            <a href="<?= url_to('licenze_create', $cliente["id"]) ?>" class="btn btn-light btn-outline-secondary btn-sm ms-auto" title="Nuova Licenza per il cliente">
                 <i class="bi bi-key-fill"></i> Nuova Licenza
             </a>
         </div>
@@ -165,18 +165,18 @@
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="azione-<?= $licenza['id'] ?>">
                                         <li>
-                                            <a class="dropdown-item" href="<?= url_to('aggiornamenti_crea', $licenza["padre_lic_id"], $licenza["tipo"]) ?>">
+                                            <a class="dropdown-item" href="<?= url_to('aggiornamenti_create', $licenza["padre_lic_id"], $licenza["tipo"]) ?>">
                                                 <i class="bi bi-clock-history"></i> Crea Aggiornamento
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="<?= url_to('licenze_modifica', $licenza["id"]) ?>">
+                                            <a class="dropdown-item" href="<?= url_to('licenze_edit', $licenza["id"]) ?>">
                                                 <i class="bi bi-pencil"></i> Modifica
                                             </a>
                                         </li>
                                         <li><hr class="dropdown-divider"></li>
                                         <li>
-                                            <a class="dropdown-item text-danger" href="<?= url_to('licenze_elimina', $licenza["id"]) ?>" onclick="return confirm('Sei sicuro di voler eliminare questa licenza?');">
+                                            <a class="dropdown-item text-danger" href="<?= url_to('licenze_delete', $licenza["id"]) ?>" onclick="return confirm('Sei sicuro di voler eliminare questa licenza?');">
                                                 <i class="bi bi-trash"></i> Elimina
                                             </a>
                                         </li>

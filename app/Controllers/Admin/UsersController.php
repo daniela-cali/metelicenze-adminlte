@@ -70,7 +70,7 @@ class UsersController extends BaseController
             'user'   => null,
             'backTo' => $backTo,
             'form'   => [
-                'action'     => url_to('users_salva'),
+                'action'     => url_to('users_store'),
                 'method'     => 'post',
                 'spoof'      => null,
                 'submitText' => 'Salva',
@@ -101,9 +101,9 @@ class UsersController extends BaseController
             'user'    => $user,
             'backTo'  => $backTo,
             'form'    => [
-                // url_to('users_aggiorna', $id) genera /admin/users/{id} (la rotta PUT ha il placeholder (:num)).
+                // url_to('users_update', $id) genera /admin/users/{id} (la rotta PUT ha il placeholder (:num)).
                 // Il form invia POST con spoof _method=PUT, che CI4 instradia su put('(:num)') → update()
-                'action'     => url_to('users_aggiorna', $id),
+                'action'     => url_to('users_update', $id),
                 'method'     => 'POST',
                 'spoof'      => 'PUT',
                 'submitText' => 'Aggiorna',

@@ -10,7 +10,7 @@
 <?= $this->section('content') ?>
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h5 class="mb-0"><i class="bi bi-people"></i> Gestione Utenti</h5>
-    <a href="<?= url_to('users_crea') ?>" class="btn btn-outline-secondary btn-sm" title="Aggiungi nuovo utente">
+    <a href="<?= url_to('users_create') ?>" class="btn btn-outline-secondary btn-sm" title="Aggiungi nuovo utente">
         <i class="bi bi-person-plus"></i> Nuovo Utente
     </a>
 </div>
@@ -54,12 +54,12 @@
                         </button>
                         <ul class="dropdown-menu">
                             <li>
-                                <a class="dropdown-item" href="<?= url_to('users_scheda', $utente->id) ?>">
+                                <a class="dropdown-item" href="<?= url_to('users_show', $utente->id) ?>">
                                     <i class="bi bi-person-vcard"></i> Scheda Utente
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="<?= url_to('users_modifica', $utente->id) ?>">
+                                <a class="dropdown-item" href="<?= url_to('users_edit', $utente->id) ?>">
                                     <i class="bi bi-pencil"></i> Modifica
                                 </a>
                             </li>
@@ -76,7 +76,7 @@
                             <li><hr class="dropdown-divider"></li>
                             <li>
                                 <a class="dropdown-item text-danger"
-                                    href="<?= url_to('users_elimina', $utente->id) ?>"
+                                    href="<?= url_to('users_delete', $utente->id) ?>"
                                     onclick="return confirm('Eliminare questo utente?')">
                                     <i class="bi bi-trash"></i> Elimina
                                 </a>

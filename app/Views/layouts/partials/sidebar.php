@@ -1,9 +1,11 @@
 <?php
 $siteName = setting('SiteConfig.siteName') ?? 'MeTe Licenze';
 
-// Rileva la URI corrente per evidenziare la voce attiva
-$currentUri = '/' . ltrim(service('uri')->getPath(), '/');
+// Rileva la URI corrente per evidenziare la voce attiva rimuovendo index.php in quanto non matchava mai
+//$currentUri = '/' . ltrim(service('uri')->getPath(), '/');
+$currentUri = '/' . ltrim(str_replace('index.php/', '', service('uri')->getPath()), '/');
 ?>
+
 
 <!--
   app-sidebar       → classe AdminLTE per la sidebar laterale

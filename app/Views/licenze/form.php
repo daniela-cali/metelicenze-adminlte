@@ -22,7 +22,7 @@ $backTo = $backTo ?? base_url('/licenze');
 
         <div class="card-body">
             <!--Aggiungo la modalità di creazione o modifica per il js-->
-            <form action="<?= $action ?>" method="post" data-mode="<?= $mode ?>">
+            <form action="<?= $form["action"] ?>" method="post" data-mode="<?= $mode ?>">
                 <input type="hidden" name="backTo" value="<?= esc($backTo) ?>">
                 <input type="hidden" name="clienti_id" value="<?= esc($licenza['clienti_id'] ?? $id_cliente ?? '') ?>">
                 <?php if ($mode === 'edit'): ?>

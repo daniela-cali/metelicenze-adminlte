@@ -20,7 +20,10 @@ $backTo = $backTo ?? base_url('/versioni');
         </a>
     </div>
     <div class="card-body">
-        <form action="<?= $action ?>" method="post" data-mode="<?= $mode ?>">
+        <form action="<?= $form["action"] ?>" method="post" data-mode="<?= $mode ?>">
+            <?php if (!empty($form['spoof'])): ?>
+                <input type="hidden" name="_method" value="<?= $form['spoof'] ?>">
+            <?php endif; ?>
             <input type="hidden" name="backTo" value="<?= esc($backTo) ?>">
             <div class="mb-3 form-check">
                 <label class="form-check-label" class="form-label" for="ultima">Ultima Versione</label>
@@ -75,4 +78,4 @@ $backTo = $backTo ?? base_url('/versioni');
 </div>
 <?= $this->endSection() ?>
 
-<?= $this->endSection() ?>
+

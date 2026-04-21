@@ -17,61 +17,63 @@ $routes->group('filters', ['filter' => 'notpending'], function($routes) {
 
 $routes->group('clienti', ['filter' => 'notpending'], function($routes) {
     $routes->get('/', 'ClientiController::index', ['as' => 'clienti_index']);
-    $routes->get('(:num)', 'ClientiController::show/$1', ['as' => 'clienti_scheda']);
-    $routes->get('crea', 'ClientiController::create', ['as' => 'clienti_crea']);
-    $routes->post('/', 'ClientiController::store', ['as' => 'clienti_salva']);
-    $routes->get('modifica/(:num)', 'ClientiController::edit/$1', ['as' => 'clienti_modifica']);
-    $routes->put('(:num)', 'ClientiController::update/$1', ['as' => 'clienti_aggiorna']);
-    $routes->get('elimina/(:num)', 'ClientiController::delete/$1', ['as' => 'clienti_elimina']);
+    $routes->get('(:num)', 'ClientiController::show/$1', ['as' => 'clienti_show']);
+    $routes->get('crea', 'ClientiController::create', ['as' => 'clienti_create']);
+    $routes->post('/', 'ClientiController::store', ['as' => 'clienti_store']);
+    $routes->get('modifica/(:num)', 'ClientiController::edit/$1', ['as' => 'clienti_edit']);
+    $routes->put('(:num)', 'ClientiController::update/$1', ['as' => 'clienti_update']);
+    $routes->get('elimina/(:num)', 'ClientiController::delete/$1', ['as' => 'clienti_delete']);
 });
 
 $routes->group('licenze', ['filter' => 'notpending'], function($routes) {
     $routes->get('/', 'LicenzeController::index', ['as' => 'licenze_index']);
-    $routes->get('(:num)', 'LicenzeController::show/$1', ['as' => 'licenze_scheda']);
-    $routes->get('crea/(:num)', 'LicenzeController::create/$1', ['as' => 'licenze_crea']); // Passo l'ID del cliente alla funzione create
-    $routes->post('/', 'LicenzeController::store', ['as' => 'licenze_salva']);
-    $routes->get('modifica/(:num)', 'LicenzeController::edit/$1', ['as' => 'licenze_modifica']);
-    $routes->put('(:num)', 'LicenzeController::update/$1', ['as' => 'licenze_aggiorna']);
-    $routes->get('elimina/(:num)', 'LicenzeController::delete/$1', ['as' => 'licenze_elimina']);
+    $routes->get('(:num)', 'LicenzeController::show/$1', ['as' => 'licenze_show']);
+    $routes->get('crea/(:num)', 'LicenzeController::create/$1', ['as' => 'licenze_create']); // Passo l'ID del cliente alla funzione create
+    $routes->post('/', 'LicenzeController::store', ['as' => 'licenze_store']);
+    $routes->get('modifica/(:num)', 'LicenzeController::edit/$1', ['as' => 'licenze_edit']);
+    $routes->put('(:num)', 'LicenzeController::update/$1', ['as' => 'licenze_update']);
+    $routes->get('elimina/(:num)', 'LicenzeController::delete/$1', ['as' => 'licenze_delete']);
 });
 
 $routes->group('aggiornamenti', ['filter' => 'notpending'], function($routes) {
     $routes->get('byLicenza/(:num)', 'AggiornamentiController::getByLicenza/$1', ['as' => 'aggiornamenti_byLicenza']);
-    $routes->get('(:num)', 'AggiornamentiController::show/$1', ['as' => 'aggiornamenti_scheda']);
-    $routes->get('crea/(:num)/(:segment)', 'AggiornamentiController::create/$1/$2', ['as' => 'aggiornamenti_crea']); // Creo un nuovo aggiornamento passando l'ID della licenza e il tipo
-    $routes->post('salva/(:num)', 'AggiornamentiController::store/$1', ['as' => 'aggiornamenti_salva']);
-    $routes->get('modifica/(:num)', 'AggiornamentiController::edit/$1', ['as' => 'aggiornamenti_modifica']);
-    $routes->get('elimina/(:num)', 'AggiornamentiController::delete/$1', ['as' => 'aggiornamenti_elimina']);
+    $routes->get('(:num)', 'AggiornamentiController::show/$1', ['as' => 'aggiornamenti_show']);
+    $routes->get('crea/(:num)/(:segment)', 'AggiornamentiController::create/$1/$2', ['as' => 'aggiornamenti_create']); // Creo un nuovo aggiornamento passando l'ID della licenza e il tipo
+    $routes->post('salva/(:num)', 'AggiornamentiController::store/$1', ['as' => 'aggiornamenti_store']);
+    $routes->get('modifica/(:num)', 'AggiornamentiController::edit/$1', ['as' => 'aggiornamenti_edit']);
+    $routes->post('modifica/(:num)', 'AggiornamentiController::update/$1', ['as' => 'aggiornamenti_update']);
+    $routes->get('elimina/(:num)', 'AggiornamentiController::delete/$1', ['as' => 'aggiornamenti_delete']);
 });
 
 $routes->group('versioni', ['filter' => 'notpending'], function($routes) {
-    $routes->get('/', 'VersioniController::index', ['as' => 'versioni_index']);
-    $routes->get('(:num)', 'VersioniController::show/$1', ['as' => 'versioni_scheda']);
-    $routes->get('crea/(:num)', 'VersioniController::create/$1', ['as' => 'versioni_crea']);
-    $routes->get('modifica/(:num)', 'VersioniController::edit/$1', ['as' => 'versioni_modifica']);
-    $routes->post('salva/(:num)', 'VersioniController::store/$1', ['as' => 'versioni_salva']);
-    $routes->get('elimina/(:num)', 'VersioniController::delete/$1', ['as' => 'versioni_elimina']);
+    $routes->get('/',               'VersioniController::index',     ['as' => 'versioni_index']);
+    $routes->get('(:num)',          'VersioniController::show/$1',   ['as' => 'versioni_show']);
+    $routes->get('crea',            'VersioniController::create',    ['as' => 'versioni_create']);
+    $routes->post('/',              'VersioniController::store',     ['as' => 'versioni_store']);
+    $routes->get('modifica/(:num)', 'VersioniController::edit/$1',   ['as' => 'versioni_edit']);
+    $routes->put('(:num)',          'VersioniController::update/$1', ['as' => 'versioni_update']);
+    $routes->get('elimina/(:num)',  'VersioniController::delete/$1', ['as' => 'versioni_delete']);
 });
 
 $routes->group('fornitori', ['filter' => 'notpending'], function($routes) {
     $routes->get('/', 'FornitoriController::index', ['as' => 'fornitori_index']);
-    $routes->get('(:num)', 'FornitoriController::show/$1', ['as' => 'fornitori_scheda']);
-    $routes->get('crea', 'FornitoriController::create', ['as' => 'fornitori_crea']);
-    $routes->post('/', 'FornitoriController::store', ['as' => 'fornitori_salva']);
-    $routes->get('modifica/(:num)', 'FornitoriController::edit/$1', ['as' => 'fornitori_modifica']);
-    $routes->put('(:num)', 'FornitoriController::update/$1', ['as' => 'fornitori_aggiorna']);
-    $routes->get('elimina/(:num)', 'FornitoriController::delete/$1', ['as' => 'fornitori_elimina']);
+    $routes->get('(:num)', 'FornitoriController::show/$1', ['as' => 'fornitori_show']);
+    $routes->get('crea', 'FornitoriController::create', ['as' => 'fornitori_create']);
+    $routes->post('/', 'FornitoriController::store', ['as' => 'fornitori_store']);
+    $routes->get('modifica/(:num)', 'FornitoriController::edit/$1', ['as' => 'fornitori_edit']);
+    $routes->put('(:num)', 'FornitoriController::update/$1', ['as' => 'fornitori_update']);
+    $routes->get('elimina/(:num)', 'FornitoriController::delete/$1', ['as' => 'fornitori_delete']);
 });
 
 // Rinominato da 'tipi' a 'tipilicenze' per allinearsi al nome del controller TipiLicenzeController
 $routes->group('tipilicenze', ['filter' => 'notpending'], function($routes) {
     $routes->get('/', 'TipiLicenzeController::index', ['as' => 'tipilicenze_index']);
-    $routes->get('(:num)', 'TipiLicenzeController::show/$1', ['as' => 'tipilicenze_scheda']);
-    $routes->get('new', 'TipiLicenzeController::create', ['as' => 'tipilicenze_crea']);
-    $routes->post('/', 'TipiLicenzeController::store', ['as' => 'tipilicenze_salva']);
-    $routes->get('edit/(:num)', 'TipiLicenzeController::edit/$1', ['as' => 'tipilicenze_modifica']);
-    $routes->put('(:num)', 'TipiLicenzeController::update/$1', ['as' => 'tipilicenze_aggiorna']);
-    $routes->get('delete/(:num)', 'TipiLicenzeController::delete/$1', ['as' => 'tipilicenze_elimina']);
+    $routes->get('(:num)', 'TipiLicenzeController::show/$1', ['as' => 'tipilicenze_show']);
+    $routes->get('new', 'TipiLicenzeController::create', ['as' => 'tipilicenze_create']);
+    $routes->post('/', 'TipiLicenzeController::store', ['as' => 'tipilicenze_store']);
+    $routes->get('edit/(:num)', 'TipiLicenzeController::edit/$1', ['as' => 'tipilicenze_edit']);
+    $routes->put('(:num)', 'TipiLicenzeController::update/$1', ['as' => 'tipilicenze_update']);
+    $routes->get('delete/(:num)', 'TipiLicenzeController::delete/$1', ['as' => 'tipilicenze_delete']);
     $routes->post('link/(:num)', 'TipiLicenzeController::link/$1', ['as' => 'tipilicenze_link']);
     $routes->get('unlink/(:num)', 'TipiLicenzeController::unlink/$1', ['as' => 'tipilicenze_unlink']);
 });
@@ -94,12 +96,12 @@ $routes->group('admin', ['filter' => 'group:superadmin,admin'], function($routes
      * Il filter 'group:superadmin,admin' assicura che solo gli amministratori possano accedere a queste rotte.
      */
     $routes->get('users',                'Admin\UsersController::index',       ['as' => 'users_index']);
-    $routes->get('users/(:num)',          'Admin\UsersController::show/$1',     ['as' => 'users_scheda']);
-    $routes->get('users/crea',           'Admin\UsersController::create',      ['as' => 'users_crea']);
-    $routes->post('users',               'Admin\UsersController::store',       ['as' => 'users_salva']);
-    $routes->get('users/modifica/(:num)', 'Admin\UsersController::edit/$1',    ['as' => 'users_modifica']);
-    $routes->put('users/(:num)',          'Admin\UsersController::update/$1',  ['as' => 'users_aggiorna']);
-    $routes->get('users/elimina/(:num)',  'Admin\UsersController::delete/$1',  ['as' => 'users_elimina']);
+    $routes->get('users/(:num)',          'Admin\UsersController::show/$1',     ['as' => 'users_show']);
+    $routes->get('users/crea',           'Admin\UsersController::create',      ['as' => 'users_create']);
+    $routes->post('users',               'Admin\UsersController::store',       ['as' => 'users_store']);
+    $routes->get('users/modifica/(:num)', 'Admin\UsersController::edit/$1',    ['as' => 'users_edit']);
+    $routes->put('users/(:num)',          'Admin\UsersController::update/$1',  ['as' => 'users_update']);
+    $routes->get('users/elimina/(:num)',  'Admin\UsersController::delete/$1',  ['as' => 'users_delete']);
     $routes->get('users/approva/(:num)', 'Admin\UsersController::approva/$1', ['as' => 'users_approva']);
 
     /**

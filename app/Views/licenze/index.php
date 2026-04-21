@@ -111,13 +111,13 @@
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item" href="<?= url_to('licenze_scheda', $licenza["id"]);  ?>">
+                                                    <a class="dropdown-item" href="<?= url_to('licenze_show', $licenza["id"]);  ?>">
                                                         <i class="bi bi-eye"></i>
                                                         Visualizza
                                                     </a>
                                                 </li>
                                                 <li>
-                                                    <a class="dropdown-item" href="<?= url_to('licenze_modifica', $licenza["id"]) ?>">
+                                                    <a class="dropdown-item" href="<?= url_to('licenze_edit', $licenza["id"]) ?>">
                                                         <i class="bi bi-pencil"></i>
                                                         Modifica
                                                     </a>

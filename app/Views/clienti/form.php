@@ -25,7 +25,7 @@ $backTo = $backTo ?? base_url('/clienti');
         <!--Aggiungo la modalità di creazione o modifica per il js-->
         <form action="<?= $form["action"] ?>" method="post" data-mode="<?= $mode ?>">
             <input type="hidden" name="backTo" value="<?= esc($backTo) ?>">
-
+            <input type="hidden" name="_method" value="<?= $form['spoof'] ?>">
             <div class="mb-3">
                 <label for="codice" class="form-label">Codice Cliente</label>
                 <input type="text" name="codice" id="codice" class="form-control" required placeholder="Es. ABC12345"

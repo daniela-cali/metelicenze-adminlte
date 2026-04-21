@@ -32,10 +32,10 @@ class AggiornamentiController extends BaseController
                     '<i class="bi bi-list"></i>' .
                 '</button>' .
                 '<ul class="dropdown-menu" aria-labelledby="azione-agg-' . $id . '">' .
-                    '<li><a class="dropdown-item" href="' . url_to('aggiornamenti_scheda', $id) . '"><i class="bi bi-eye"></i> Visualizza</a></li>' .
-                    '<li><a class="dropdown-item" href="' . url_to('aggiornamenti_modifica', $id) . '"><i class="bi bi-pencil"></i> Modifica</a></li>' .
+                    '<li><a class="dropdown-item" href="' . url_to('aggiornamenti_show', $id) . '"><i class="bi bi-eye"></i> Visualizza</a></li>' .
+                    '<li><a class="dropdown-item" href="' . url_to('aggiornamenti_edit', $id) . '"><i class="bi bi-pencil"></i> Modifica</a></li>' .
                     '<li><hr class="dropdown-divider"></li>' .
-                    '<li><a class="dropdown-item text-danger" href="' . url_to('aggiornamenti_elimina', $id) . '" onclick="return confirm(\'Eliminare questo aggiornamento?\')"><i class="bi bi-trash"></i> Elimina</a></li>' .
+                    '<li><a class="dropdown-item text-danger" href="' . url_to('aggiornamenti_delete', $id) . '" onclick="return confirm(\'Eliminare questo aggiornamento?\')"><i class="bi bi-trash"></i> Elimina</a></li>' .
                 '</ul>';
         }
         log_message('info', 'AggiornamentiController::getByLicenza - Risultato query: ' . print_r($rows, true));
@@ -45,8 +45,6 @@ class AggiornamentiController extends BaseController
         log_message('info', 'AggiornamentiController::getByLicenza - Risposta JSON: ' . $result->getBody());
         return $result;
     }
-
-
 
     public function show($id)
     {
@@ -95,7 +93,7 @@ class AggiornamentiController extends BaseController
             'versioni' => $versioni,
             'backTo' => $backTo, // Aggiungo il path di provenienza per il bottone indietro
             'form' => [
-                'action' => url_to('aggiornamenti_salva', $idLicenza), // Azione per il salvataggio dell'aggiornamento
+                'action' => url_to('aggiornamenti_store', $idLicenza), // Azione per il salvataggio dell'aggiornamento
                 'method' => 'post',
                 'spoof' => null,
                 'submitText' => 'Salva',
@@ -117,7 +115,7 @@ class AggiornamentiController extends BaseController
         $data = [
             'mode' => 'edit', // Modalità di modifica
             'form' => [
-                'action' => url_to('aggiornamenti_salva', $aggiornamento['licenze_id']), // Azione per il salvataggio dell'aggiornamento
+                'action' => url_to('aggiornamenti_update', $id), // Azione per la modifica dell'aggiornamento
                 'method' => 'post',
                 'spoof' => null,
                 'submitText' => 'Salva',
@@ -130,6 +128,20 @@ class AggiornamentiController extends BaseController
         ];
 
         return $this->view('aggiornamenti/form', $data);
+    }
+
+    public function update($id)
+    {
+        $data = $this->request->getPost();
+        $data['id'] = $id; // Assicuro che l'ID dell'aggiornamento sia presente per fare UPDATE e non INSERT
+        $stato = $this->request->getPost('stato') ? 1 : 0;
+        $data['stato'] = $stato;
+
+        if ($this->AggiornamentiModel->save($data)) {
+            return redirect()->to($this->getBackTo(base_url('/licenze')))->with('success', 'Aggiornamento modificato con successo.');
+        } else {
+            return redirect()->back()->with('error', 'Errore durante la modifica dell\'aggiornamento.')->withInput();
+        }
     }
 
     public function store($idLicenza = null)

@@ -34,115 +34,136 @@
     </div>
 </div>
 <div>
-            <?php if (!empty($versioni)): ?>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-striped table-hover align-middle" id="versioniTable">
-                        <thead class="table-secondary">
-                            <tr>
-                                <th>ID</th>
-                                <th>Tipo</th>
-                                <th>Codice</th>
-                                <th>Release</th>
-                                <th>Data Rilascio</th>
-                                <th>Stato</th>
-                                <th>Azioni</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($versioni as $versione): ?>
-                                <tr class="clickable"
-                                data-id="<?= esc($versione["id"])?>"
-                                <?= audit_tooltip($versione) ?>>
-                                    <td><?= esc($versione["id"]) ?></td>
-                                    <td><?= esc($versione["tipo"]) ?></td>
-                                    <td><?= esc($versione["codice"]) ?></td>
-                                    <td><?= esc($versione["release"]) ?></td>
-                                    <td><?= date('d/m/Y', strtotime($versione["dt_rilascio"])) ?></td>
-                                    <td>
-                                        <?php if ($versione["ultima"]): ?>
-                                            <span class="badge bg-success">Ultima</span>
-                                        <?php else: ?>
-                                            <span class="badge bg-secondary"><i>Superata</i></span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <a href="/versioni/visualizza/<?= $versione["id"] ?>" class="btn btn-sm btn-outline-primary" title="Scheda versione">
-                                            <i class="bi bi-person-vcard"></i>
-                                        </a>
-                                        <a href="/versioni/modifica/<?= $versione["id"] ?>" class="btn btn-sm btn-outline-secondary" title="Modifica versione">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                        <a href="/versioni/elimina/<?= $versione["id"] ?>" class="btn btn-sm btn-outline-danger" title="Elimina versione" onclick="return confirm('Eliminare la versione?')">
-                                            <i class="bi bi-trash"></i>
-                                        </a>
-                                    </td>
+    <?php if (!empty($versioni)): ?>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover align-middle" id="versioniTable">
+                <thead class="table-secondary">
+                    <tr>
+                        <th>ID</th>
+                        <th>Tipo</th>
+                        <th>Codice</th>
+                        <th>Release</th>
+                        <th>Data Rilascio</th>
+                        <th>Stato</th>
+                        <th>Azioni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($versioni as $versione): ?>
+                        <tr class="clickable"
+                            data-id="<?= esc($versione["id"]) ?>"
+                            <?= audit_tooltip($versione) ?>>
+                            <td><?= esc($versione["id"]) ?></td>
+                            <td><?= esc($versione["tipo"]) ?></td>
+                            <td><?= esc($versione["codice"]) ?></td>
+                            <td><?= esc($versione["release"]) ?></td>
+                            <td><?= date('d/m/Y', strtotime($versione["dt_rilascio"])) ?></td>
+                            <td>
+                                <?php if ($versione["ultima"]): ?>
+                                    <span class="badge bg-success">Ultima</span>
+                                <?php else: ?>
+                                    <span class="badge bg-secondary"><i>Superata</i></span>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                            <div class="d-flex justify-content-center align-items-center">
+                                    <button class="btn dropdown-toggle" type="button" id="azione" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-list"></i>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                        <li>
+                                            <a class="dropdown-item" href="<?= url_to('versioni_show', $versione["id"]) ?>">
+                                                <i class="bi bi-person-vcard"></i>
+                                                Scheda
+                                            </a>
+                                        </li>
+    
+                                        <li>
+                                            <a class="dropdown-item" href="<?= url_to('versioni_edit', $versione["id"]) ?>">
+                                                <i class="bi bi-pencil"></i>
+                                                Modifica
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+    
+                                        <li class="">
+                                            <a class="dropdown-item text-danger" href="<?= url_to('versioni_delete', $versione["id"]) ?>">
+                                                <i class="bi bi-trash"></i>
+                                                Elimina
+                                            </a>
+                                        </li>
+                                    </ul>
 
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-            <?php else: ?>
-                <div class="alert alert-info">
-                    <i class="bi bi-info-circle"></i> Nessuna versione trovata nel database.
-                </div>
-            <?php endif; ?>
+                                </div>
+                            </td>
+
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    <?php else: ?>
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> Nessuna versione trovata nel database.
+        </div>
+    <?php endif; ?>
 </div>
 <?= $this->endSection() ?>
 <?= $this->section('scripts') ?>
 <script>
-   document.addEventListener("DOMContentLoaded", function() {
-            // inizializza la DataTable 
-            const table = $('#versioniTable').DataTable($.extend(true, {}, datatableDefaults, {
-                order: []
-            }));
+    document.addEventListener("DOMContentLoaded", function() {
+        // inizializza la DataTable 
+        const table = $('#versioniTable').DataTable($.extend(true, {}, datatableDefaults, {
+            order: []
+        }));
 
-            // filtro custom: tipi + stato licenze
-            $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-                if (settings.nTable.id !== 'versioniTable') return true;
+        // filtro custom: tipi + stato licenze
+        $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+            if (settings.nTable.id !== 'versioniTable') return true;
 
-                // ---- filtro TIPI (esempio: colonna 1)
-                const selectedTipi = $('input[name="tipi"]:checked').map(function() {
-                    return $(this).val();
-                }).get();
+            // ---- filtro TIPI (esempio: colonna 1)
+            const selectedTipi = $('input[name="tipi"]:checked').map(function() {
+                return $(this).val();
+            }).get();
 
-                let passTipi = true;
-                if (selectedTipi.length > 0) {
-                    const tipiText = String(data[1] ?? '')
-                        .replace(/<[^>]*>/g, '') // toglie eventuale HTML
-                        .replace(/\s+/g, ' ') // compatta whitespace
-                        .trim();
+            let passTipi = true;
+            if (selectedTipi.length > 0) {
+                const tipiText = String(data[1] ?? '')
+                    .replace(/<[^>]*>/g, '') // toglie eventuale HTML
+                    .replace(/\s+/g, ' ') // compatta whitespace
+                    .trim();
 
-                    passTipi = selectedTipi.some(t => tipiText.includes(t));
-                }
+                passTipi = selectedTipi.some(t => tipiText.includes(t));
+            }
 
-                
-                return passTipi;
+
+            return passTipi;
+        });
+        document.querySelectorAll('.clickable').forEach(function(input) {
+            /*input.addEventListener('click', function() {
+                const ID = this.getAttribute('data-id');
+               console.log('Click singolo ID: ' + ID);
+                window.location.href = '/versioni/visualizza/' + ID;
+            });*/
+            input.addEventListener('dblclick', function() {
+                const ID = this.getAttribute('data-id');
+                console.log('Doppio click ID: ' + ID);
+                window.location.href = '/versioni/modifica/' + ID;
             });
-            document.querySelectorAll('.clickable').forEach(function(input) {
-                /*input.addEventListener('click', function() {
-                    const ID = this.getAttribute('data-id');
-                   console.log('Click singolo ID: ' + ID);
-                    window.location.href = '/versioni/visualizza/' + ID;
-                });*/
-                input.addEventListener('dblclick', function() {
-                    const ID = this.getAttribute('data-id');
-                   console.log('Doppio click ID: ' + ID);
-                    window.location.href = '/versioni/modifica/' + ID;
-                });
-            });
-
-            // quando cambia un filtro, ridisegna la tabella 
-
-            document.querySelectorAll('input[name="tipi"]').forEach(function(input) {
-                input.addEventListener('change', function() {
-                    //console.log('Ridisegno tabella per filtro tipi valore selezionato: ' + this.value);
-                    table.draw();
-                });
-            });
-
-
         });
 
+        // quando cambia un filtro, ridisegna la tabella 
+
+        document.querySelectorAll('input[name="tipi"]').forEach(function(input) {
+            input.addEventListener('change', function() {
+                //console.log('Ridisegno tabella per filtro tipi valore selezionato: ' + this.value);
+                table.draw();
+            });
+        });
+
+
+    });
 </script>
 <?= $this->endSection() ?>

@@ -46,7 +46,7 @@
     <div class="card">
         <div class="card-header d-flex align-items-center">
             <h5 class="mb-0"><i class="bi bi-person-badge"></i> Dati Anagrafici</h5>
-            <a href="<?= url_to('fornitori_modifica', $fornitore["id"]) ?>" class="btn btn-light btn-outline-secondary btn-sm ms-auto" title="Modifica">
+            <a href="<?= url_to('fornitori_edit', $fornitore["id"]) ?>" class="btn btn-light btn-outline-secondary btn-sm ms-auto" title="Modifica">
                 Modifica <i class="bi bi-pencil"></i>
             </a>
         </div>
@@ -131,6 +131,7 @@
                                 <?= audit_tooltip($tipo, 'right') ?>>
                                 <td><?= esc($tipo["id"]) ?></td>
                                 <td><?= esc($tipo["nome"]) ?></td>
+                                <td><?= esc($tipo["modello"]) ?></td>
                                 <td><?= esc($tipo["descrizione"]) ?></td>
                                 <td><?= esc($tipo["categoria_label"]) ?></td>
                                 <td>
@@ -144,7 +145,7 @@
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="azione-<?= $tipo['id'] ?>">
                                         <li>
-                                            <a class="dropdown-item" href="<?= url_to('tipilicenze_modifica', $tipo["id"]) ?>">
+                                            <a class="dropdown-item" href="<?= url_to('tipilicenze_edit', $tipo["id"]) ?>">
                                                 <i class="bi bi-pencil"></i> Modifica
                                             </a>
                                         </li>
@@ -182,7 +183,7 @@
             </div>
             <form action="<?= url_to('tipilicenze_link', $fornitore["id"]) ?>" method="POST">
                 <div class="modal-body">
-                    <input type="hidden" name="backTo" value="<?= url_to('fornitori_scheda', $fornitore["id"]) ?>">
+                    <input type="hidden" name="backTo" value="<?= url_to('fornitori_show', $fornitore["id"]) ?>">
                     <select name="id_licenza" id="id_licenza" class="form-select" required>
                         <?php foreach ($selectData as $option): ?>
                             <option value="<?= esc($option["id"]) ?>"><?= esc($option["value"]) ?></option>

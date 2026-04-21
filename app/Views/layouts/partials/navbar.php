@@ -42,7 +42,7 @@ $siteName = setting('SiteConfig.siteName') ?? 'MeTe Licenze';
           </a>
           <ul class="dropdown-menu dropdown-menu-end">
             <li>
-              <a class="dropdown-item" href="<?= url_to('users_scheda', auth()->user()->id) ?>">
+              <a class="dropdown-item" href="<?= url_to('users_show', auth()->user()->id) ?>">
                 <i class="bi bi-person me-2"></i> Profilo
               </a>
             </li>

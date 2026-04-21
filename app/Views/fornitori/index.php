@@ -10,7 +10,7 @@
 <?= $this->section('content') ?>
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h5 class="mb-0"><i class="bi bi-people"></i> Elenco Fornitori</h5>
-    <a href="<?= url_to('fornitori_crea') ?>" class="btn btn-outline-secondary btn-sm" title="Aggiungi nuovo fornitore">
+    <a href="<?= url_to('fornitori_create') ?>" class="btn btn-outline-secondary btn-sm" title="Aggiungi nuovo fornitore">
         <i class="bi bi-person-add"></i> Nuovo Fornitore
     </a>
 </div>
@@ -66,8 +66,11 @@
 
                                     <td>
                                         <?php // Visualizzo i tipi di licenze fornite come lista
-                                        foreach ($fornitore["tipiLicenze"] as $tipo): ?>
-                                            <span class="badge d-block bg-transparent text-dark mb-1"><?= esc($tipo["nome"]) ?></span>
+                                        foreach ($fornitore["tipiLicenze"] as $tipo): 
+                                            $tipoLicenza = $tipo["modello"] !== 'Unico' ? $tipo["nome"]. ' - ' . $tipo["modello"] : $tipo["nome"];
+                                        ?>
+
+                                            <span class="badge d-block bg-transparent text-dark mb-1"><?= esc($tipoLicenza) ?></span>
                                         <?php endforeach; ?>
                                     </td>
                                     <td>
@@ -76,14 +79,14 @@
                                         </button>
                                         <ul class="dropdown-menu" aria-labelledby="azioniDropDownMenu">
                                             <li>
-                                                <a class="dropdown-item" href="<?= url_to('fornitori_scheda', $fornitore["id"]);  ?>">
+                                                <a class="dropdown-item" href="<?= url_to('fornitori_show', $fornitore["id"]);  ?>">
                                                     <i class="bi bi-person-vcard"></i>
                                                     Scheda Fornitore
                                                 </a>
                                             </li>
 
                                             <li>
-                                                <a class="dropdown-item" href="<?= url_to('fornitori_modifica', $fornitore["id"]); ?>">
+                                                <a class="dropdown-item" href="<?= url_to('fornitori_edit', $fornitore["id"]); ?>">
                                                     <i class="bi bi-pencil"></i>
                                                     Modifica
                                                 </a>
@@ -93,7 +96,7 @@
                                             </li>
 
                                             <li class="">
-                                                <a class="dropdown-item text-danger" href="<?= url_to('fornitori_elimina', $fornitore["id"]); ?>">
+                                                <a class="dropdown-item text-danger" href="<?= url_to('fornitori_delete', $fornitore["id"]); ?>">
                                                     <i class="bi bi-trash"></i>
                                                     Elimina
                                                 </a>

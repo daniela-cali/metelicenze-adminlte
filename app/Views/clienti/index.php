@@ -10,7 +10,7 @@
 <?= $this->section('content') ?>
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h5 class="mb-0"><i class="bi bi-people"></i> Elenco Clienti</h5>
-    <a href="<?= url_to('clienti_crea') ?>" class="btn btn-outline-secondary btn-sm" title="Aggiungi nuovo cliente">
+    <a href="<?= url_to('clienti_create') ?>" class="btn btn-outline-secondary btn-sm" title="Aggiungi nuovo cliente">
         <i class="bi bi-person-add"></i> Nuovo Cliente
     </a>
 </div>
@@ -113,14 +113,14 @@
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                 <li>
-                                    <a class="dropdown-item" href="<?= url_to('clienti_scheda', $cliente["id"]) ?>">
+                                    <a class="dropdown-item" href="<?= url_to('clienti_show', $cliente["id"]) ?>">
                                         <i class="bi bi-person-vcard"></i>
                                         Scheda Cliente
                                     </a>
                                 </li>
 
                                 <li>
-                                    <a class="dropdown-item" href="<?= url_to('clienti_modifica', $cliente["id"]) ?>">
+                                    <a class="dropdown-item" href="<?= url_to('clienti_edit', $cliente["id"]) ?>">
                                         <i class="bi bi-pencil"></i>
                                         Modifica
                                     </a>
@@ -130,7 +130,7 @@
                                 </li>
 
                                 <li class="">
-                                    <a class="dropdown-item text-danger" href="<?= url_to('clienti_elimina', $cliente["id"]) ?>">
+                                    <a class="dropdown-item text-danger" href="<?= url_to('clienti_delete', $cliente["id"]) ?>">
                                         <i class="bi bi-trash"></i>
                                         Elimina
                                     </a>

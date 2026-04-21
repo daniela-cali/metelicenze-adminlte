@@ -95,7 +95,6 @@ class ClientiController extends BaseController
                 'spoof' => null,
                 'submitText' => 'Salva',
                 'readonly' => false,
-
             ],
         ]);
     }
@@ -110,7 +109,7 @@ class ClientiController extends BaseController
             $clienteID = $this->ClientiModel->getInsertID();
             return redirect()->to(
                 $this->getBackTo(url_to('clienti_show', $clienteID))
-            )->with('success', 'Cliente creato con successo.');
+            )->with('success', 'Cliente salvato con successo.');
         } else {
             return redirect()->back()->with('error', 'Errore durante la creazione del cliente.')->withInput();
         }
@@ -118,6 +117,7 @@ class ClientiController extends BaseController
 
     public function edit($id)
     {
+        log_message('debug', 'ClientiController::edit id: '.$id);
         $backTo = $this->getBackTo(url_to('clienti_index'));
         $cliente = $this->ClientiModel->getClientiById($id);
         $selectValues = $this->ClientiModel->getClientiPadre();
@@ -126,10 +126,10 @@ class ClientiController extends BaseController
             'mode' => 'edit',
             'cliente' => $cliente,
             'form' => [
-                'action' => site_url('clienti'),
+                'action' => url_to('clienti_update', $id),
                 'method' => 'post',
-                'spoof' => null,
-                'submitText' => 'Salva',
+                'spoof' => 'PUT',
+                'submitText' => 'Aggiorna',
                 'readonly' => false,
 
             ],
@@ -143,6 +143,7 @@ class ClientiController extends BaseController
     {
         $data = $this->request->getPost();
         $data['id'] = $id; // Aggiungo l'ID per la modifica
+        log_message('debug', 'ClientiController::update: '. print_r($data));
         if ($this->ClientiModel->save($data)) {
             return redirect()->to(
                 $this->getBackTo(url_to('clienti_show', $id))
