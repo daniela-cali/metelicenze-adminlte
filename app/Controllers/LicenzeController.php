@@ -91,6 +91,7 @@ class LicenzeController extends BaseController
         }
 
         $cliente = $this->ClientiModel->getClientiById($idCliente);
+        $padre_id = $cliente["padre_id"];
         if (!$cliente) {
             return redirect()->back()->with('error', 'Cliente non trovato!.');
         } elseif ($cliente["padre_id"]) {
@@ -100,26 +101,41 @@ class LicenzeController extends BaseController
             //log_message('info', 'LicenzeController::crea Licenze del padre trovate: ' . print_r($licenzePadre, true));
             foreach ($licenzePadre as $licenza) {
                 if ($licenza["tipo"] === 'Sigla') {
-                    $data['licenzePadre']['Sigla'] = $licenza;
+                    $padreLic['licenzePadre']['Sigla'] = $licenza;
                 } elseif ($licenza["tipo"] === 'VarHub') {
-                    $data['licenzePadre']['VarHub'] = $licenza;
+                    $padreLic['licenzePadre']['VarHub'] = $licenza;
                 } elseif ($licenza["tipo"] === 'SKNT') {
-                    $data['licenzePadre']['SKNT'] = $licenza;
+                    $padreLic['licenzePadre']['SKNT'] = $licenza;
                 }
             }
-            //log_message('info', 'LicenzeController::crea Licenze del padre organizzate: ' . print_r($data, true));
+            log_message('info', 'LicenzeController::crea Licenze del padre organizzate: ' . print_r($padreLic, true));
 
         }
-
         $data = [
+            'title' => 'Crea Licenza per Cliente ' . esc($cliente["nome"]) . ' [ID: ' . esc($idCliente) . ']',
             'mode' => 'create',
-            'action' => url_to('licenze_salva'),
+            'licenza' => null,
+            'licenzePadre' => $padreLic['licenzePadre'] ?? [], // Passo le licenze del padre se esistono
+            'id_cliente' => $idCliente,
+            'backTo' => $this->getBackTo(url_to('clienti_index')),
+            'form' => [
+                'action' => url_to('clienti_show', $idCliente), // Dopo la creazione torno alla scheda del cliente
+                'method' => 'post',
+                'spoof' => null,
+                'submitText' => 'Salva',
+                'readonly' => false,
+
+            ]
+        ];
+        /*$data = [
+            'mode' => 'create',
+            'action' => url_to('licenze_store'),
             'id_cliente' => $idCliente,
             'cliente' => $cliente,
             'licenza' => null,
-            'title' => 'Crea Licenza per Cliente ' . esc($cliente["nome"]) . ' [ID: ' . esc($idCliente) . ']',
+            'title' => 
             'backTo' => $this->getBackTo(url_to('licenze_index')),
-        ];
+        ];*/
 
         log_message('info', 'LicenzeController::crea - Creazione licenza per Cliente ID: ' . $idCliente . ' con questi dati inviati alla view: ' . print_r($data, true));
 
@@ -135,7 +151,7 @@ class LicenzeController extends BaseController
         if ($this->LicenzeModel->save($data)) {
             $licenzaID = $this->LicenzeModel->getInsertID();
             return redirect()->to(
-                $this->getBackTo(url_to('licenze_scheda', $licenzaID))
+                $this->getBackTo(url_to('licenze_show', $licenzaID))
             )->with('success', 'Licenza creata con successo.');
         } else {
             return redirect()->back()->with('error', 'Errore durante la creazione della licenza.')->withInput();
@@ -155,7 +171,7 @@ class LicenzeController extends BaseController
             'id_cliente' => $idCliente,
             'mode' => 'edit',
             'title' => 'Modifica Licenza ' . esc($codice) . ' (ID: ' . esc($id) . ')',
-            'action' => url_to('licenze_aggiorna', $id),
+            'action' => url_to('licenze_update', $id),
             'backTo' => $this->getBackTo(url_to('licenze_index')),
         ];
 
@@ -172,7 +188,7 @@ class LicenzeController extends BaseController
         $data['id'] = $id; // Aggiungo l'ID per la modifica
         if ($this->LicenzeModel->save($data)) {
             return redirect()->to(
-                $this->getBackTo(url_to('licenze_scheda', $id))
+                $this->getBackTo(url_to('licenze_show', $id))
             )->with('success', 'Licenza aggiornata con successo.');
         } else {
             return redirect()->back()->with('error', 'Errore durante l\'aggiornamento della licenza.')->withInput();

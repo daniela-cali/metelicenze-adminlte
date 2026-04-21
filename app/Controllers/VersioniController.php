@@ -3,110 +3,126 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use CodeIgniter\HTTP\ResponseInterface;
+use App\Models\VersioniModel;
 
 class VersioniController extends BaseController
 {
     protected $VersioniModel;
+
     public function __construct()
     {
-        $this->VersioniModel = new \App\Models\VersioniModel();
+        $this->VersioniModel = new VersioniModel();
     }
 
-    public function index()
+    public function index(): string
     {
         $data = [
             'versioni' => $this->VersioniModel->getVersioni(),
-            'title' => 'Elenco Versioni'
+            'title'    => 'Elenco Versioni',
         ];
         return $this->view('versioni/index', $data);
     }
 
-    public function show($idVersione)
+    public function show($id)
     {
-        $versione = $this->VersioniModel->getVersioneById($idVersione);
-        $backTo = $this->getBackTo(base_url('/versioni'));
-
+        $versione = $this->VersioniModel->getVersioneById($id);
         $data = [
-            'mode' => 'view',
+            'mode'    => 'view',
             'versione' => $versione,
-            'title' => 'Versione ' . esc($versione["codice"]) . ' - ' . esc($versione["nome"]),
-                        'form' => [
-                'action' => '', // Nessuna azione in visualizzazione
-                'method' => 'get',
-                'spoof' => null,
+            'title'   => 'Versione ' . esc($versione['codice']),
+            'backTo'  => $this->getBackTo(url_to('versioni_index')),
+            'form'    => [
+                'action'     => '',
+                'method'     => 'get',
+                'spoof'      => null,
                 'submitText' => '',
-                'readonly' => true,
+                'readonly'   => true,
             ],
-
-            'backTo' => $backTo,
         ];
         return $this->view('versioni/form', $data);
     }
 
     public function create()
     {
-        $backTo = $this->getBackTo(base_url('/versioni'));
-        return $this->view('versioni/form', [
-            'mode' => 'create',
-            'action' => base_url('/versioni/salva'), // Non ha ancora ID
-            'versione' => null, // Non abbiamo una versione esistente da modificare
-            'title' => 'Crea Nuova Versione',
-            'backTo' => $backTo,
-        ]);
+        $data = [
+            'mode'    => 'create',
+            'versione' => null,
+            'title'   => 'Crea Nuova Versione',
+            'backTo'  => $this->getBackTo(url_to('versioni_index')),
+            'form'    => [
+                'action'     => url_to('versioni_store'),
+                'method'     => 'POST',
+                'spoof'      => null,
+                'submitText' => 'Salva',
+                'readonly'   => false,
+            ],
+        ];
+        return $this->view('versioni/form', $data);
     }
 
-    public function modifica($idVersione)
+    public function store()
     {
-        $versione = $this->VersioniModel->find($idVersione);
-        if (!$versione) {
-            return redirect()->to('/versioni')->with('error', 'Versione non trovata.');
-        }
-        $backTo = $this->getBackTo(base_url('/versioni'));
-
-        return $this->view('versioni/form', [
-            'mode' => 'edit',
-            'action' => base_url('/versioni/salva/' . $idVersione),
-            'versione' => $versione,
-            'title' => 'Modifica Versione ' . esc($versione["codice"]),
-            'backTo' => $backTo,
-        ]);
-    }
-
-    public function salva($idVersione = null)
-    {
-        // Logica per salvare la versione
-        // Se $idVersione è null, stiamo creando una nuova versione
-        // Altrimenti, stiamo modificando una versione esistente
         $data = $this->request->getPost();
-
-        $ultima_sn = $data['ultima'] ?? false;
-        $tipo = $data['tipo'] ?? false;
-        if ($ultima_sn) {
-            // Se l'utente ha selezionato "Ultima", aggiorno tutte le altre versioni dello stesso tipo
-            $this->VersioniModel->set(['ultima' => 0])->where('ultima', 1)->where('tipo', $tipo)->update();
+        if (!$data) {
+            return redirect()->back()->with('error', 'Dati mancanti per creare la versione.');
         }
-        log_message('info', 'Dati ricevuti per il salvataggio: ' . print_r($data, true));
-        //echo "Dati ricevuti: ";
-        //print_r($data); 
-        $this->VersioniModel->save($data);
-        if ($this->VersioniModel->errors()) {
-            // Se ci sono errori, li mostriamo
-            return redirect()->back()->withInput()->with('errors', $this->VersioniModel->errors());
+        // Se questa versione è marcata come "ultima", azzero il flag sulle altre dello stesso tipo
+        if (!empty($data['ultima'])) {
+            $this->VersioniModel->set(['ultima' => 0])->where('ultima', 1)->where('tipo', $data['tipo'])->update();
         }
-        // Se non ci sono errori, reindirizziamo alla lista delle versioni
-        return redirect()->to($this->getBackTo(base_url('/versioni')))
-            ->with('success', 'Versione salvata con successo!');
+        if ($this->VersioniModel->save($data)) {
+            return redirect()->to($this->getBackTo(url_to('versioni_index')))
+                ->with('success', 'Versione creata con successo.');
+        } else {
+            return redirect()->back()->with('error', 'Errore durante la creazione della versione.')->withInput();
+        }
     }
-    public function elimina($idVersione)
-    {
-        $versione = $this->VersioniModel->find($idVersione);
-        if (!$versione) {
-            return redirect()->to('/versioni')->with('error', 'Versione non trovata.');
-        }
 
-        $this->VersioniModel->delete($idVersione);
-        return redirect()->to($this->getBackTo(base_url('/versioni')))
-            ->with('success', 'Versione eliminata con successo.');
+    public function edit($id)
+    {
+        $versione = $this->VersioniModel->find($id);
+        if (!$versione) {
+            return redirect()->to(url_to('versioni_index'))->with('error', 'Versione non trovata.');
+        }
+        $data = [
+            'mode'    => 'edit',
+            'versione' => $versione,
+            'title'   => 'Modifica Versione ' . esc($versione['codice']),
+            'backTo'  => $this->getBackTo(url_to('versioni_index')),
+            'form'    => [
+                'action'     => url_to('versioni_update', $id),
+                'method'     => 'POST',
+                'spoof'      => 'PUT',
+                'submitText' => 'Aggiorna',
+                'readonly'   => false,
+            ],
+        ];
+        return $this->view('versioni/form', $data);
+    }
+
+    public function update($id)
+    {
+        $data = $this->request->getPost();
+        $data['id'] = $id;
+        // Se questa versione è marcata come "ultima", azzero il flag sulle altre dello stesso tipo
+        if (!empty($data['ultima'])) {
+            $this->VersioniModel->set(['ultima' => 0])->where('ultima', 1)->where('tipo', $data['tipo'])->update();
+        }
+        if ($this->VersioniModel->save($data)) {
+            return redirect()->to($this->getBackTo(url_to('versioni_index')))
+                ->with('success', 'Versione aggiornata con successo.');
+        } else {
+            return redirect()->back()->with('error', 'Errore durante l\'aggiornamento della versione.')->withInput();
+        }
+    }
+
+    public function delete($id)
+    {
+        if ($this->VersioniModel->delete($id)) {
+            return redirect()->to($this->getBackTo(url_to('versioni_index')))
+                ->with('success', 'Versione eliminata con successo.');
+        } else {
+            return redirect()->back()->with('error', 'Errore durante l\'eliminazione della versione.');
+        }
     }
 }

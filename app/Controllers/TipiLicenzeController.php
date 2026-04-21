@@ -8,13 +8,11 @@ use CodeIgniter\HTTP\ResponseInterface;
 class TipiLicenzeController extends BaseController
 {
     protected $TipiLicenzeModel;
-    protected $FornitoriTipilicenzeMapModel;
     protected $FornitoriModel;
 
     public function __construct()
     {
         $this->TipiLicenzeModel = new \App\Models\TipiLicenzeModel();
-        $this->FornitoriTipilicenzeMapModel = new \App\Models\FornitoriTipilicenzeMapModel();
         $this->FornitoriModel = new \App\Models\FornitoriModel();
     }
     public function index()
@@ -78,7 +76,7 @@ class TipiLicenzeController extends BaseController
             'title' => 'Modifica Tipo Licenza: ' . $tipoLicenza["nome"],
             'backTo' => $this->getBackTo(base_url('/tipi')),
             'form' => [
-                'action' => url_to('tipilicenze_aggiorna', $id),
+                'action' => url_to('tipilicenze_update', $id),
                 'method' => 'POST',
                 'spoof' => 'PUT',
                 'submitText' => 'Aggiorna',
@@ -119,7 +117,7 @@ class TipiLicenzeController extends BaseController
         if (!$idLicenza) {
             return redirect()->back()->with('error', 'ID licenza mancante per l\'associazione.');
         }
-        $result = $this->FornitoriTipilicenzeMapModel->linkFornitoreToTipoLicenze($idFornitore, $idLicenza);
+        $result = $this->TipiLicenzeModel->linkFornitore($idFornitore, $idLicenza);
 
         if ($result !== false) {
             return redirect()->back()->with('success', 'Tipo di licenza associato al fornitore con successo.');
@@ -128,7 +126,22 @@ class TipiLicenzeController extends BaseController
         return redirect()->back()->with('error', 'Errore durante l\'associazione del tipo di licenza al fornitore.');
 
     }
+    public function unlink($idTipoLicenze)
+    {  
+        
 
+        if (!$idTipoLicenze) {
+            return redirect()->back()->with('error', 'ID licenza mancante ');
+        }
+        $result = $this->TipiLicenzeModel->unlinkFornitore($idTipoLicenze);
+
+        if ($result !== false) {
+            return redirect()->back()->with('success', 'Tipo di licenza disassociato al fornitore con successo.');
+        }
+
+        return redirect()->back()->with('error', 'Errore durante la disassociazione del tipo di licenza al fornitore.');
+
+    }
 
     
 

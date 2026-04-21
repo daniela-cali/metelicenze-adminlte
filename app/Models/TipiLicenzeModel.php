@@ -11,6 +11,7 @@ class TipiLicenzeModel extends AuditModel
     protected $allowedFields = [
         'nome',
         'descrizione',
+        'modello',
         'fornitori_id',
         'categoria',
         'stato',
@@ -36,8 +37,7 @@ class TipiLicenzeModel extends AuditModel
     public function getTipiLicenzeByFornitore($idFornitore)
     {
         $recordset = $this->select('tipilicenze.*')
-            ->join('fornitori_tipilicenze_map', 'fornitori_tipilicenze_map.tipilicenze_id = tipilicenze.id')
-            ->where('fornitori_tipilicenze_map.fornitori_id', $idFornitore)
+            ->where('fornitori_id', $idFornitore)
             ->findAll(); //Uso findAll() per fare in modo che si attivi la callback decode_categoria
             log_message('info', 'TipiLicenzeModel::getTipiLicenzeByFornitore - Recordset per fornitore ' . $idFornitore . ': ' . print_r($recordset, true));
 
@@ -51,11 +51,42 @@ class TipiLicenzeModel extends AuditModel
         foreach ($data as $item) {
             $selectData[] = [
                 'id' => $item['id'],
-                'value' => $item['nome'],
+                'value' => $item['nome'] . ' - ' . $item['modello'],
             ];
         }
         return $selectData;
     }
+
+    public function linkFornitore($idFornitore, $idTipoLicenze)
+        {
+            log_message('info', 'Tentativo di associare Fornitore ID: ' . $idFornitore . ' al TipoLicenze ID: ' . $idTipoLicenze);
+            $data = [
+                'fornitori_id' => $idFornitore,
+            ];
+            try {
+                $res = $this->set('fornitori_id', $idFornitore)
+                ->where('id', $idTipoLicenze)
+                ->update();
+                return $res !== false; // Verifica se l'inserimento è avvenuto con successo restituendo true SOLO se diverso da false (inserimento riuscito)
+
+            } catch (\Exception $e) {
+                log_message('error', 'Errore durante l\'associazione del fornitore al tipo di licenza: ' . $e->getMessage());
+                return false;
+            }
+        }
+        public function unlinkFornitore($idTipoLicenze)
+        {
+            try {
+                $res = $this->set('fornitori_id', null)
+                ->where('id', $idTipoLicenze)
+                ->update();
+                return $res !== false; // Verifica se l'inserimento è avvenuto con successo restituendo true SOLO se diverso da false (inserimento riuscito)
+
+            } catch (\Exception $e) {
+                log_message('error', 'Errore durante la disassociazione del fornitore al tipo di licenza: ' . $e->getMessage());
+                return false;
+            }
+        }
     protected function decode_categoria(array $data)
     {
         // Se non c'è data, esco

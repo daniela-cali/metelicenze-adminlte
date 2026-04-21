@@ -11,7 +11,7 @@
 <?php $this->section('content') ?>
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h5 class="mb-0"><i class="bi bi-tags-fill"></i> Elenco Tipi Licenze</h5>
-    <a href="<?= url_to('tipilicenze_crea') ?>" class="btn btn-outline-secondary btn-sm" title="Aggiungi nuovo tipo di licenza">
+    <a href="<?= url_to('tipilicenze_create') ?>" class="btn btn-outline-secondary btn-sm" title="Aggiungi nuovo tipo di licenza">
         <i class="bi bi-plus-circle"></i> Nuovo tipo di licenza
     </a>
 </div>
@@ -22,8 +22,10 @@
             <thead class="table-secondary">
                 <tr>
                     <th>ID Tipo</th>
-                    <th>Codice</th>
-                    <th>Tipo</th>
+                    <th>Nome</th>
+                    <th>Modello</th>
+                    <th>Categoria</th>
+                    <th>Descrizione</th>
                     <th class="notexport">Azioni</th>
                 </tr>
             </thead>
@@ -35,7 +37,9 @@
                         <?= audit_tooltip($tipo) ?>>
                         <td><?= esc($tipo["id"]) ?></td>
                         <td><?= esc($tipo["nome"]) ?></td>
+                        <td><?= esc($tipo["modello"]) ?></td>
                         <td><?= esc($tipo["categoria_label"]) ?></td>
+                        <td><?= esc($tipo["descrizione"]) ?></td>
                         <td>
                             <div class="dropdown">
                                 <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -43,18 +47,18 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a class="dropdown-item" href="<?= url_to('tipilicenze_scheda', $tipo["id"]) ?>">
+                                        <a class="dropdown-item" href="<?= url_to('tipilicenze_show', $tipo["id"]) ?>">
                                             <i class="bi bi-eye"></i> Visualizza
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" href="<?= url_to('tipilicenze_modifica', $tipo["id"]) ?>">
+                                        <a class="dropdown-item" href="<?= url_to('tipilicenze_edit', $tipo["id"]) ?>">
                                             <i class="bi bi-pencil"></i> Modifica
                                         </a>
                                     </li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
-                                        <a class="dropdown-item text-danger" href="<?= url_to('tipilicenze_elimina', $tipo["id"]) ?>">
+                                        <a class="dropdown-item text-danger" href="<?= url_to('tipilicenze_delete', $tipo["id"]) ?>">
                                             <i class="bi bi-trash"></i> Elimina
                                         </a>
                                     </li>

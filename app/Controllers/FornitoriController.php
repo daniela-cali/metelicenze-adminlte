@@ -18,7 +18,6 @@ class FornitoriController extends BaseController
     {
         $this->FornitoriModel = new FornitoriModel();
         $this->tipiLicenzeModel = new \App\Models\TipiLicenzeModel();
-        $this->fornitoriTipi_map = new \App\Models\FornitoriTipilicenzeMapModel();
     }
 
 
@@ -109,7 +108,7 @@ class FornitoriController extends BaseController
             'title' => 'Modifica Fornitore ' . $fornitore["nome"],
             'backTo' => $backTo,
             'form' => [
-                'action' => url_to('fornitori_salva', $id),
+                'action' => url_to('fornitori_store', $id),
                 'method' => 'POST',
                 'spoof' => 'PUT',
                 'submitText' => 'Aggiorna',
