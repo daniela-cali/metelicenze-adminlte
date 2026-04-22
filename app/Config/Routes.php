@@ -114,6 +114,19 @@ $routes->group('admin', ['filter' => 'group:superadmin,admin'], function($routes
     $routes->get('databaseinfo/showlog',                       'Admin\DatabaseInfoController::showLog', ['as' => 'databaseinfo_showlog']);
 });
 
+$routes->group('import', ['filter' => 'group:superadmin,admin'], function($routes) {
+    $routes->get('/', 'Import\ImportController', ['as' => 'import_index']);
+    /**
+     * Importazione Clienti 
+     */
+    $routes->get('clienti/db', 'Import\ImportClientiController::fromDatabase', ['as' => 'import_clienti_fromDatabase']);
+    $routes->get('clienti/csv', 'Import\ImportClientiController::fromCSV', ['as' => 'import_clienti_fromCSV']);
+    $routes->get('clienti/create', 'Import\ImportClientiController::create', ['as' => 'import_clienti_create']);
+
+    
+
+    });
+
 $routes->group('account', function($routes) {
     $routes->get('pending', 'AccountController::pending');
     $routes->get('nodev', 'AccountController::nodev');

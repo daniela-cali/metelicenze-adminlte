@@ -17,7 +17,7 @@
       </p>
       <p class="text-muted mb-3">Il database esterno non è accessibile. Verificare la connessione ad esso.</p>
 
-      <a href="<?= base_url('/') ?>" class="btn btn-light btn-outline-secondary btn-sm">Torna alla home</a>
+      <a href="<?= url_to('import_index') ?>" class="btn btn-light btn-outline-secondary btn-sm">Torna all'importazione</a>
     </div>
   </div>
 </div>

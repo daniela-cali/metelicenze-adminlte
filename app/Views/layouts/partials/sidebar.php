@@ -129,9 +129,9 @@ $currentUri = '/' . ltrim(str_replace('index.php/', '', service('uri')->getPath(
               </a>
             </li>
             <li class="nav-item">
-              <a href="<?= base_url('admin/importClienti') ?>" class="nav-link <?= str_starts_with($currentUri, '/admin/importClienti') ? 'active' : '' ?>">
+              <a href="<?= url_to('import_index') ?>" class="nav-link <?= str_starts_with($currentUri, '/import') ? 'active' : '' ?>">
                 <i class="nav-icon bi bi-circle"></i>
-                <p>Importa Clienti</p>
+                <p>Importazione Dati</p>
               </a>
             </li>
             <li class="nav-item">

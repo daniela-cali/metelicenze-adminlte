@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers\Admin;
+namespace App\Controllers\Import;
 
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -10,7 +10,7 @@ helper('db_status');
 
 class ImportClientiController extends BaseController
 {
-    public function index()
+    public function fromDatabase()
     {
         $connectionStatus = db_is_available('external');
         //dd($connectionStatus);
@@ -20,19 +20,24 @@ class ImportClientiController extends BaseController
             $clientiModel = new ClientiImportModel();
             $data['clienti'] = $clientiModel->getRecordsetForImport();
             log_message('info', 'Clienti per importazione: ' . print_r($data['clienti'], true));
-            return $this->view('admin/importClienti/importClienti', $data);
+            return $this->view('import/clienti/importClienti', $data);
         } else {
             //$data['title'] = 'Connessione al DB External non riuscita';
             $data['connectionStatus'] = $connectionStatus;
             
-            return $this->view('admin/importClienti/importClienti_down', $data);
+            return $this->view('import/clienti/importClienti_down', $data);
         }
     }
-    public function importClienti()
+    public function fromCSV()
     {
-        $clientiModel = new ClientiImportModel();
-        $importedMessage = $clientiModel->importClienti();
+        $data['title'] = 'Importa Clienti da CSV';
+        return $this->view('/import/under_construction', $data);
 
-        return redirect()->to('/admin/import_clienti')->with('success', $importedMessage);
     }
+    public function create()
+    {
+        $data['title'] = 'Crea Cliente Manualmente';
+        return $this->view('/import/under_construction', $data);
+    }
+
 }
