@@ -4,7 +4,7 @@ namespace App\Controllers\Import;
 
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
-use App\Models\ClientiImportModel;
+use App\Models\Import\ClientiImportModel;
 
 helper('db_status');
 

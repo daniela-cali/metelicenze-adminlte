@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Import;
 
 use CodeIgniter\Model;
+//use App\Models\Import\ClientiExternalModel; Non serve in quanto nella stessa cartella, basta usare ClientiExternalModel senza namespace   
 
 class ClientiImportModel extends Model
 {
