@@ -3,6 +3,7 @@
 namespace App\Controllers\Admin;
 
 use App\Controllers\BaseController;
+use App\Models\Admin\DatabaseInfoModel;
 
 helper('db_status');
 
@@ -12,75 +13,40 @@ class DatabaseInfoController extends BaseController
     {
         $database_config = config(\Config\Database::class);
         $profiles = get_object_vars($database_config);
+        $databaseInfoModel = new DatabaseInfoModel();
 
-        // Filtro per escludere properties non-array e config vuote
+        /* Analizzo il profili di connessione: se è un array con DBDriver, provo a testare la connessione (get_object_vars restituisce un array per tutte le proprietà delle classi, 
+        quindi controllo che abbia DBDriver per essere sicura che sia un profilo di connessione valido) 
+        Filtro per escludere properties non-array e config vuote*/
         $profiles = array_filter($profiles, function ($config) {
             return is_array($config) && !empty($config['DBDriver']);
         });
 
         $databases = [];
         $results = [];
-        $errors = [];
 
         log_message('info', 'Profili trovati: ' . implode(', ', array_keys($profiles)));
         foreach ($profiles as $group => $config) {
-            /* Analizzo il profili di connessione: se è un array con DBDriver, provo a testare la connessione (get_object_vars restituisce un array per tutte le proprietà delle classi, 
-            quindi controllo che abbia DBDriver per essere sicura che sia un profilo di connessione valido) */
-            log_message('info', 'Analizzando il profilo di connessione: ' . $group);
+            //log_message('info', 'Analizzando il profilo di connessione: ' . $group);
             if (db_is_available($group)) {
-                log_message('info', 'Database disponibile per il profilo: ' . $group);
+                //log_message('info', 'Database disponibile per il profilo: ' . $group);
                 try { // Database disponibile controllando la connessione alla porta relativa (db_status helper) ed effettuo la connessione
                     $db = db_connect($group, false); //Attivo la connessione
-                    $driver = $db->DBDriver;
-                    log_message('info', 'Driver del database per il profilo ' . $group . ': ' . $driver);
-                    //Eseguo le query specifiche per driver
-                    if ($driver === 'MySQLi') {
-                        $query = $db->query("
-                                SELECT 
-                                    DATABASE() AS db_name,
-                                    @@character_set_database AS encoding,
-                                    @@collation_database AS collation,
-                                    'N/A' AS ctype
-                            ")->getRowArray();
-                        log_message('info', 'Query eseguita per MySQLi: ' . print_r($query, true));
-                    } elseif ($driver === 'Postgre') {
-                        $query = $db->query("
-                                SELECT 
-                                    current_database() AS db_name,
-                                    pg_encoding_to_char(encoding) AS encoding,
-                                    datcollate AS collation,
-                                    datctype AS ctype
-                                FROM pg_database 
-                                WHERE datname = current_database()
-                            ")->getRowArray();
-                        log_message('info', 'Query eseguita per PostgreSQL: ' . print_r($query, true));
-                    } else { // Se il driver non è supportato, loggo un messaggio di avviso e salto al prossimo
-                        log_message('warning', 'Driver non supportato per il test di connessione: ' . $driver);
 
-                        throw new \Exception("Driver $driver non supportato per il test di connessione");
-                    }
-
-                    $results[$group] = $query;
+                    $results[$group] = $databaseInfoModel->getDbInfo($db);
                     $databases[] = [
-                        'title' => 'Connessione Database ' . ucfirst($query['db_name'] ?? $group),
-                        'db_name' => $query['db_name'] ?? 'N/A',
-                        'encoding' => $query['encoding'] ?? 'N/A',
-                        'collation' => $query['collation'] ?? 'N/A',
-                        'ctype' => $query['ctype'] ?? 'N/A',
-                        'driver' => $driver,
-                        'hostname' => $config['hostname'] ?? 'N/A',
+                        'title'            => 'Connessione Database ' . ucfirst($results[$group]['db_name'] ?? $group),
+                        'db_name'          => $results[$group]['db_name'] ?? 'N/A',
+                        'encoding'         => $results[$group]['encoding'] ?? 'N/A',
+                        'collation'        => $results[$group]['collation'] ?? 'N/A',
+                        'ctype'            => $results[$group]['ctype'] ?? 'N/A',
+                        'driver'           => $db->DBDriver,
+                        'hostname'         => $config['hostname'] ?? 'N/A',
                         'connection_group' => $group,
-                        'status' => 'Raggiungibile'
+                        'status'           => 'Raggiungibile'
                     ];
                     log_message('info', 'Connessione testata con successo per il profilo: ' . $group);
                 } catch (\Throwable $e) {
-                    /*$errors[$group] = [
-                            'message' => $e->getMessage(),
-                            'code' => $e->getCode(),
-                            'file' => $e->getFile(),
-                            'line' => $e->getLine(),
-                            'exception' => $e,
-                        ];*/
                     log_message('error', 'Errore durante l\'analisi del profilo di connessione: ' . $group . ' - ' . $e->getMessage());
                 }
             } else {
@@ -105,76 +71,18 @@ class DatabaseInfoController extends BaseController
         ]);
     }
 
-    /**
-     * Visualizza le informazioni del database specificato
-     * Uso interno alla classe per evitare duplicazioni
-     **/
-    /*private function getDatabaseInfo($database)
-    {
-        // Connessione al database
-        $db = db_connect($database, false);
-        $config = config('Database');
-        $schema = $config->{$database}['schema'] ?? null;
-        $driver = $db->DBDriver;
-        $db = [
-            'db_name'  => $db->getDatabase(),
-            // Recupera encoding, collation e ctype tramite query SQL
-            'encoding' => $db->query("SELECT @@character_set_database AS encoding")->getRow('encoding') ?? null,
-            'collation' => $db->query("SELECT @@collation_database AS collation")->getRow('collation') ?? null,
-            'ctype' => null, // MySQL non ha ctype, per PostgreSQL serve una query diversa
-            'schema' => $schema,
-            'driver'    => $driver,
-            'connection_group' => $database,
-            'connection' => $db,
-        ];
-    }*/
 
-    public function getTableFields($database = 'default', $tableName = '')
-    {
-        log_message('info', 'Richiesta campi per la tabella: ' . $tableName . ' nel database: ' . $database);
 
+
+    public function getTableFields($db = 'default', $table = '')
+    {
+        log_message('info', 'Richiesta campi per la tabella: ' . $table . ' nel database: ' . $db);
+        $databaseInfoModel = new DatabaseInfoModel();
         try {
             // Connessione diretta
-            $db = db_connect($database, false);
-            $driver = $db->DBDriver;
-
-            // Imposta schema per PostgreSQL
-            $schema = null;
-            if ($driver === 'Postgre') {
-                $config = config('Database');
-                $schema = $config->{$database}['schema'] ?? 'public';
-            }
-
-            // Esegui query in base al driver
-            switch ($driver) {
-                case 'MySQLi':
-                    // Per MySQL lo "schema" è il database stesso
-                    $dbName = $db->database ?? null;
-                    $query = $db->query("
-                    SELECT COLUMN_NAME as column_name,
-                           COLUMN_TYPE as data_type,
-                           IS_NULLABLE as is_nullable,
-                           COLUMN_DEFAULT as column_default
-                    FROM information_schema.columns
-                    WHERE table_name = ? AND table_schema = ?
-                    ORDER BY ORDINAL_POSITION
-                ", [$tableName, $dbName]);
-                    break;
-
-                case 'Postgre':
-                    $query = $db->query("
-                    SELECT column_name, data_type, is_nullable, column_default
-                    FROM information_schema.columns
-                    WHERE table_name = ? AND table_schema = ?
-                    ORDER BY ordinal_position
-                ", [$tableName, $schema]);
-                    break;
-
-                default:
-                    throw new \Exception("Driver $driver non supportato per la lettura dei campi");
-            }
-
-            $result = $query->getResultArray();
+            $db = db_connect($db, false);
+            
+            $result = $databaseInfoModel->getTableFields($db, $table);
 
             // Lista dei nomi dei campi
             $allowedFields = array_filter(
@@ -184,16 +92,16 @@ class DatabaseInfoController extends BaseController
 
             return $this->view('admin/database/dbFields', [
                 'fields'         => $result,
-                'table_name'     => $tableName,
+                'table_name'     => $table,
                 'allowed_fields' => $allowedFields,
-                'database'       => $database,
+                'database'       => $db,
             ]);
         } catch (\Exception $e) {
             log_message('error', 'Errore nel recupero campi: ' . $e->getMessage());
             return $this->view('admin/database/dbFields', [
                 'error'      => $e->getMessage(),
-                'table_name' => $tableName,
-                'database'   => $database,
+                'table_name' => $table,
+                'database'   => $db,
             ]);
         }
     }
