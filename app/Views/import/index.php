@@ -21,53 +21,46 @@
             <i class="bi bi-arrow-left"></i> Indietro
         </a>
     </div>
+    <?php if (empty($tables)): ?>
+        <div class="card-body">
 
-    <div class="card-body">
+            <div class="mb-3">
+                <div class="small-box bg-warning">
+                    <div class="inner">
+                        <h3>Tabella Transcodifiche vuota!</h3>
+                        <p>Eseguire prima l'importazione dei campi del database interno</p>
+                    </div>
 
-        <div class="mb-3">
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Importazione Clienti
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="<?= url_to('import_clienti_fromDatabase') ?>">Collegamento a database external</a></li>
-                    <li><a class="dropdown-item" href="<?= url_to('import_clienti_fromCSV') ?>">Importazione da file CSV</a></li>
-                    <li><a class="dropdown-item" href="<?= url_to('import_clienti_create') ?>">Creazione manuale</a></li>
-                </ul>
+                </div>
             </div>
-
+            <a href="<?= url_to('import_loadTablesFields') ?>" class="btn btn-secondary btn-sm" title="Avvia importazione">
+                <i class="bi bi-database-fill-down"></i> Avvia importazione
+            </a>
         </div>
-        <div class="mb-3">
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Dropdown button
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
+    <?php else: ?>
+        <div class="card-body">
+            <div class="row g-3">
+                <?php foreach ($tables as $table): ?>
+                    <div class="col-md-4">
+                        <div class="card border-primary h-100">
+                            <div class="card-header">
+                                <h6 class="mb-0 text-capitalize"><?= esc($table['tabella_dest']) ?></h6>
+                            </div>
+                            <div class="card-body">
+                                <a href="#" class="btn btn-outline-primary btn-sm me-1">
+                                    <i class="bi bi-file-earmark-csv"></i> Da CSV
+                                </a>
+                                <a href="#" class="btn btn-outline-secondary btn-sm">
+                                    <i class="bi bi-database"></i> Da Database
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
             </div>
-
         </div>
-
-        <div class="mb-3">
-            <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Dropdown button
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                </ul>
-            </div>
-
-        </div>
+    <?php endif; ?>
 
 
 
-
-    </div>
-</div>
-<?= $this->endSection() ?>
+    <?= $this->endSection() ?>

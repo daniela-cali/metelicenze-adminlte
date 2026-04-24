@@ -115,7 +115,8 @@ $routes->group('admin', ['filter' => 'group:superadmin,admin'], function($routes
 });
 
 $routes->group('import', ['filter' => 'group:superadmin,admin'], function($routes) {
-    $routes->get('/', 'Import\ImportController', ['as' => 'import_index']);
+    $routes->get('/', 'Import\ImportController::index', ['as' => 'import_index']);
+    $routes->get('/loadTablesFields', 'Import\ImportController::loadTablesFields', ['as' => 'import_loadTablesFields']);
     /**
      * Importazione Clienti 
      */
@@ -135,6 +136,7 @@ $routes->group('account', function($routes) {
 $routes->group('test', function($routes) {
     $routes->get('log', 'TestController::logTestMessage');
     $routes->get('db', 'TestController::testDatabaseConnection');
+    $routes->get('loadTablesFields', 'Import\ImportController::loadTablesFields');
 });
 
 // =============================================================================
