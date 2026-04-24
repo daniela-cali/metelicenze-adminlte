@@ -121,7 +121,7 @@ class DatabaseInfoController extends BaseController
         $path_default = $folder_default->getRow()->Value . $log_file_default->getRow()->Value;
         log_message('info', 'Percorso del log per il database default: ' . $path_default);
         echo $path_default;
-        die();
+        //die();
 
         $external = db_connect('external', false);
 
@@ -144,78 +144,14 @@ class DatabaseInfoController extends BaseController
         log_message('info', 'Richiesta informazioni per il database: ' . $connectionGroup);
 
         try {
+            $databaseInfoModel = new DatabaseInfoModel();
             // Connessione al database
             $db = db_connect($connectionGroup, false);
+
             $config = config('Database');
+            $dbInfo = $databaseInfoModel->getDbInfo($db);
+            $tables = $databaseInfoModel->getTables($db);
             $schema = $config->{$connectionGroup}['schema'] ?? null;
-
-            // Driver del database
-            $driver = $db->DBDriver;
-            log_message('info', 'Schema utilizzato: ' . $schema);
-            log_message('info', 'Driver del database: ' . $driver);
-
-            switch ($driver) {
-                case 'MySQLi':
-                    log_message('info', 'Driver MySQLi rilevato');
-
-                    $dbInfoRaw = $db->query("
-                    SELECT 
-                        DATABASE() AS db_name,
-                        @@character_set_database AS charset,
-                        @@collation_database AS collation
-                ")->getRow();
-
-                    // Normalizzo le proprietà per la view
-                    $dbInfo = [
-                        'db_name'   => $dbInfoRaw->db_name,
-                        'encoding'  => $dbInfoRaw->charset,
-                        'collation' => $dbInfoRaw->collation,
-                        'ctype'     => null
-                    ];
-
-                    // Tabelle dello schema
-                    $tables = $db->query("
-                    SELECT table_name AS tablename
-                    FROM information_schema.tables
-                    WHERE table_schema = ?
-                    ORDER BY table_name
-                ", [$dbInfo['db_name']])->getResultArray();
-                    break;
-
-                case 'Postgre':
-                    log_message('info', 'Driver PostgreSQL rilevato');
-
-                    // Informazioni sul database
-                    $dbInfoRaw = $db->query("
-                    SELECT 
-                        current_database() AS db_name,
-                        pg_encoding_to_char(encoding) AS encoding,
-                        datcollate AS collation,
-                        datctype AS ctype
-                    FROM pg_database 
-                    WHERE datname = current_database()
-                ")->getRow();
-
-                    // Normalizzo le proprietà per la view
-                    $dbInfo = [
-                        'db_name'   => $dbInfoRaw->db_name,
-                        'encoding'  => $dbInfoRaw->encoding,
-                        'collation' => $dbInfoRaw->collation,
-                        'ctype'     => $dbInfoRaw->ctype
-                    ];
-
-                    // Tabelle dello schema
-                    $tables = $db->query("
-                    SELECT tablename 
-                    FROM pg_tables 
-                    WHERE schemaname = ? 
-                    ORDER BY tablename
-                ", [$schema])->getResultArray();
-                    break;
-
-                default:
-                    throw new \Exception("Driver $driver non supportato");
-            }
 
             $data = [
                 'dbInfo'   => $dbInfo,
