@@ -116,7 +116,10 @@ $routes->group('admin', ['filter' => 'group:superadmin,admin'], function($routes
 
 $routes->group('import', ['filter' => 'group:superadmin,admin'], function($routes) {
     $routes->get('/', 'Import\ImportController::index', ['as' => 'import_index']);
-    $routes->get('/loadTablesFields', 'Import\ImportController::loadTablesFields', ['as' => 'import_loadTablesFields']);
+    $routes->get('loadTablesFields', 'Import\ImportController::loadTablesFields', ['as' => 'import_loadTablesFields']);
+    $routes->post('uploadCsv', 'Import\ImportController::uploadCsv', ['as' => 'import_uploadCsv']);
+    $routes->post('storeMapping', 'Import\ImportController::storeMapping', ['as' => 'import_store_mapping']);
+
     /**
      * Importazione Clienti 
      */

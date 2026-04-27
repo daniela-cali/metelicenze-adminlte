@@ -14,6 +14,7 @@ class DatabaseInfoModel extends Model
         'id', 
         'dt_import', 
         'utente_import',
+        'note',
         'created_at',
         'created_by',
         'updated_at',
@@ -107,8 +108,8 @@ class DatabaseInfoModel extends Model
 
     private function getTableFieldsMysql($db, $table)
     {
-        //$dbname = $this->dbConfig->{$db->DBGroup}['database'] // → "metelicenze" uso la forma più breve qui sotto
         /** In MySQL lo schema è solo il nome database in quanto non prevede l'utilizzo di schema diversi (schema = database)*/
+        //$dbname = $this->dbConfig->{$db->DBGroup}['database'] // → "metelicenze" uso la forma più breve qui sotto
         $dbName = $db->database;
         return $db->table('information_schema.columns')
             ->select('COLUMN_NAME as column_name, COLUMN_TYPE as data_type, IS_NULLABLE as is_nullable, COLUMN_DEFAULT as column_default')

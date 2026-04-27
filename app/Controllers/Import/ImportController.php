@@ -12,14 +12,74 @@ class ImportController extends BaseController
     public function index()
     {
         $transcodificheModel = new TranscodificheModel();
-        $tables = $transcodificheModel->distinct()->select('tabella_dest')->findAll();        
-        return $this->view('import/index', ['tables'=> $tables]);
+        $tables = $transcodificheModel->distinct()->select('tabella_dest')->findAll();
+        $nullCounts = []; //Contatore contenuto per ogni tabella
+        foreach ($tables as $key => $table) {
+            $nullCounts[$table["tabella_dest"]] = $transcodificheModel
+                ->where('tabella_dest', $table["tabella_dest"])
+                ->where('campo_ori IS NULL')
+                ->countAllResults();
+        }
+        return $this->view('import/index', [
+            'tables' => $tables,
+            'nullCounts' => $nullCounts
+        ]);
     }
 
     public function loadTablesFields()
     {
         $importService = new ImportService();
-        return $importService->loadTablesFields();
+        try {
+            $message = $importService->loadTablesFields();
+            session()->setFlashdata('success', $message);
+        } catch (\Exception $e) {
+            session()->setFlashdata('error', $e);
+        }
+        return redirect()->to(url_to('import_index'));
     }
-    
+
+    public function uploadCsv()
+    {
+        $importService = new ImportService();
+        $file = $this->request->getFile('uploadedFile');
+        $tipoImport = $this->request->getPost('tipo');
+        $columName = $this->request->getPost('columnName');
+        $tabella = $this->request->getPost('tabella');
+        $transcodificheModel = new TranscodificheModel();
+
+        try {
+            if ($file->isValid() && !$file->hasMoved()) {
+                $file->move(WRITEPATH . 'uploads/');
+                $path = WRITEPATH . 'uploads' . DIRECTORY_SEPARATOR . $file->getName();
+                if ($tipoImport === 'importa_colonne') {
+                    $fields = $importService->getCsvFields($path, $columName);
+                    $campiInterni = $transcodificheModel->where('tabella_dest', $tabella)->findAll();
+                    return $this->view('import/associazione', [
+                        'campiEsterni' => $fields,
+                        'tabella'      => $tabella,
+                        'campiInterni' => $campiInterni,
+                    ]);
+                }
+            }
+        } catch (\Exception $e) {
+            $message = "Inserire un file .cvs valido.";
+            session()->setFlashdata('error', $message);
+            return redirect()->to(url_to('import_index'));
+        }
+    }
+
+    public function storeMapping(){
+        $transcodificheModel = new TranscodificheModel();
+        $tabella = $this->request->getPost('tabella');
+        $mapping = $this->request->getPost('mapping');
+        foreach ($mapping as $campoDest => $campoOri) {
+            $transcodificheModel
+            ->where('tabella_dest', $tabella)
+            ->where('campo_dest', $campoDest)
+            ->set(['campo_ori'=>  $campoOri, 'campo_dest'=> $campoDest])
+            ->update();
+        }
+        session()->setFlashdata('success', 'Mappatura salvata con successo');
+        return redirect()->to(url_to('import_index'));
+    }
 }
