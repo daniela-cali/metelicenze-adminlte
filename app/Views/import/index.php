@@ -105,8 +105,8 @@
                 Caricare il file .csv per importare le colonne del database di origine
                 <form action="<?= url_to('import_uploadCsv'); ?>" method="post" enctype="multipart/form-data">
                     <?= csrf_field() ?>
-                    <input type="text" name="tabella" id="tabellaInput" value="">
-                    <input type="text" name="tipo" id="tipo" value="">
+                    <input type="hidden" name="tabella" id="tabellaInput" value="">
+                    <input type="hidden" name="tipo" id="tipo" value="">
                     <div class="my-3">
                         <input required class="form-control" type="file" id="uploadedFile" name="uploadedFile" accept=".csv">
                         <div id="columnNameDIV">

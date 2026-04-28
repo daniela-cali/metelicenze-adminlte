@@ -7,6 +7,8 @@ use App\Libraries\Import\ImportService;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\Import\TranscodificheModel;
 
+helper('db_status');
+
 class ImportController extends BaseController
 {
     public function index()
@@ -92,10 +94,21 @@ class ImportController extends BaseController
     }
 
     public function fromDatabase($table){
+        /* Verifico che il database esterno sia raggiungibile prima di tentare la connessione,
+         * evitando il timeout/errore grezzo di CodeIgniter in caso di server irraggiungibile */
+        if (!db_is_available('external')) {
+            session()->setFlashdata('error', 'Database esterno non raggiungibile. Verificare la connessione e riprovare.');
+            return redirect()->to(url_to('databaseinfo_connectiontest'));
+        }
         $importService = new ImportService();
-        $message = $importService->import($table, 'database');
-        session()->setFlashdata('success', $message);
-        return redirect()->to(url_to('clienti_index'));
-       
+        try {
+            $message = $importService->import($table, 'database');
+            session()->setFlashdata('success', $message);
+            return redirect()->to(url_to('clienti_index'));
+        } catch (\Exception $e) {
+            log_message('error', 'Errore importazione da database: ' . $e->getMessage());
+            session()->setFlashdata('error', 'Errore durante l\'importazione: ' . $e->getMessage());
+            return redirect()->to(url_to('import_index'));
+        }
     }
 }
