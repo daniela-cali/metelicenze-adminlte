@@ -98,7 +98,7 @@ class ImportController extends BaseController
          * evitando il timeout/errore grezzo di CodeIgniter in caso di server irraggiungibile */
         if (!db_is_available('external')) {
             session()->setFlashdata('error', 'Database esterno non raggiungibile. Verificare la connessione e riprovare.');
-            return redirect()->to(url_to('databaseinfo_connectiontest'));
+            return redirect()->to(url_to('import_index'));
         }
         $importService = new ImportService();
         try {
