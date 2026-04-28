@@ -90,4 +90,12 @@ class ImportController extends BaseController
         session()->setFlashdata('success', 'Mappatura salvata con successo');
         return redirect()->to(url_to('import_index'));
     }
+
+    public function fromDatabase($table){
+        $importService = new ImportService();
+        $message = $importService->import($table, 'database');
+        session()->setFlashdata('success', $message);
+        return redirect()->to(url_to('clienti_index'));
+       
+    }
 }

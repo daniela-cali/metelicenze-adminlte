@@ -119,17 +119,8 @@ $routes->group('import', ['filter' => 'group:superadmin,admin'], function($route
     $routes->get('loadTablesFields', 'Import\ImportController::loadTablesFields', ['as' => 'import_loadTablesFields']);
     $routes->post('uploadCsv', 'Import\ImportController::uploadCsv', ['as' => 'import_uploadCsv']);
     $routes->post('storeMapping', 'Import\ImportController::storeMapping', ['as' => 'import_store_mapping']);
-
-    /**
-     * Importazione Clienti 
-     */
-    $routes->get('clienti/db', 'Import\ImportClientiController::fromDatabase', ['as' => 'import_clienti_fromDatabase']);
-    $routes->get('clienti/csv', 'Import\ImportClientiController::fromCSV', ['as' => 'import_clienti_fromCSV']);
-    $routes->get('clienti/create', 'Import\ImportClientiController::create', ['as' => 'import_clienti_create']);
-
-    
-
-    });
+    $routes->get('fromDatabase/(:segment)', 'Import\ImportController::fromDatabase/$1', ['as' => 'import_from_database' ]);
+});
 
 $routes->group('account', function($routes) {
     $routes->get('pending', 'AccountController::pending');

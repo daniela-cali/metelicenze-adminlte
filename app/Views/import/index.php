@@ -74,13 +74,14 @@
                                     </button>
                                 </span>
                                 <span <?= $hasFields ? '' : 'data-bs-toggle="tooltip" title="Completa prima la mappatura dei campi"' ?>>
-                                    <button type="button"
+                                    <a 
+                                        href="<?= url_to('import_from_database', $table['tabella_dest']) ?>"
                                         <?= $hasFields ? '' : 'disabled' ?>
                                         title="Importa dati da database esterno"
                                         class="btn btn-outline-warning btn-sm">
                                         <i class="bi bi-database"></i>
                                         Da Database
-                                    </button>
+                                    </a>
                                 </span>
 
 
