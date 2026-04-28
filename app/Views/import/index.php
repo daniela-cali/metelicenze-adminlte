@@ -40,8 +40,8 @@
     <?php else: ?>
         <div class="card-body">
             <div class="row g-3">
-                <?php foreach ($tables as $table): ?>
-                    <?php $hasFields = ($counts[$table['tabella_dest']] ?? 0) > 0; ?>
+                <?php foreach ($tables as $key => $table): ?>
+                    <?php $hasFields = $nullCounts[$table['tabella_dest']]== 0 ? true : false; ?>
 
 
                     <div class="col-md-4">
@@ -60,7 +60,7 @@
 
                             </div>
                             <div class="card-body">
-                                <span <?= $hasFields ? '' : 'data-bs-toggle="tooltip" title="Completa prima la mappatura dei campi"' ?>>
+                                <span <?=$hasFields ? '' : 'data-bs-toggle="tooltip" title="Completa prima la mappatura dei campi"' ?>>
                                     <button type="button"
                                         <?= $hasFields ? '' : 'disabled' ?>
                                         title="Importa dati da file CSV"

@@ -20,6 +20,7 @@ class ImportController extends BaseController
                 ->where('campo_ori IS NULL')
                 ->countAllResults();
         }
+        //dd($tables);
         return $this->view('import/index', [
             'tables' => $tables,
             'nullCounts' => $nullCounts
@@ -59,9 +60,16 @@ class ImportController extends BaseController
                         'tabella'      => $tabella,
                         'campiInterni' => $campiInterni,
                     ]);
+                } 
+                if ($tipoImport === 'importa_file') {
+                    $message = $importService->import($tabella, 'csv', $path);
+                    session()->setFlashdata('success', $message);
+                    return redirect()->to(url_to('clienti_index'));
                 }
             }
         } catch (\Exception $e) {
+            dd($e->getMessage());
+            log_message('error', $e->getMessage());
             $message = "Inserire un file .cvs valido.";
             session()->setFlashdata('error', $message);
             return redirect()->to(url_to('import_index'));

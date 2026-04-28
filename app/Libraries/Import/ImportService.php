@@ -4,6 +4,7 @@ namespace App\Libraries\Import;
 
 use App\Models\Import\TranscodificheModel;
 use App\Models\Admin\DatabaseInfoModel;
+use App\Models\Import\ClientiImportModel;
 use CodeIgniter\Shield\Models\DatabaseException;
 
 class ImportService
@@ -62,7 +63,42 @@ class ImportService
 
     private function importFromDatabase(string $table): string {}
 
-    private function importFromCsv(string $table, $path): string {}
+    private function importFromCsv(string $table, $path): string {
+        //dd([$table, $path]);
+        if (($handle = fopen($path, "r")) === FALSE) {
+            throw new \Exception("Impossibile aprire il file CSV:". $path);
+        }
+        $campi_dest = $this->trancodificheModel->where('tabella_dest', $table)->findAll();
+        //dd($campi_dest);
+        $headers = fgetcsv($handle);
+        $headersIndexes = array_flip($headers);
+        //dd([$campi_dest,$headers,$headersIndexes]);
+        $fields = [];
+        $records = [];
+        while(($row = fgetcsv($handle)) !== false) {
+            //dd($row);
+            foreach ($campi_dest as  $campo) {
+                $colIndex = $headersIndexes[$campo["campo_ori"]];
+                //dd([$colIndex,$campo['campo_dest'],$campo["campo_ori"], $headersIndexes]);
+                $fields[$campo["campo_dest"]] = $row[$colIndex];
+            }
+
+            $records[] = $fields;
+        }
+        foreach ($records as &$record) {
+            $record['dt_import'] = date('Y-m-d H:i:s');
+            $record['utente_import'] = auth()->id();
+            /* Casto i booleani in 0/1 per MySQL */
+            $record['stato'] = filter_var($record['stato'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
+        }
+        //dd($records);
+        $model = match($table) {
+            'clienti' => new ClientiImportModel,
+            default    => throw new \Exception("Tabella '$table' non supportata per l'import"),
+        };
+        $model->upsertBatch($records);
+        return "Importazione completata: ". count($records) ." record elaborati";
+    }
 
     public function getCsvFields(string $path, string $columnName = 'column_name')
     {
