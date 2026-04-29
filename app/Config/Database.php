@@ -34,6 +34,7 @@ class Database extends Config
             'DBPrefix' => env('database.default.DBPrefix'),
             'pConnect' => false,
             'charset'  => env('database.default.charset')?? 'utf8mb4',
+            'DBCollat'  => 'utf8mb4_unicode_ci',  // compatibile con MySQL 5.7, MySQL 8 e MariaDB; gestisce correttamente le accentate italiane
             'DBDebug'  => ENVIRONMENT !== 'production',
             'port'     => (int) env('database.default.port'),
             'swapPre'  => '',
