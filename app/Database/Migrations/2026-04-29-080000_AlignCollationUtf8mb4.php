@@ -5,7 +5,7 @@ namespace App\Database\Migrations;
 use CodeIgniter\Database\Migration;
 
 /**
- * Allinea charset e collation di tutte le tabelle applicative a utf8mb4_0900_ai_ci,
+ * Allinea charset e collation di tutte le tabelle applicative a utf8mb4_unicode_ci,
  * che è il default di MySQL 8 e quello configurato in app/Config/Database.php.
  *
  * Le tabelle create in momenti diversi possono aver ereditato utf8mb4_general_ci
@@ -34,7 +34,7 @@ class AlignCollationUtf8mb4 extends Migration
     public function up()
     {
         $database = $this->db->getDatabase();
-        $collation = 'utf8mb4_0900_ai_ci';
+        $collation = 'utf8mb4_unicode_ci';
         $charset   = 'utf8mb4';
 
         // Imposta il default del database per le nuove tabelle create senza COLLATE esplicito
