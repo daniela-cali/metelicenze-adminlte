@@ -4,15 +4,16 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\FornitoriModel;
+use App\Models\TipiLicenzeModel;
 
 use CodeIgniter\HTTP\ResponseInterface;
 
 class FornitoriController extends BaseController
 {
 
-    protected $FornitoriModel;
-    protected $tipiLicenzeModel;
-    protected $fornitoriTipi_map;
+    protected FornitoriModel $FornitoriModel;
+    protected TipiLicenzeModel $tipiLicenzeModel;
+
 
     public function __construct()
     {
@@ -39,7 +40,7 @@ class FornitoriController extends BaseController
         return $this->view('fornitori/index', $data);
     }
 
-    public function show($id)
+    public function show(int $id)
     {
         $fornitore = $this->FornitoriModel->getFornitoriById($id);
         $data = [
@@ -57,7 +58,6 @@ class FornitoriController extends BaseController
                 'readonly'   => true,
             ]
         ];
-
         return $this->view('fornitori/show', $data);
     }
 
@@ -75,7 +75,6 @@ class FornitoriController extends BaseController
                 'spoof' => null,
                 'submitText' => 'Salva',
                 'readonly' => false,
-
             ]
         ];
         return $this->view('fornitori/form', $data );
@@ -97,16 +96,14 @@ class FornitoriController extends BaseController
         }
     }
 
-    public function edit($id)
+    public function edit(int $id)
     {
         $fornitore = $this->FornitoriModel->getFornitoriById($id);
-        $backTo = $this->getBackTo(base_url('/fornitori'));
         $data = [
             'mode' => 'edit',
             'fornitore' => $fornitore,
-
             'title' => 'Modifica Fornitore ' . $fornitore["nome"],
-            'backTo' => $backTo,
+            'backTo' => $this->getBackTo(base_url('/fornitori')),
             'form' => [
                 'action' => url_to('fornitori_store', $id),
                 'method' => 'POST',
@@ -118,7 +115,7 @@ class FornitoriController extends BaseController
         return $this->view('fornitori/form', $data);
     }
 
-    public function update($id)
+    public function update(int $id)
     {
         $data = $this->request->getPost();
         $data['id'] = $id; // Aggiungo l'ID per la modifica
@@ -131,7 +128,7 @@ class FornitoriController extends BaseController
         }
     }
 
-    public function delete($id)
+    public function delete(int $id)
     {
         if ($this->FornitoriModel->delete($id)) {
             return redirect()->to($this->getBackTo(base_url('/fornitori')))
