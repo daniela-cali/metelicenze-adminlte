@@ -58,6 +58,7 @@
                             <tr>
                                 <th>ID Licenza</th>
                                 <th>Codice</th>
+                                <th>Categoria</th>
                                 <th>Tipo</th>
                                 <th>Modello</th>
                                 <th>Cliente</th>
@@ -75,8 +76,9 @@
                                 <?= audit_tooltip($licenza) ?>>
                                     <td><?= esc($licenza["id"]) ?></td>
                                     <td><?= esc($licenza["codice"]) ?></td>
-                                    <td><?= esc($licenza["tipo"]) ?></td>
-                                    <td><?= esc($licenza["modello"]) ?></td>
+                                    <td><?= esc($licenza["tipilicenze_categoria_label"]) ?></td>
+                                    <td><?= esc($licenza["tipilicenze_tipo"]) ?></td>
+                                    <td><?= esc($licenza["tipilicenze_modello"]) ?></td>
                                     <td><?= esc($licenza["clienteNome"]) ?></td>
                                     <td><?= esc($licenza["ultimoAggiornamento"]) ?></td>
                                     <td><?= esc($licenza["versioneUltimoAggiornamento"]) ?></td>

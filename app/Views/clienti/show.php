@@ -1,3 +1,12 @@
+<?php
+/**
+ * @var string $title
+ * @var array  $cliente
+ * @var string $backTo
+ * @var array $licenze
+ * ...
+ */
+?>
 <?php $this->extend('layouts/main'); ?>
 
 <?php $this->section('breadcrumb'); ?>

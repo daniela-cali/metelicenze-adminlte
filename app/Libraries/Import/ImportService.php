@@ -48,9 +48,11 @@ class ImportService
                     ];
                 }
             }
+            $this->trancodificheModel->upsertBatch($data);
+            return "Campi interni caricati con successo nella tabella!";
+        } else {
+            return "Nessuna tabella permessa nel database: ". implode( ' - ', $allowedTables);
         }
-        $this->trancodificheModel->upsertBatch($data);
-        return "Campi interni caricati con successo nella tabella!";
     }
 
     public function import(string $table, string $source, string $path = 'null'): string

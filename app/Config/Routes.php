@@ -131,6 +131,7 @@ $routes->group('test', function($routes) {
     $routes->get('log', 'TestController::logTestMessage');
     $routes->get('db', 'TestController::testDatabaseConnection');
     $routes->get('loadTablesFields', 'Import\ImportController::loadTablesFields');
+    $routes->get('getClientiByTipoLicenza/(:segment)', 'TestController::getLicenzeByTipo/$1');
 });
 
 // =============================================================================

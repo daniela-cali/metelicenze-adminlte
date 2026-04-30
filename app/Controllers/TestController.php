@@ -7,25 +7,14 @@ use CodeIgniter\HTTP\ResponseInterface;
 
 class TestController extends BaseController
 {
-    public function aggiornamentiModel($metodo)
+    public function getLicenzeByTipo(string $tipo)
     {
-        $model = new \App\Models\AggiornamentiModel();
-        // Esegui il metodo specificato
-        if (method_exists($model, $metodo)) {
-            $test = $model->$metodo();
-            return $this->view('test/test', ['test' => $test]);
-        } else {
-            return redirect()->back()->with('error', 'Metodo non trovato.');
-        }
-    }
-    public function clienti($metodo)
-    {
-        // Esegui il metodo specificato
-        if (method_exists($this, $metodo)) {
-            return $this->$metodo();
-        } else {
-            return redirect()->back()->with('error', 'Metodo non trovato.');
-        }
+        $model = new \App\Models\ClientiModel();
+        $result = $model->getClientiByTipoLicenza($tipo);
+        return $this->view('test/test', [
+            'test' => $result
+        ]);
+
     }
 
 }

@@ -47,7 +47,7 @@ class ClientiController extends BaseController
         return $this->view('clienti/index', $data);
     }
 
-    public function show($id)
+    public function show(int $id)
     {
         $cliente = $this->ClientiModel->getClientiById($id);
         $session = service('session');
@@ -115,7 +115,7 @@ class ClientiController extends BaseController
         }
     }
 
-    public function edit($id)
+    public function edit(int $id)
     {
         log_message('debug', 'ClientiController::edit id: '.$id);
         $backTo = $this->getBackTo(url_to('clienti_index'));
@@ -139,7 +139,7 @@ class ClientiController extends BaseController
         return $this->view('clienti/form', $data);
     }
 
-    public function update($id)
+    public function update(int $id)
     {
         $data = $this->request->getPost();
         $data['id'] = $id; // Aggiungo l'ID per la modifica
@@ -153,7 +153,7 @@ class ClientiController extends BaseController
         }
     }
 
-    public function delete($id)
+    public function delete(int $id)
     {
         if ($this->ClientiModel->delete($id)) {
             return redirect()->to($this->getBackTo(url_to('clienti_index')))
@@ -162,13 +162,7 @@ class ClientiController extends BaseController
             return redirect()->back()->with('error', 'Errore durante l\'eliminazione del cliente.');
         }
     }
+
 }
 
-/*
-tbana_ragsoc1
-tbana_indirizzo1
-tbana_citta
-tbana_cap
-tbana_provincia
-tbana_telefono1
-*/
+

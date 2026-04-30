@@ -22,7 +22,7 @@
             <thead class="table-secondary">
                 <tr>
                     <th>ID Tipo</th>
-                    <th>Nome</th>
+                    <th>Tipo</th>
                     <th>Modello</th>
                     <th>Categoria</th>
                     <th>Descrizione</th>
@@ -36,7 +36,7 @@
                         data-id="<?= esc($tipo["id"]) ?>"
                         <?= audit_tooltip($tipo) ?>>
                         <td><?= esc($tipo["id"]) ?></td>
-                        <td><?= esc($tipo["nome"]) ?></td>
+                        <td><?= esc($tipo["tipo"]) ?></td>
                         <td><?= esc($tipo["modello"]) ?></td>
                         <td><?= esc($tipo["categoria_label"]) ?></td>
                         <td><?= esc($tipo["descrizione"]) ?></td>

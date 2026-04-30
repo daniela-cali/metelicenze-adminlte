@@ -18,7 +18,7 @@ class LicenzeModel extends AuditModel
         'padre_lic_id',
         'postazioni',
         'note',
-        'tplicenze_id',
+        'tipilicenze_id',
         'stato',
         'esistenza_cliente',
         'natura',
@@ -42,48 +42,66 @@ class LicenzeModel extends AuditModel
      * Genera l'elenco delle licenze
      */
 
-    public function getLicenze()
+    public function getLicenze(): array
     {
-
-        return $this->select('*')
-            ->orderBy('codice', 'ASC')
-            ->findAll();
+        $result = $this->select('licenze.*,tipilicenze.tipo as tipilicenze_tipo, tipilicenze.modello as tipilicenze_modello, tipilicenze.categoria as tipilicenze_categoria')
+            ->join('tipilicenze', 'licenze.tipilicenze_id = tipilicenze.id')
+            ->orderBy('licenze.codice', 'ASC')
+            ->get()
+            ->getResultArray();
+            foreach ($result as &$row) {
+                $row['tipilicenze_categoria_label'] = TipiLicenzeModel::decodeCategoriaLabel($row['tipilicenze_categoria']);
+                }
+                //dd($result);
+            return $result;
     }
 
-    public function getLicenzeByCliente($idCliente)
+    public function getLicenzeByCliente(int $idCliente): array
     {
         //log_message('info', 'Recupero le licenze per il cliente con ID: ' . $idCliente . 'e ottengo: ' . print_r($this->where('clienti_id', $idCliente)->findAll(), true));
-        return $this->where('clienti_id', $idCliente)->findAll();
+        $result = $this->db->table('clienti c')
+            ->join('licenze l', 'l.clienti_id = c.id')
+            ->join('tipilicenze t', 'l.tipilicenze_id = t.id')
+            ->where('c.id', $idCliente)
+            ->get()
+            ->getResultArray();
+            //dd($result);
+            return $result;
     }
 
-    public function getLicenzeById($idLicenza)
-    {   //Sto cercando per chiave primaria pertanto non serve il where
-    //$licenza = $this->find($idLicenza);
-          //dd($licenza);
-        return $this->find($idLicenza);
+    public function getLicenzeById(int $idLicenza): array
+    {   
+        $result = $this->select('licenze.*, tipilicenze.tipo as tipilicenze_tipo, tipilicenze.modello as tipilicenze_modello' )
+            ->join('tipilicenze', 'tipilicenze.id = licenze.tipilicenze_id')
+            ->where('licenze.id', $idLicenza)
+            ->get()
+            ->getRowArray();
+            //dd($result);
+        return $result;
     }
 
-    public function getLicenzeByTipo($tipoLicenza)
+    public function getLicenzeByTipo(string $tipoLicenza): array
     {
-
         $idClientiPerLicenza = $this->select('clienti_id')
             ->distinct()
-            ->where('tipo', $tipoLicenza)
+            ->join('tipilicenze', 'tipilicenze.id = licenze.tipilicenze_id')
+            ->where('tipilicenze.tipo', $tipoLicenza)
             ->findAll();
         log_message('info', 'Clienti con licenza di tipo ' . $tipoLicenza . ': ' . print_r($idClientiPerLicenza, true));
         return $idClientiPerLicenza;
     }
 
-    public function geTipoLicenzeByCliente()
+    public function geTipoLicenzeByCliente(): array
     {
-        $tipoLicenzaPerCliente = $this->select('clienti_id, tipo')
+        $tipoLicenzaPerCliente = $this->select('clienti_id, tipilicenze_id')
+            ->join('tipilicenze', 'licenze.tipilicenze_id = tipilicenze.id')
             ->distinct()
             ->findAll();
         //log_message('info', 'tipoLicenzaPerCliente: ' . print_r($tipoLicenzaPerCliente, true));
         return $tipoLicenzaPerCliente;
     }
 
-    protected function setFakePadre(array $data)
+    protected function setFakePadre(array $data) :array
     {
         // Imposto il valore a numerico positivo fittizio per evitare errori di incorrect integer value, poi dopo l'inserimento lo correggo con setPadreSelfIfMissing
         $insertData = $data['data'] ?? [];
@@ -92,7 +110,7 @@ class LicenzeModel extends AuditModel
 
         return $data;
     }
-    protected function setPadreSelfIfMissing(array $data)
+    protected function setPadreSelfIfMissing(array $data) :array
     {
         // Dopo l'inserimento, prendo l'ID appena creato
         $newId = $data['id'] ?? null;
@@ -117,7 +135,7 @@ class LicenzeModel extends AuditModel
 
         return $data;
     }
-    public function countLicenzeByCliente()
+    public function countLicenzeByCliente(): array
     {
         $rows = $this
             ->select('clienti_id, COUNT(id) AS numLicenze')
@@ -127,22 +145,31 @@ class LicenzeModel extends AuditModel
 
         return $result;
     }
-    public function getTipoLicenzeByCliente()
+    public function getTipoLicenzeByCliente(): array
     {
-        $rows = $this->select('clienti_id, tipo')
-            ->groupBy('clienti_id, tipo')
+
+        /*$rows = $this->select('licenze.clienti_id, t.tipo as tipo_licenza')
+            ->join('tipilicenze t', 'licenze.tipilicenze_id = t.id', 'left')
+            ->groupBy('licenze.clienti_id, t.tipo')
             ->get()
-            ->getResultArray(); // array normale, nessuna indicizzazione su PK come in findAll()
+            ->getResultArray(); // array normale, nessuna indicizzazione su PK come in findAll()*/
+
+            $rows = $this->db->table('licenze l')
+                ->select('l.clienti_id, t.tipo as tipo_licenza')
+                ->join('tipilicenze t', 'l.tipilicenze_id = t.id', 'left')
+                ->groupBy('l.clienti_id, t.tipo')
+                ->get()
+                ->getResultArray(); 
         // Estraggo un array associativo con clienti_id come chiave e tipo come valore 
         $result = [];
         foreach ($rows as $row) {
-            $result[$row['clienti_id']][] = $row['tipo'];
+            $result[$row['clienti_id']][] = $row['tipo_licenza'];
         }
         //log_message('info', 'tipoLicenzaPerCliente: ' . print_r($result, true));
         return $result;
     }
 
-    public function getDistribuzionePerTipo()
+    public function getDistribuzionePerTipo(): array
     {
         return $this->select('tipo as nome, COUNT(ID) AS totale')
         ->groupBy('tipo')

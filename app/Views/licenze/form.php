@@ -1,3 +1,13 @@
+<?php
+/**
+ * @var string $title
+ * @var string  $mode
+ * @var array  $form
+ * @var string $backTo
+ * @var string $licenze
+ * ...
+ */
+?>
 <?= $this->extend('layouts/main') ?>
 
 <?= $this->section('breadcrumb') ?>
@@ -9,9 +19,7 @@
 <?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
-<?php
-$backTo = $backTo ?? base_url('/licenze');
-?>
+
 <div class="card shadow-sm">
     <div class="card-header card-header-muted d-flex align-items-center">
         <h5 class="mb-0"><i class="bi bi-key-fill"></i> <?= esc($title) ?></h5>
@@ -33,9 +41,9 @@ $backTo = $backTo ?? base_url('/licenze');
                     <label for="tipo" class="form-label">Tipo</label>
                     <select name="tipo" id="tipo" class="form-select" required>
                         <option value="Common">-- Seleziona --</option>
-                        <option value="Sigla" <?= (isset($licenza) && $licenza["tipo"] === 'Sigla') ? 'selected' : '' ?>>Sigla</option>
-                        <option value="VarHub" <?= (isset($licenza) && $licenza["tipo"] === 'VarHub') ? 'selected' : '' ?>>VarHub</option>
-                        <option value="SKNT" <?= (isset($licenza) && $licenza["tipo"] === 'SKNT') ? 'selected' : '' ?>>SKTN</option>
+                        <option value="Sigla" <?= (isset($licenza) && $licenza["tipilicenze_tipo"] === 'Sigla') ? 'selected' : '' ?>>Sigla</option>
+                        <option value="VarHub" <?= (isset($licenza) && $licenza["tipilicenze_tipo"] === 'VarHub') ? 'selected' : '' ?>>VarHub</option>
+                        <option value="SKNT" <?= (isset($licenza) && $licenza["tipilicenze_tipo"] === 'SKNT') ? 'selected' : '' ?>>SKTN</option>
                     </select>
                 </div>
 
@@ -70,10 +78,10 @@ $backTo = $backTo ?? base_url('/licenze');
                     <label for="modello" class="form-label" data-licenza="Sigla">Modello</label>
                     <select name="modello" id="modello" class="form-select" required>
                         <option value="Common">-- Seleziona --</option>
-                        <option value="Start" <?= (isset($licenza) && $licenza["modello"] === 'Start') ? 'selected' : '' ?>>Start</option>
-                        <option value="Ultimate" <?= (isset($licenza) && $licenza["modello"] === 'Ultimate') ? 'selected' : '' ?>>Ultimate</option>
-                        <option value="Cloud" <?= (isset($licenza) && $licenza["modello"] === 'Cloud') ? 'selected' : '' ?>>Cloud</option>
-                        <option value="N/A" <?= (isset($licenza) && empty($licenza["modello"])) ? 'selected' : '' ?>>Nessun tipo di modello</option>
+                        <option value="Start" <?= (isset($licenza) && $licenza["tipilicenze_modello"] === 'Start') ? 'selected' : '' ?>>Start</option>
+                        <option value="Ultimate" <?= (isset($licenza) && $licenza["tipilicenze_modello"] === 'Ultimate') ? 'selected' : '' ?>>Ultimate</option>
+                        <option value="Cloud" <?= (isset($licenza) && $licenza["tipilicenze_modello"] === 'Cloud') ? 'selected' : '' ?>>Cloud</option>
+                        <option value="N/A" <?= (isset($licenza) && empty($licenza["tipilicenze_modello"])) ? 'selected' : '' ?>>Nessun tipo di modello</option>
                     </select>
                 </div>
                 <div class="mb-3 d-none" data-licenza="Sigla">
