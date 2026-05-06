@@ -54,11 +54,29 @@ class VersioniModel extends AuditModel
     }
 
     /**
-     * Recupera solo le versioni contrassegnate come "ultima" distincte per tipo
+     * Restituisce una riga per ogni tipo distinto in tipilicenze,
+     * con la versione più recente se esiste (NULL se non ancora presente).
      */
-    public function getUltimeVersioni()
+    public function getUltimeVersioni(): array
     {
-        return $this->distinct()->where('ultima', 1)->findAll();
+        $subTipi = $this->db->table('tipilicenze')
+            ->distinct()
+            ->select('tipo')
+            ->getCompiledSelect();
+
+        $subLatest = $this->db->table('versioni')
+            ->select('tipo, MAX(id) AS max_id')
+            ->where('deleted_at IS NULL')
+            ->groupBy('tipo')
+            ->getCompiledSelect();
+
+        return $this->db->query("
+            SELECT tipi.tipo, v.codice, v.dt_rilascio, v.release, v.ultima
+            FROM ($subTipi) tipi
+            LEFT JOIN ($subLatest) latest ON tipi.tipo = latest.tipo
+            LEFT JOIN versioni v ON v.id = latest.max_id
+            ORDER BY tipi.tipo ASC
+        ")->getResultArray();
     }
 
 }

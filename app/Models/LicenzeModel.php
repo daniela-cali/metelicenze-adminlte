@@ -58,15 +58,12 @@ class LicenzeModel extends AuditModel
 
     public function getLicenzeByCliente(int $idCliente): array
     {
-        //log_message('info', 'Recupero le licenze per il cliente con ID: ' . $idCliente . 'e ottengo: ' . print_r($this->where('clienti_id', $idCliente)->findAll(), true));
-        $result = $this->db->table('clienti c')
-            ->join('licenze l', 'l.clienti_id = c.id')
-            ->join('tipilicenze t', 'l.tipilicenze_id = t.id')
+        $result = $this->select('licenze.*, t.tipo as tipilicenze_tipo, t.modello as tipilicenze_modello, t.categoria as tipilicenze_categoria')
+            ->join('tipilicenze t', 'licenze.tipilicenze_id = t.id')
+            ->join('clienti c', 'licenze.clienti_id = c.id')
             ->where('c.id', $idCliente)
-            ->get()
-            ->getResultArray();
-            //dd($result);
-            return $result;
+            ->findAll();
+        return $result;
     }
 
     public function getLicenzeById(int $idLicenza): array
@@ -171,10 +168,17 @@ class LicenzeModel extends AuditModel
 
     public function getDistribuzionePerTipo(): array
     {
-        return $this->select('tipo as nome, COUNT(ID) AS totale')
-        ->groupBy('tipo')
-        ->orderby('totale', 'DESC')
-        ->get()
-        ->getResultArray();
+        $rows = $this->db->table('licenze l')
+            ->select('t.categoria, COUNT(l.id) AS totale')
+            ->join('tipilicenze t', 'l.tipilicenze_id = t.id', 'left')
+            ->groupBy('t.categoria')
+            ->orderBy('totale', 'DESC')
+            ->get()
+            ->getResultArray();
+
+        foreach ($rows as &$row) {
+            $row['nome'] = TipiLicenzeModel::decodeCategoriaLabel($row['categoria']);
+        }
+        return $rows;
     }
 }

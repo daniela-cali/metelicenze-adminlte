@@ -31,6 +31,15 @@ class TipiLicenzeModel extends AuditModel
         return $data;
     }
 
+    public function getTipiLicenzaDistinct()
+    {
+        $data = $this->select('tipo')
+            ->distinct()
+            ->findAll();
+        //dd($data);        
+        return $data;
+    }
+
     public function getTipiLicenzaById(int $id)
     {
         return $this->where('id', $id)->first();
@@ -47,22 +56,6 @@ class TipiLicenzeModel extends AuditModel
         log_message('info', 'TipiLicenzeModel::getTipiLicenzeByFornitore - Recordset per fornitore ' . $idFornitore . ': ' . print_r($recordset, true));
 
         return $recordset;
-    }
-
-    /**
-     * Genera la select da mandare alla view
-     */
-    public function getTipiLicenzaForSelect()
-    {
-        $data = $this->findAll();
-        $selectData = [];
-        foreach ($data as $item) {
-            $selectData[] = [
-                'id' => $item['id'],
-                'value' => $item['nome'] . ' - ' . $item['modello'],
-            ];
-        }
-        return $selectData;
     }
 
     /**
@@ -130,7 +123,7 @@ class TipiLicenzeModel extends AuditModel
 
         foreach ($rows as &$row) {
             if ($isSingleton) log_message('info', 'TipiLicenzeModel::decode_categoria - Decodifico categoria per riga: ' . print_r($row, true));
-            $row['categoria_label'] = self::decodeCategoriaLabel($row['categoria']);
+            $row['categoria_label'] = self::decodeCategoriaLabel($row['categoria'] ?? null);
         }
 
         // Se per qualche motivo non è un array di righe, esco
