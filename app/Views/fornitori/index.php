@@ -18,100 +18,90 @@
     <div class="col-auto">
         <small class="text-muted text-uppercase fw-semibold d-block mb-1">Tipo licenza</small>
         <div class="d-flex gap-3" id="tipi">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="tipi" value="Sigla" id="tipoSigla">
-                <label class="form-check-label" for="tipoSigla">Sigla</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="tipi" value="VarHub" id="tipoVarHub">
-                <label class="form-check-label" for="tipoVarHub">VarHub</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="tipi" value="firma" id="tipoFirma">
-                <label class="form-check-label" for="tipoFirma">Servizio Firma</label>
-            </div>
+            <?= view_cell('TipiCell::filtro') ?>
         </div>
     </div>
 </div>
 <div>
 
 
-                <?php if (!empty($fornitori)): ?>
-                    <?php //dd($fornitori) ?>
+    <?php if (!empty($fornitori)): ?>
+        <?php //dd($fornitori) 
+        ?>
 
-                    <table class="table table-bordered table-striped table-hover align-middle datatable" id="primaryTable">
-                        <thead class="table-secondary">
-                            <tr>
-                                <th>ID</th>
-                                <th>Codice Fornitore</th>
-                                <th>Nome</th>
-                                <th>Email</th>
-                                <th>Telefono</th>
-                                <th class="notexport">Città</th>
-                                <th>Tipi</th>
-                                <th class="notexport">Azioni</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($fornitori as $fornitore): ?>
-                                <tr class="data-row"
-                                data-id="<?= esc($fornitore["id"]) ?>"
-                                <?= audit_tooltip($fornitore, 'right') ?>>
-                                    <td><?= esc($fornitore["id"]) ?></td>
-                                    <td><?= esc($fornitore["codice"]) ?></td>
-                                    <td><?= esc($fornitore["nome"]) ?></td>
-                                    <td><?= esc($fornitore["email"]) ?></td>
-                                    <td><?= esc($fornitore["telefono"]) ?></td>
-                                    <td><?= esc($fornitore["citta"]) ?></td>
+        <table class="table table-bordered table-striped table-hover align-middle datatable" id="primaryTable">
+            <thead class="table-secondary">
+                <tr>
+                    <th>ID</th>
+                    <th>Codice Fornitore</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Telefono</th>
+                    <th class="notexport">Città</th>
+                    <th>Tipi</th>
+                    <th class="notexport">Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($fornitori as $fornitore): ?>
+                    <tr class="data-row"
+                        data-id="<?= esc($fornitore["id"]) ?>"
+                        <?= audit_tooltip($fornitore, 'right') ?>>
+                        <td><?= esc($fornitore["id"]) ?></td>
+                        <td><?= esc($fornitore["codice"]) ?></td>
+                        <td><?= esc($fornitore["nome"]) ?></td>
+                        <td><?= esc($fornitore["email"]) ?></td>
+                        <td><?= esc($fornitore["telefono"]) ?></td>
+                        <td><?= esc($fornitore["citta"]) ?></td>
 
-                                    <td>
-                                        <?php // Visualizzo i tipi di licenze fornite come lista
-                                        foreach ($fornitore["tipiLicenze"] as $tipo): 
-                                            $tipoLicenza = $tipo["modello"] !== 'Unico' ? $tipo["nome"]. ' - ' . $tipo["modello"] : $tipo["nome"];
-                                        ?>
+                        <td>
+                            <?php // Visualizzo i tipi di licenze fornite come lista
+                            foreach ($fornitore["tipiLicenze"] as $tipo):
+                                $tipoLicenza = $tipo["modello"] !== 'Unico' ? $tipo["tipo"] . ' - ' . $tipo["modello"] : $tipo["tipo"];
+                            ?>
 
-                                            <span class="badge d-block bg-transparent text-dark mb-1"><?= esc($tipoLicenza) ?></span>
-                                        <?php endforeach; ?>
-                                    </td>
-                                    <td>
-                                        <button class="btn dropdown-toggle" type="button" id="azione" data-bs-toggle="dropdown" aria-expanded="false">
-                                            <i class="bi bi-list"></i>
-                                        </button>
-                                        <ul class="dropdown-menu" aria-labelledby="azioniDropDownMenu">
-                                            <li>
-                                                <a class="dropdown-item" href="<?= url_to('fornitori_show', $fornitore["id"]);  ?>">
-                                                    <i class="bi bi-person-vcard"></i>
-                                                    Scheda Fornitore
-                                                </a>
-                                            </li>
-
-                                            <li>
-                                                <a class="dropdown-item" href="<?= url_to('fornitori_edit', $fornitore["id"]); ?>">
-                                                    <i class="bi bi-pencil"></i>
-                                                    Modifica
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <hr class="dropdown-divider">
-                                            </li>
-
-                                            <li class="">
-                                                <a class="dropdown-item text-danger" href="<?= url_to('fornitori_delete', $fornitore["id"]); ?>">
-                                                    <i class="bi bi-trash"></i>
-                                                    Elimina
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </td>
-                                </tr>
+                                <span class="badge d-block bg-transparent text-dark mb-1"><?= esc($tipoLicenza) ?></span>
                             <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                <?php else: ?>
-                    <div class="alert alert-info">
-                        <i class="bi bi-info-circle"></i> Nessun fornitore trovato nel database.
-                    </div>
-                <?php endif; ?>
+                        </td>
+                        <td>
+                            <button class="btn dropdown-toggle" type="button" id="azione" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-list"></i>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="azioniDropDownMenu">
+                                <li>
+                                    <a class="dropdown-item" href="<?= url_to('fornitori_show', $fornitore["id"]);  ?>">
+                                        <i class="bi bi-person-vcard"></i>
+                                        Scheda Fornitore
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="dropdown-item" href="<?= url_to('fornitori_edit', $fornitore["id"]); ?>">
+                                        <i class="bi bi-pencil"></i>
+                                        Modifica
+                                    </a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+
+                                <li class="">
+                                    <a class="dropdown-item text-danger" href="<?= url_to('fornitori_delete', $fornitore["id"]); ?>">
+                                        <i class="bi bi-trash"></i>
+                                        Elimina
+                                    </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    <?php else: ?>
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle"></i> Nessun fornitore trovato nel database.
+        </div>
+    <?php endif; ?>
 </div>
 
 <?= $this->endSection() ?>

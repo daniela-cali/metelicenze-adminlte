@@ -15,18 +15,7 @@
     <div class="col-auto">
         <small class="text-muted text-uppercase fw-semibold d-block mb-1">Tipo licenza</small>
         <div class="d-flex gap-3" id="tipi">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="tipi" value="Sigla" id="tipoSigla">
-                <label class="form-check-label" for="tipoSigla">Sigla</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="tipi" value="VarHub" id="tipoVarHub">
-                <label class="form-check-label" for="tipoVarHub">VarHub</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="tipi" value="SKNT" id="tipoSKNT">
-                <label class="form-check-label" for="tipoSKNT">SKNT</label>
-            </div>
+            <?= view_cell('TipiCell::filtro') ?>
         </div>
     </div>
     <div class="col-auto d-none d-sm-flex align-items-end pb-1">
@@ -107,7 +96,7 @@
                                             </button>
                                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                                                 <li>
-                                                    <a class="dropdown-item" href="<?= site_url('aggiornamenti/crea/' . $licenza["id"] . '/' . $licenza["tipo"]) ?>">
+                                                    <a class="dropdown-item" href="<?= site_url('aggiornamenti/crea/' . $licenza["id"] . '/' . $licenza["tipilicenze_tipo"]) ?>">
                                                         <i class="bi bi-clock-history"></i>
                                                         Aggiornamento
                                                     </a>
@@ -122,6 +111,12 @@
                                                     <a class="dropdown-item" href="<?= url_to('licenze_edit', $licenza["id"]) ?>">
                                                         <i class="bi bi-pencil"></i>
                                                         Modifica
+                                                    </a>
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item" href="<?= url_to('clienti_show', $licenza["clienti_id"]) ?>">
+                                                        <i class="bi bi-person-vcard"></i>
+                                                        Scheda Cliente
                                                     </a>
                                                 </li>
                                                 <li>
@@ -162,30 +157,29 @@
         $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
             if (settings.nTable.id !== 'licenzeTable') return true;
 
-            // ---- filtro TIPI (esempio: colonna 2)
+            // ---- filtro TIPI (colonna 3 = Tipo)
             const selectedTipi = $('input[name="tipi"]:checked').map(function() {
                 return $(this).val();
             }).get();
 
             let passTipi = true;
             if (selectedTipi.length > 0) {
-                const tipiText = String(data[2] ?? '')
-                    .replace(/<[^>]*>/g, '') // toglie eventuale HTML
-                    .replace(/\s+/g, ' ') // compatta whitespace
+                const tipiText = String(data[3] ?? '')
+                    .replace(/<[^>]*>/g, '')
+                    .replace(/\s+/g, ' ')
                     .trim();
 
                 passTipi = selectedTipi.some(t => tipiText.includes(t));
             }
 
-            // ---- filtro STATO (colonna 6)
+            // ---- filtro STATO (colonna 8 = Aggiornato)
             const selectedStati = $('input[name="statoLicenze"]:checked').map(function() {
                 return $(this).val(); // es: "Aggiornato" / "Da aggiornare" / "Tutte"
             }).get();
 
             let passStato = true;
             if (selectedStati.length > 0) {
-                //console.log('Filtrando per stati: ' + selectedStati);
-                const statoText = String(data[7] ?? '')
+                const statoText = String(data[8] ?? '')
                     .replace(/<[^>]*>/g, '')
                     .replace(/\s+/g, ' ')
                     .trim();

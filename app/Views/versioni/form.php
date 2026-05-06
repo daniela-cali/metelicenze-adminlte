@@ -44,12 +44,8 @@ $backTo = $backTo ?? base_url('/versioni');
                     value="<?= isset($versione) ? esc($versione["dt_rilascio"]) : '' ?>">
             </div>
             <div class="mb-3">
-                <select name="tipo" id="tipo" class="form-select" required>
-                    <option value="Common">-- Seleziona --</option>
-                    <option value="Sigla" <?= (isset($versione) && $versione["tipo"] === 'Sigla') ? 'selected' : '' ?>>Sigla</option>
-                    <option value="VarHub" <?= (isset($versione) && $versione["tipo"] === 'VarHub') ? 'selected' : '' ?>>VarHub</option>
-                    <option value="SKNT" <?= (isset($versione) && $versione["tipo"] === 'SKNT') ? 'selected' : '' ?>>SKTN</option>
-                </select>
+                <label for="tipo" class="form-label">Tipo</label>
+                <?= view_cell('TipiCell::tipoNomiSelect', ['selezionato' => $versione['tipo'] ?? null]) ?>
             </div>
             <div class="mb-3">
                 <label for="codice" class="form-label">Codice</label>

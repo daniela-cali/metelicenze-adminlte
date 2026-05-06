@@ -17,22 +17,9 @@
 <div class="row g-3 mb-3">
     <!-- Colonna: Tipo licenza -->
     <div class="col-auto">
-        <small class="text-muted text-uppercase fw-semibold d-block mb-1">Tipo licenza</small>
-        <div class="d-flex gap-3" id="tipi">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="tipi" value="Sigla" id="tipoSigla">
-                <label class="form-check-label" for="tipoSigla">Sigla</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="tipi" value="VarHub" id="tipoVarHub">
-                <label class="form-check-label" for="tipoVarHub">VarHub</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="tipi" value="SKNT" id="tipoSKNT">
-                <label class="form-check-label" for="tipoSKNT">SKNT</label>
-            </div>
-        </div>
+        <?= view_cell('TipiCell::filtro') ?>
     </div>
+
 
     <!-- Separatore verticale -->
     <div class="col-auto d-none d-sm-flex align-items-end pb-1">
@@ -154,22 +141,18 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         //$(document).ready(function () {
-        const clientiRows = document.querySelectorAll('.cliente-row');
-        let selectedClienteId = null;
-        clientiRows.forEach(row => {
-            row.addEventListener('click', function() {
-                clientiRows.forEach(r => r.classList.remove('table-primary', 'selected'));
-                selectedClienteId = this.getAttribute('data-id');
-                console.log("Cliente selezionato: " + selectedClienteId);
-                this.classList.add('table-primary', 'selected');
-            });
-            row.addEventListener('dblclick', function() {
-                selectedClienteId = this.getAttribute('data-id');
-                const baseUrl = "<?= base_url() ?>";
-                selectedClienteId = this.getAttribute('data-id');
-                console.log("Redirecting to cliente ID: " + selectedClienteId);
-                window.location.href = `${baseUrl}/clienti/${selectedClienteId}`;
-            });
+        // Event delegation: funziona anche dopo i re-render di DataTables
+        document.querySelector('#clientiTable tbody').addEventListener('click', function(e) {
+            const row = e.target.closest('tr.cliente-row');
+            if (!row) return;
+            document.querySelectorAll('tr.cliente-row').forEach(r => r.classList.remove('table-primary', 'selected'));
+            row.classList.add('table-primary', 'selected');
+        });
+
+        document.querySelector('#clientiTable tbody').addEventListener('dblclick', function(e) {
+            const row = e.target.closest('tr.cliente-row');
+            if (!row) return;
+            window.location.href = '<?= url_to('clienti_show', 0) ?>'.replace('/0', '/' + row.dataset.id);
         });
         // Pre-calcola i conteggi per gruppo dall'HTML PRIMA che DataTables inizializzi
         // la tabella — così abbiamo i totali reali, indipendenti dalla paginazione.

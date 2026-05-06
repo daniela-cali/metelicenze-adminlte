@@ -18,18 +18,7 @@
     <div class="col-auto">
         <small class="text-muted text-uppercase fw-semibold d-block mb-1">Tipo</small>
         <div class="d-flex gap-3" id="tipi">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="tipi" value="Sigla" id="tipoSigla">
-                <label class="form-check-label" for="tipoSigla">Sigla</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="tipi" value="VarHub" id="tipoVarHub">
-                <label class="form-check-label" for="tipoVarHub">VarHub</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="tipi" value="SKNT" id="tipoSKNT">
-                <label class="form-check-label" for="tipoSKNT">SKNT</label>
-            </div>
+            <?= view_cell('TipiCell::filtro') ?>
         </div>
     </div>
 </div>
