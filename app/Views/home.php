@@ -93,8 +93,12 @@
                                 <?= esc($versione['tipo']) ?>
                             </span>
                             <div>
-                                <div class="fw-bold"><?= esc($versione['codice']) ?></div>
-                                <div class="text-muted small">Rilasciata il <?= date('d/m/Y', strtotime($versione['dt_rilascio'])) ?></div>
+                                <?php if ($versione['codice']): ?>
+                                    <div class="fw-bold"><?= esc($versione['codice']) ?></div>
+                                    <div class="text-muted small">Rilasciata il <?= date('d/m/Y', strtotime($versione['dt_rilascio'])) ?></div>
+                                <?php else: ?>
+                                    <div class="text-muted fst-italic">Nessuna versione registrata</div>
+                                <?php endif; ?>
                             </div>
                         <?php endforeach; ?>
                     </div>
@@ -145,10 +149,12 @@
 <?php if (!empty($distribuzione)): ?>
     <script>
         const distribuzioneData = <?= json_encode(array_values($distribuzione)) ?>;
+        const categoriaColori = <?= json_encode($categoriaColori) ?>;
 
         const chart = new ApexCharts(document.querySelector('#chart-distribuzione'), {
             series: distribuzioneData.map(r => parseInt(r.totale)),
             labels: distribuzioneData.map(r => r.nome ?? 'Non specificato'),
+            colors: distribuzioneData.map(r => categoriaColori[r.categoria] ?? '#6c757d'),
             chart: {
                 type: 'donut',
                 height: 320,

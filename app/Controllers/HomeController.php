@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\ClientiModel;
 use App\Models\LicenzeModel;
+use App\Models\TipiLicenzeModel;
 use App\Models\VersioniModel;
 
 class HomeController extends BaseController
@@ -31,11 +32,16 @@ class HomeController extends BaseController
             $distribuzione = [];
             $versioni = [];
         }
-        $tipoColori = [
-            'Sigla'  => '#008FFB',
-            'VarHub' => '#FEB019',
-            'SKNT'   => '#00E396',
+        $categoriaColori = [
+            'gest_contab'    => '#008FFB',
+            'fatt_elett'     => '#FEB019',
+            'firma_digitale' => '#00E396',
         ];
+        $tipiList = (new TipiLicenzeModel())->select('tipo, categoria')->distinct()->findAll();
+        $tipoColori = [];
+        foreach ($tipiList as $t) {
+            $tipoColori[$t['tipo']] = $categoriaColori[$t['categoria']] ?? '#6c757d';
+        }
         $data = [
             'title'         => 'Dashboard',
             'siteName'      => setting('SiteConfig.siteName'),
@@ -47,6 +53,7 @@ class HomeController extends BaseController
             'versioni'      => $versioni,
             'loggedIn'      => $loggedIn,
             'tipoColori'    => $tipoColori,
+            'categoriaColori' => $categoriaColori,
         ];
         return $this->view('home', $data);
     }
