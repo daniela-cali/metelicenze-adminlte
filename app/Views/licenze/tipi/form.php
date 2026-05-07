@@ -75,11 +75,15 @@ $backTo = $backTo ?? base_url('/tipi');
                     <?php if (!isset($tipoLicenza) || $tipoLicenza["stato"]) echo 'checked'; ?> />
             </div>
 
-            <div class="mt-4 ">
+            <div class="mt-4">
+                <?php if ($mode !== 'view'): ?>
                 <button type="submit" class="btn btn-success">
                     <i class="bi bi-check-circle"></i> <?= esc($form['submitText']) ?>
                 </button>
-                <a href="<?= esc($backTo) ?>" class="btn btn-secondary">Annulla</a>
+                <?php endif; ?>
+                <a href="<?= esc($backTo) ?>" class="btn btn-secondary">
+                    <?= $mode === 'view' ? 'Indietro' : 'Annulla' ?>
+                </a>
             </div>
         </form>
     </div>

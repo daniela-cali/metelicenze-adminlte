@@ -155,8 +155,9 @@ class LicenzeController extends BaseController
 
     public function edit(int $id)
     {
-
+        //dd($id);
         $licenza = $this->LicenzeModel->getLicenzeById($id);
+       // dd($licenza);
         $cliente = $this->ClientiModel->find($licenza["clienti_id"]); // Ottengo il nome del cliente
         $codice =  $licenza["codice"];
 

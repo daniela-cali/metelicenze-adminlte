@@ -1,3 +1,15 @@
+<?php
+
+/**
+ * @var string $title
+ * @var string $mode
+ * @var array  $form
+ * @var string $backTo
+ * @var array $versione
+ * ...
+ */
+?>
+
 <?= $this->extend('layouts/main') ?>
 
 <?= $this->section('breadcrumb') ?>
@@ -45,7 +57,7 @@ $backTo = $backTo ?? base_url('/versioni');
             </div>
             <div class="mb-3">
                 <label for="tipo" class="form-label">Tipo</label>
-                <?= view_cell('TipiCell::tipoNomiSelect', ['selezionato' => $versione['tipo'] ?? null]) ?>
+                <?= view_cell('TipiCell::tipoNomiSelect', ['selezionatoNome' => $versione['tipo'] ?? null]) ?>
             </div>
             <div class="mb-3">
                 <label for="codice" class="form-label">Codice</label>

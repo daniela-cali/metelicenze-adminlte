@@ -47,12 +47,10 @@ class LicenzeModel extends AuditModel
         $result = $this->select('licenze.*,tipilicenze.tipo as tipilicenze_tipo, tipilicenze.modello as tipilicenze_modello, tipilicenze.categoria as tipilicenze_categoria')
             ->join('tipilicenze', 'licenze.tipilicenze_id = tipilicenze.id')
             ->orderBy('licenze.codice', 'ASC')
-            ->get()
-            ->getResultArray();
+            ->findAll();
             foreach ($result as &$row) {
                 $row['tipilicenze_categoria_label'] = TipiLicenzeModel::decodeCategoriaLabel($row['tipilicenze_categoria']);
-                }
-                //dd($result);
+            }
             return $result;
     }
 
@@ -68,12 +66,10 @@ class LicenzeModel extends AuditModel
 
     public function getLicenzeById(int $idLicenza): array
     {   
-        $result = $this->select('licenze.*, tipilicenze.tipo as tipilicenze_tipo, tipilicenze.modello as tipilicenze_modello' )
-            ->join('tipilicenze', 'tipilicenze.id = licenze.tipilicenze_id')
-            ->where('licenze.id', $idLicenza)
-            ->get()
-            ->getRowArray();
-            //dd($result);
+        $result = $this->select('licenze.*, tipilicenze.tipo as tipilicenze_tipo, tipilicenze.modello as tipilicenze_modello')
+        ->join('tipilicenze', 'tipilicenze.id = licenze.tipilicenze_id')
+        ->where('licenze.id', $idLicenza)
+        ->first();
         return $result;
     }
 
