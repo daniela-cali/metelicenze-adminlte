@@ -103,16 +103,11 @@ class LicenzeController extends BaseController
             return redirect()->back()->with('error', 'Cliente non trovato!.');
         } elseif ($padre_id) {
             log_message('info', 'LicenzeController::crea Cliente selezionato è un figlio, prendo il padre ID: ' . $padre_id);
-            // Se è figlio allora prendo le licenze del padre messe in un array con 3 elementi (Sigla, VariHub, SKNT) per poterle mostrare nel form
             $licenzePadre = $this->LicenzeModel->getLicenzeByCliente($padre_id);
-            //log_message('info', 'LicenzeController::crea Licenze del padre trovate: ' . print_r($licenzePadre, true));
             foreach ($licenzePadre as $licenza) {
-                if ($licenza["tipo"] === 'Sigla') {
-                    $padreLic['licenzePadre']['Sigla'] = $licenza;
-                } elseif ($licenza["tipo"] === 'VarHub') {
-                    $padreLic['licenzePadre']['VarHub'] = $licenza;
-                } elseif ($licenza["tipo"] === 'SKNT') {
-                    $padreLic['licenzePadre']['SKNT'] = $licenza;
+                $tipo = $licenza['tipilicenze_tipo'] ?? null;
+                if ($tipo) {
+                    $padreLic['licenzePadre'][$tipo] = $licenza;
                 }
             }
         } else {
@@ -126,9 +121,9 @@ class LicenzeController extends BaseController
             'licenza' => null,
             'licenzePadre' => $padreLic['licenzePadre'] ?? [], // Passo le licenze del padre se esistono
             'id_cliente' => $idCliente,
-            'backTo' => $this->getBackTo(url_to('clienti_index')),
+            'backTo' => $this->getBackTo(url_to('clienti_show', $idCliente)),
             'form' => [
-                'action' => url_to('clienti_show', $idCliente), // Dopo la creazione torno alla scheda del cliente
+                'action' => url_to('licenze_store'),
                 'method' => 'post',
                 'spoof' => null,
                 'submitText' => 'Salva',
@@ -162,15 +157,16 @@ class LicenzeController extends BaseController
     {
 
         $licenza = $this->LicenzeModel->getLicenzeById($id);
-        $idCliente = $licenza["clienti_id"]; // Ottengo l'ID del cliente associato alla licenza
+        $cliente = $this->ClientiModel->find($licenza["clienti_id"]); // Ottengo il nome del cliente
         $codice =  $licenza["codice"];
 
         $data = [
             'mode' => 'edit',
             'licenza' => $licenza,
-            'title' => 'Modifica Licenza ' . esc($codice) . ' (ID: ' . esc($id) . ')',
+            'title' => 'Modifica Licenza ' . esc($codice) . ' - ' . esc($cliente['nome']),
             'backTo' => $this->getBackTo(url_to('licenze_index')),
-            'id_cliente' => $idCliente,
+            'id_cliente' => $cliente['id'],
+            'nome_cliente' => $cliente['nome'],
             'form' =>[
                 'action' => url_to('licenze_update', $id),
                 'method' => 'POST',
@@ -203,6 +199,7 @@ class LicenzeController extends BaseController
     public function delete(int $id)
     {
         // Logica per eliminare una licenza
+        log_message('info', 'LicenzeController::Delete sono entrata e lancio il metodo delete con $this->LicenzeModel->delete($id);');
         $this->LicenzeModel->delete($id);
         // Redirect o mostra un messaggio di successo
         return redirect()->to($this->getBackTo(url_to('licenze_index')))

@@ -73,15 +73,12 @@ class AggiornamentiController extends BaseController
     public function create($idLicenza = null, $tipo = null)
     {
   
-        $backTo = $this->getBackTo(base_url('/licenze'));
-        //log_message('info', 'AggiornamentiController::crea - Tipo: ' . $tipo);
-        //log_message('info', 'AggiornamentiController::crea - ID Licenza: ' . $idLicenza);
-        // Se non è fornito un ID licenza, non posso creare un aggiornamento
         if ($idLicenza === null) {
             return redirect()->back()->with('error', 'Selezionare una licenza!.');
-        } else {
-            $info = $this->LicenzeModel->getLicenzeById($idLicenza);
         }
+
+        $info = $this->LicenzeModel->getLicenzeById($idLicenza);
+        $backTo = $this->getBackTo(url_to('clienti_show', $info['clienti_id']));
         $tipo = $tipo ?? '';
         //log_message('info', 'AggiornamentiController::crea - Creazione aggiornamento per Licenza ID: ' . $idLicenza);
         $versioni = $this->VersioniModel->getVersioniByTipo($tipo);
@@ -158,7 +155,9 @@ class AggiornamentiController extends BaseController
         $data['stato'] = $stato; // Aggiungo lo stato 
 
         if ($this->AggiornamentiModel->save($data)) {
-            return redirect()->back()->with('success', 'Aggiornamento salvato con successo!');
+            return redirect()->to(
+                $this->getBackTo(url_to('licenze_index'))
+            )->with('success', 'Aggiornamento salvato con successo!');
         } else {
             return redirect()->back()->with('error', 'Errore durante la creazione dell\'aggiornamento.')->withInput();
         }

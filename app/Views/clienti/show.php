@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @var string $title
  * @var array  $cliente
@@ -21,37 +22,37 @@
 
 <div id="scheda-cliente">
 
-<div class="d-flex align-items-center mb-3">
-    <p class="lead mb-0">Dettagli e gestione del cliente</p>
-    <a href="<?= base_url("/clienti") ?>" class="btn btn-light btn-outline-secondary btn-sm">
-        <i class="bi bi-arrow-left-circle"></i> Torna all'elenco clienti
-    </a>
-</div>
-        <nav id="anchor-nav" class="navbar navbar-expand-lg navbar-light bg-light anchor-nav rounded shadow-sm mt-3 mb-3 p-2">
-
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="#anagrafica">Anagrafica</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#licenze">Licenze</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#aggiornamenti">Aggiornamenti</a>
-                    </li>
-                </ul>
-                <ul class="navbar-nav ms-auto">
-                    <li>
-                        <a href="<?= esc($backTo) ?>" id="navigation" class="btn btn-light btn-outline-secondary btn-sm">
-                            <i class="bi bi-arrow-left-circle"></i> Torna indietro
-                        </a>
-                    </li>
-                </ul>
-
-            </div>
-        </nav>
+    <div class="d-flex align-items-center mb-3">
+        <p class="lead mb-0">Dettagli e gestione del cliente</p>
+        <a href="<?= base_url("/clienti") ?>" class="btn btn-light btn-outline-secondary btn-sm ms-auto">
+            <i class="bi bi-arrow-left-circle"></i> Torna all'elenco clienti
+        </a>
     </div>
+    <nav id="anchor-nav" class="navbar navbar-expand-lg navbar-light bg-light anchor-nav rounded shadow-sm mt-3 mb-3 p-2">
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="#anagrafica">Anagrafica</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#licenze">Licenze</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#aggiornamenti">Aggiornamenti</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                <li>
+                    <a href="<?= esc($backTo) ?>" id="navigation" class="btn btn-light btn-outline-secondary btn-sm">
+                        <i class="bi bi-arrow-left-circle"></i> Torna indietro
+                    </a>
+                </li>
+            </ul>
+
+        </div>
+    </nav>
+</div>
 
 </div>
 
@@ -153,16 +154,17 @@
                         </tr>
                     </thead>
                     <tbody>
+
                         <?php foreach ($licenze as $licenza): ?>
                             <tr class="data-row"
-                            <?= audit_tooltip($licenza) ?>
-                            data-route="licenze"
-                            data-id="<?= esc($licenza["padre_lic_id"]) /* padre_lic_id = id per licenze padre; usato anche dal fetch aggiornamenti via click */ ?>"
-                            style="cursor:pointer;">
+                                <?= audit_tooltip($licenza) ?>
+                                data-route="licenze"
+                                data-id="<?= esc($licenza["padre_lic_id"]) /* padre_lic_id = id per licenze padre; usato anche dal fetch aggiornamenti via click */ ?>"
+                                style="cursor:pointer;">
                                 <td><?= esc($licenza["id"]) ?></td>
                                 <td><?= $licenza["codice"] ? esc($licenza["codice"]) : esc($licenza["ambiente"]) ?></td>
-                                <td><?= esc($licenza["tipo"]) ?></td>
-                                <td><?= esc($licenza["modello"]) ?></td>
+                                <td><?= esc($licenza["tipilicenze_tipo"]) ?></td>
+                                <td><?= esc($licenza["tipilicenze_modello"]) ?></td>
                                 <td>
                                     <span class="badge <?= $licenza["stato"] ? 'bg-success' : 'bg-danger' ?>">
                                         <?= $licenza["stato"] ? 'Attiva' : 'Inattiva' ?>
@@ -174,7 +176,7 @@
                                     </button>
                                     <ul class="dropdown-menu" aria-labelledby="azione-<?= $licenza['id'] ?>">
                                         <li>
-                                            <a class="dropdown-item" href="<?= url_to('aggiornamenti_create', $licenza["padre_lic_id"], $licenza["tipo"]) ?>">
+                                            <a class="dropdown-item" href="<?= url_to('aggiornamenti_create', $licenza["padre_lic_id"], $licenza["tipilicenze_tipo"]) ?>">
                                                 <i class="bi bi-clock-history"></i> Crea Aggiornamento
                                             </a>
                                         </li>
@@ -183,7 +185,9 @@
                                                 <i class="bi bi-pencil"></i> Modifica
                                             </a>
                                         </li>
-                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
                                         <li>
                                             <a class="dropdown-item text-danger" href="<?= url_to('licenze_delete', $licenza["id"]) ?>" onclick="return confirm('Sei sicuro di voler eliminare questa licenza?');">
                                                 <i class="bi bi-trash"></i> Elimina
@@ -244,20 +248,19 @@
 
 <?php $this->section('scripts'); ?>
 <script>
-                                
-    function tooltipFormatter(row, aggiornamento, type='display') {
+    function tooltipFormatter(row, aggiornamento, type = 'display') {
         //console.log('Tooltip formatter - DOM element Row: ', row);
         //console.log('Tooltip formatter - Aggiornamento: ', aggiornamento);
 
         if (type === 'display' && aggiornamento) {
             //console.log('Tooltip formatter - Formattazione tooltip per aggiornamento ID:', aggiornamento.id);
             row.setAttribute('data-bs-toggle', 'tooltip');
-            row.setAttribute('data-bs-placement', 'top'); 
+            row.setAttribute('data-bs-placement', 'top');
             row.setAttribute('title', `Creato da: ${aggiornamento.created_by_name || 'N/A'} il ${aggiornamento.created_at ? new Date(aggiornamento.created_at).toLocaleString() : 'N/A'}`);
             row.tooltip = new bootstrap.Tooltip(row);
-        } else{
+        } else {
             //console.log(type === 'display' ? `<span data-bs-toggle="tooltip" data-bs-placement="right" title="Creato da: ${aggiornamento.created_by_name || 'N/A'} il ${aggiornamento.created_at ? new Date(aggiornamento.created_at).toLocaleString() : 'N/A'}">${aggiornamento}</span>` : aggiornamento);
-        } 
+        }
     }
 
     document.addEventListener("DOMContentLoaded", function() {
@@ -333,7 +336,7 @@
 
                             tabellaAggiornamenti.clear();
                             rows.forEach(aggiornamento => {
-                                
+
                                 console.log('Aggiornamento aggiunto alla tabella:', aggiornamento);
                                 const rowNode = tabellaAggiornamenti.row.add([
                                     aggiornamento.id,
@@ -369,7 +372,7 @@
         });
         const aggiornamentiRows = document.querySelectorAll('.aggiornamento-row');
         aggiornamentiRows.forEach(row => {
-            
+
         });
 
 
