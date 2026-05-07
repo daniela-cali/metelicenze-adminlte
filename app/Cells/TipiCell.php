@@ -7,32 +7,28 @@ use App\Models\TipiLicenzeModel;
 
 class TipiCell extends Cell
 {
+    public mixed $selezionato = null;
+    public ?string $selezionatoNome = null;
+
     public function filtro(): string
     {
-        $tipi= (new TipiLicenzeModel())->select('tipo, categoria')->distinct()->findAll();
-        //dd($tipi);
+        $tipi = (new TipiLicenzeModel())->select('tipo, categoria')->distinct()->findAll();
         return $this->view('tipi_filtro', ['tipi' => $tipi]);
     }
 
-    public function select(?int $selezionato = null): string
+    public function select(): string
     {
         $tipi = (new TipiLicenzeModel())->select('id, tipo, modello, categoria')->findAll();
-        // Raggruppa per tipo per costruire gli optgroup (es. "Sigla" → [Start, Ultimate, Cloud])
         $gruppi = [];
         foreach ($tipi as $t) {
             $gruppi[$t['categoria_label']][] = $t;
-            }
-        //dd($gruppi);
-
-        return $this->view('tipi_select', ['gruppi' => $gruppi, 'selezionato' => $selezionato]);
+        }
+        return $this->view('tipi_select', ['gruppi' => $gruppi, 'selezionato' => $this->selezionato]);
     }
 
-    /**
-     * Select per versioni: value = nome tipo (stringa), non FK numerica.
-     */
-    public function tipoNomiSelect(?string $selezionato = null): string
+    public function tipoNomiSelect(): string
     {
         $tipi = (new TipiLicenzeModel())->select('tipo')->distinct()->orderBy('tipo')->findAll();
-        return $this->view('tipi_nomi_select', ['tipi' => $tipi, 'selezionato' => $selezionato]);
+        return $this->view('tipi_nomi_select', ['tipi' => $tipi, 'selezionato' => $this->selezionatoNome]);
     }
 }

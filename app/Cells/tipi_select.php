@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var array  $gruppi
+ * @var int $selezionato
+ */
+?>
 <select name="tipilicenze_id" id="tipilicenze_id" class="form-select" required>
     <option value="">-- Seleziona --</option>
     <?php foreach ($gruppi as $nomeTipo => $opzioni): ?>

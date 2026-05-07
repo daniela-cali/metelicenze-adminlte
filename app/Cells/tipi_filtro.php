@@ -1,3 +1,9 @@
+<?php
+/**
+ * @var array  $tipi
+ */
+?>
+
 <?php foreach ($tipi as $tipo): ?>
     <div class="form-check">
         <input class="form-check-input" type="checkbox" name="tipi" value="<?= esc($tipo['tipo']) ?>" id="tipo_<?= esc($tipo['tipo']) ?>">

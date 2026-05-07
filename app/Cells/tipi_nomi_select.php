@@ -1,3 +1,10 @@
+<?php
+/**
+ * @var array  $tipi
+ * @var int $selezionato
+ */
+?>
+
 <select name="tipo" id="tipo" class="form-select" required>
     <option value="">-- Seleziona tipo --</option>
     <?php foreach ($tipi as $t): ?>
