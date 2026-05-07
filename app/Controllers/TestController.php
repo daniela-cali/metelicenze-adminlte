@@ -17,4 +17,25 @@ class TestController extends BaseController
 
     }
 
+    public function tipi_filtro()
+    {
+        $cell = new \App\Cells\TipiCell();
+        $result = $cell->filtro();
+        return $this->view('test/test', [
+            'test' => $result
+        ]);
+
+    }
+
+    public function tipi_select()
+    {
+        $cell = new \App\Cells\TipiCell();
+        $result = $cell->select();
+        //dd($result);
+        return $this->view('test/test', [
+            'test' => $result
+        ]);
+
+    }
+
 }

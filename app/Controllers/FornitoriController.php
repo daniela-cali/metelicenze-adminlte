@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\FornitoriModel;
 use App\Models\TipiLicenzeModel;
+use App\Controllers\TipiLicenzeController;
 
 use CodeIgniter\HTTP\ResponseInterface;
 
@@ -42,13 +43,14 @@ class FornitoriController extends BaseController
 
     public function show(int $id)
     {
+        $tipiLicenzeController = (new TipiLicenzeController);
         $fornitore = $this->FornitoriModel->getFornitoriById($id);
         $data = [
             'mode'          => 'view',
             'fornitore'     => $fornitore,
             'title'         => 'Scheda Fornitore: ' . $fornitore["nome"],
             'backTo'        => $this->getBackTo(url_to('fornitori_index')),
-            'selectData'    => $this->tipiLicenzeModel->getTipiLicenzaForSelect(),
+            'selectData'    => $tipiLicenzeController->getTipiLicenzaForSelect(),
             'licenzeFornite' => $this->tipiLicenzeModel->getTipiLicenzeByFornitore($id),
             'form' => [
                 'action'     => '',

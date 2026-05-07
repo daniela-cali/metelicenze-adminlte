@@ -7,7 +7,7 @@ use App\Models\VersioniModel;
 
 class VersioniController extends BaseController
 {
-    protected $VersioniModel;
+    protected VersioniModel $VersioniModel;
 
     public function __construct()
     {
@@ -23,7 +23,7 @@ class VersioniController extends BaseController
         return $this->view('versioni/index', $data);
     }
 
-    public function show($id)
+    public function show(int $id)
     {
         $versione = $this->VersioniModel->getVersioneById($id);
         $data = [
@@ -78,7 +78,7 @@ class VersioniController extends BaseController
         }
     }
 
-    public function edit($id)
+    public function edit(int $id)
     {
         $versione = $this->VersioniModel->find($id);
         if (!$versione) {
@@ -100,7 +100,7 @@ class VersioniController extends BaseController
         return $this->view('versioni/form', $data);
     }
 
-    public function update($id)
+    public function update(int $id)
     {
         $data = $this->request->getPost();
         $data['id'] = $id;
@@ -116,7 +116,7 @@ class VersioniController extends BaseController
         }
     }
 
-    public function delete($id)
+    public function delete(int $id)
     {
         if ($this->VersioniModel->delete($id)) {
             return redirect()->to($this->getBackTo(url_to('versioni_index')))

@@ -10,8 +10,8 @@ use CodeIgniter\HTTP\ResponseInterface;
 class ClientiController extends BaseController
 {
 
-    protected $ClientiModel;
-    protected $LicenzeModel;
+    protected ClientiModel $ClientiModel;
+    protected LicenzeModel $LicenzeModel;
 
     public function __construct()
     {
@@ -60,7 +60,7 @@ class ClientiController extends BaseController
             $padre = $this->ClientiModel->getClientiById($cliente['padre_id']);
             $cliente['padre_nome'] = $padre['nome'] ?? null;
         }
-
+    //dd($cliente, $licenze);
         $data = [
             'title' => 'Scheda Cliente ',
             'mode' => 'view',
