@@ -132,6 +132,8 @@ $routes->group('test', function($routes) {
     $routes->get('db', 'TestController::testDatabaseConnection');
     $routes->get('loadTablesFields', 'Import\ImportController::loadTablesFields');
     $routes->get('getClientiByTipoLicenza/(:segment)', 'TestController::getLicenzeByTipo/$1');
+    $routes->get('tipi_filtro', 'TestController::tipi_filtro');
+    $routes->get('tipi_select', 'TestController::tipi_select');
 });
 
 // =============================================================================
@@ -144,11 +146,11 @@ $routes->group('test', function($routes) {
 // =============================================================================
 //
 // $routes->group('gruppo', ['filter' => 'notpending'], function($routes) {
-//     $routes->get('/',              'GruppoController::index',    ['as' => 'gruppo_index']);     // Elenco di tutti i record
-//     $routes->get('(:num)',         'GruppoController::show/$1',  ['as' => 'gruppo_scheda']);    // Dettaglio in sola lettura
-//     $routes->get('crea',          'GruppoController::create',   ['as' => 'gruppo_crea']);      // Form di creazione vuoto
-//     $routes->post('/',             'GruppoController::store',    ['as' => 'gruppo_salva']);     // Salva il nuovo record (POST dal form crea)
-//     $routes->get('modifica/(:num)','GruppoController::edit/$1',  ['as' => 'gruppo_modifica']); // Form di modifica precompilato
-//     $routes->put('(:num)',         'GruppoController::update/$1',['as' => 'gruppo_aggiorna']); // Salva le modifiche (PUT dal form modifica)
-//     $routes->get('elimina/(:num)', 'GruppoController::delete/$1',['as' => 'gruppo_elimina']); // Elimina il record
+//     $routes->get('/',              'GruppoController::index',    ['as' => 'gruppo_index']);      // Elenco di tutti i record
+//     $routes->get('(:num)',         'GruppoController::show/$1',  ['as' => 'gruppo_scheda']);     // Dettaglio in sola lettura
+//     $routes->get('crea',          'GruppoController::create',   ['as' => 'gruppo_crea']);        // Form di creazione vuoto
+//     $routes->post('/',             'GruppoController::store',    ['as' => 'gruppo_salva']);      // Salva il nuovo record (POST dal form crea)
+//     $routes->get('modifica/(:num)','GruppoController::edit/$1',  ['as' => 'gruppo_modifica']);   // Form di modifica precompilato
+//     $routes->put('(:num)',         'GruppoController::update/$1',['as' => 'gruppo_aggiorna']);   // Salva le modifiche (PUT dal form modifica)
+//     $routes->get('elimina/(:num)', 'GruppoController::delete/$1',['as' => 'gruppo_elimina']);    // Elimina il record
 // });

@@ -1,3 +1,12 @@
+<?php
+/**
+ * @var string $title
+ * @var array  $fornitore
+ * @var string $backTo
+ * @var array $selectData
+ * ...
+ */
+?>
 <?php $this->extend('layouts/main'); ?>
 
 <?php $this->section('breadcrumb'); ?>
@@ -116,9 +125,10 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Nome</th>
-                            <th>Descrizione</th>
                             <th>Categoria</th>
+                            <th>Tipo</th>
+                            <th>Modello</th>
+                            <th>Descrizione</th>
                             <th>Stato</th>
                             <th class="notexport">Azioni</th>
                         </tr>
@@ -130,10 +140,10 @@
                                 style="cursor:pointer;"
                                 <?= audit_tooltip($tipo, 'right') ?>>
                                 <td><?= esc($tipo["id"]) ?></td>
-                                <td><?= esc($tipo["nome"]) ?></td>
+                                <td><?= esc($tipo["categoria_label"]) ?></td>
+                                <td><?= esc($tipo["tipo"]) ?></td>
                                 <td><?= esc($tipo["modello"]) ?></td>
                                 <td><?= esc($tipo["descrizione"]) ?></td>
-                                <td><?= esc($tipo["categoria_label"]) ?></td>
                                 <td>
                                     <span class="badge <?= $tipo["stato"] ? 'bg-success' : 'bg-danger' ?>">
                                         <?= $tipo["stato"] ? 'Attiva' : 'Inattiva' ?>

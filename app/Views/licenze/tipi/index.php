@@ -56,6 +56,11 @@
                                             <i class="bi bi-pencil"></i> Modifica
                                         </a>
                                     </li>
+                                    <li>
+                                        <a class="dropdown-item" href="<?= url_to('fornitori_show', $tipo["fornitori_id"]) ?>">
+                                            <i class="bi bi-person-vcard"></i> Scheda Fornitore
+                                        </a>
+                                    </li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
                                         <a class="dropdown-item text-danger" href="<?= url_to('tipilicenze_delete', $tipo["id"]) ?>">
