@@ -25,19 +25,24 @@ class TipiLicenzeController extends BaseController
     }
     public function show(int $id)
     {
-        $data['tipo'] = $this->TipiLicenzeModel->find($id);
-        if (!$data['tipo']) {
-            return redirect()->to('licenze/tipi')->with('error', 'Tipo di licenza non trovato');
+        $tipoLicenza = $this->TipiLicenzeModel->find($id);
+        if (!$tipoLicenza) {
+            return redirect()->to(url_to('tipilicenze_index'))->with('error', 'Tipo di licenza non trovato');
         }
-        $data['mode'] = 'show';
-        $data['title'] = 'Dettagli Tipo Licenza: ' . esc($data['tipo']['nome']);
-        $data['form'] = [
-            'action' => null,
-            'method' => null,
-            'spoof' => null,
-            'readonly' => true
+        $data = [
+            'mode'        => 'view',
+            'title'       => 'Dettagli Tipo Licenza: ' . esc($tipoLicenza['tipo']),
+            'backTo'      => $this->getBackTo(url_to('tipilicenze_index')),
+            'tipoLicenza' => $tipoLicenza,
+            'form' => [
+                'action'     => '',
+                'method'     => 'get',
+                'spoof'      => null,
+                'submitText' => '',
+                'readonly'   => true,
+            ],
         ];
-        return $this->view('licenze/tipi/show', $data);
+        return $this->view('licenze/tipi/form', $data);
     }
 
     public function create(): string
