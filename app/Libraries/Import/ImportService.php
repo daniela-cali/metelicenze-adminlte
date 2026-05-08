@@ -166,7 +166,7 @@ class ImportService
 
     public function getCsvFields(string $path, string $columnName = 'column_name')
     {
-        dd([$path,$columnName]);
+        //dd([$path,$columnName]);
         $fields = [];
         //Se non riesco ad aprire il file lancio un'eccezione 
         if (($handle = fopen($path, "r")) === FALSE) {
