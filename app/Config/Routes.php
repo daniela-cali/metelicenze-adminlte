@@ -79,11 +79,11 @@ $routes->group('tipilicenze', ['filter' => 'notpending'], function($routes) {
 });
 
 $routes->group('admin', ['filter' => 'group:superadmin,admin'], function($routes) {
-    /**
+    /*
      * Importazione Clienti 
-     */
     $routes->get('importClienti', 'Admin\ImportClientiController::index');
     $routes->post('importClienti', 'Admin\ImportClientiController::importClienti');
+    */
 
     /**
      * Impostazioni sito 
