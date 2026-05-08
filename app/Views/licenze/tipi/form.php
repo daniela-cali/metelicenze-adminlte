@@ -45,8 +45,8 @@ $backTo = $backTo ?? base_url('/tipi');
                 </select>
             </div>
             <div class="mb-3">
-                <label for="nome" class="form-label">Nome</label>
-                <input type="text" name="nome" id="nome" class="form-control" value="<?= isset($tipoLicenza) ? esc($tipoLicenza['tipo']) : '' ?>" required>
+                <label for="tipo" class="form-label">Tipo</label>
+                <input type="text" name="tipo" id="tipo" class="form-control" value="<?= isset($tipoLicenza) ? esc($tipoLicenza['tipo']) : '' ?>" required>
             </div>
             <div class="mb-3 ">
                 <label for="modello" class="form-label">Modello</label>

@@ -17,31 +17,31 @@
 </div>
 
 <?php if (!empty($tipiLicenze)): ?>
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped table-hover align-middle" id="tipiTable">
-            <thead class="table-secondary">
-                <tr>
-                    <th>ID Tipo</th>
-                    <th>Tipo</th>
-                    <th>Modello</th>
-                    <th>Categoria</th>
-                    <th>Descrizione</th>
-                    <th class="notexport">Azioni</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($tipiLicenze as $tipo): ?>
-                    <?php $trClass = $tipo["stato"] == 0 ? 'table-danger' : ''; ?>
-                    <tr class="clickable <?= $trClass ?>"
-                        data-id="<?= esc($tipo["id"]) ?>"
-                        <?= audit_tooltip($tipo) ?>>
-                        <td><?= esc($tipo["id"]) ?></td>
-                        <td><?= esc($tipo["tipo"]) ?></td>
-                        <td><?= esc($tipo["modello"]) ?></td>
-                        <td><?= esc($tipo["categoria_label"]) ?></td>
-                        <td><?= esc($tipo["descrizione"]) ?></td>
-                        <td>
-                            <div class="dropdown">
+    <div class="container-fluid">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover align-middle" id="tipiTable">
+                <thead class="table-secondary">
+                    <tr>
+                        <th>ID Tipo</th>
+                        <th>Tipo</th>
+                        <th>Modello</th>
+                        <th>Categoria</th>
+                        <th>Descrizione</th>
+                        <th class="notexport">Azioni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($tipiLicenze as $tipo): ?>
+                        <?php $trClass = $tipo["stato"] == 0 ? 'table-danger' : ''; ?>
+                        <tr class="clickable <?= $trClass ?>"
+                            data-id="<?= esc($tipo["id"]) ?>"
+                            <?= audit_tooltip($tipo) ?>>
+                            <td><?= esc($tipo["id"]) ?></td>
+                            <td><?= esc($tipo["tipo"]) ?></td>
+                            <td><?= esc($tipo["modello"]) ?></td>
+                            <td><?= esc($tipo["categoria_label"]) ?></td>
+                            <td><?= esc($tipo["descrizione"]) ?></td>
+                            <td>
                                 <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bi bi-list"></i>
                                 </button>
@@ -56,24 +56,33 @@
                                             <i class="bi bi-pencil"></i> Modifica
                                         </a>
                                     </li>
-                                    <li>
-                                        <a class="dropdown-item" href="<?= url_to('fornitori_show', $tipo["fornitori_id"]) ?>">
-                                            <i class="bi bi-person-vcard"></i> Scheda Fornitore
+                                    <?php if ($tipo["fornitori_id"]): ?>
+                                        <li>
+                                            <a class="dropdown-item" href="<?= url_to('fornitori_show', $tipo["fornitori_id"]) ?>">
+                                                <i class="bi bi-person-vcard"></i> Scheda Fornitore
+                                            </a>
+                                        </li>
+                                    <?php else: ?>
+                                        <a class="dropdown-item" href="<?= url_to('fornitori_index') ?>">
+                                            Associare prima il fornitore
                                         </a>
+                                        </li>
+                                    <?php endif ?>
+                                    <li>
+                                        <hr class="dropdown-divider">
                                     </li>
-                                    <li><hr class="dropdown-divider"></li>
                                     <li>
                                         <a class="dropdown-item text-danger" href="<?= url_to('tipilicenze_delete', $tipo["id"]) ?>">
                                             <i class="bi bi-trash"></i> Elimina
                                         </a>
                                     </li>
                                 </ul>
-                            </div>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 <?php else: ?>
     <div class="alert alert-info">
