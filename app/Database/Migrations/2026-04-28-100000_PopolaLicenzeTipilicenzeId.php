@@ -29,7 +29,7 @@ class PopolaLicenzeTipilicenzeId extends Migration
         // Sigla: tre varianti identificate dal modello
         $this->db->query("
             UPDATE licenze l
-            JOIN tipilicenze t ON (t.nome = 'Sigla' AND t.modello = l.modello)
+            JOIN tipilicenze t ON (t.tipo = 'Sigla' AND t.modello = l.modello)
             SET l.tipilicenze_id = t.id
             WHERE l.tipo = 'Sigla'
               AND l.tipilicenze_id IS NULL
@@ -38,7 +38,7 @@ class PopolaLicenzeTipilicenzeId extends Migration
         // VarHub: un unico record in tipilicenze, modello non discriminante
         $this->db->query("
             UPDATE licenze l
-            JOIN tipilicenze t ON (t.nome = 'VarHub')
+            JOIN tipilicenze t ON (t.tipo = 'VarHub')
             SET l.tipilicenze_id = t.id
             WHERE l.tipo = 'VarHub'
               AND l.tipilicenze_id IS NULL
@@ -47,7 +47,7 @@ class PopolaLicenzeTipilicenzeId extends Migration
         // SKNT: mappa su 'SKNT Signer'
         $this->db->query("
             UPDATE licenze l
-            JOIN tipilicenze t ON (t.nome = 'SKNT Signer')
+            JOIN tipilicenze t ON (t.tipo = 'SKNT Signer')
             SET l.tipilicenze_id = t.id
             WHERE l.tipo = 'SKNT'
               AND l.tipilicenze_id IS NULL
