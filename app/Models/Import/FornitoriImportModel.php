@@ -4,16 +4,16 @@ namespace App\Models\Import;
 
 use CodeIgniter\Model;
 
-class ClientiImportModel extends Model
+class FornitoriImportModel extends Model
 {
 
-    protected $table            = 'clienti';
+    protected $table            = 'fornitori';
     protected $primaryKey       = 'id';
     protected $returnType       = 'array';
     protected $uniqueKeys       = ['id_external'];
     protected $allowedFields = [
-        'id_external', 
         'codice', 
+        'id_external', 
         'nome', 
         'piva', 
         'indirizzo', 

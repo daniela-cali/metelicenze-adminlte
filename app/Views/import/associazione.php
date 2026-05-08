@@ -41,7 +41,7 @@
                                     class="form-control form-control-sm">
                                 <datalist id="campi-<?= esc($campo["campo_dest"]) ?>">
                                     <?php foreach ($campiEsterni as $esterno): ?>
-                                        <option value="<?= esc($esterno) ?>">
+                                        <option value="<?= old(esc($esterno)) ?>">
                                         <?php endforeach; ?>
                                 </datalist>
                             </td>

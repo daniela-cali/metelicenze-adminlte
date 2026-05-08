@@ -62,38 +62,40 @@ class ImportController extends BaseController
                         'tabella'      => $tabella,
                         'campiInterni' => $campiInterni,
                     ]);
-                } 
+                }
                 if ($tipoImport === 'importa_file') {
                     $message = $importService->import($tabella, 'csv', $path);
                     session()->setFlashdata('success', $message);
-                    return redirect()->to(url_to('clienti_index'));
+                    return redirect()->to(url_to($tabella.'_index'));
                 }
             }
         } catch (\Exception $e) {
-            dd($e->getMessage());
-            log_message('error', $e->getMessage());
-            $message = "Inserire un file .cvs valido.";
+            $message = $e instanceof \App\Libraries\Import\ImportException
+                ? $e->getMessage()
+                : 'Errore imprevisto durante l\'importazione.';
             session()->setFlashdata('error', $message);
-            return redirect()->to(url_to('import_index'));
+            return redirect()->back();
         }
     }
 
-    public function storeMapping(){
+    public function storeMapping()
+    {
         $transcodificheModel = new TranscodificheModel();
         $tabella = $this->request->getPost('tabella');
         $mapping = $this->request->getPost('mapping');
         foreach ($mapping as $campoDest => $campoOri) {
             $transcodificheModel
-            ->where('tabella_dest', $tabella)
-            ->where('campo_dest', $campoDest)
-            ->set(['campo_ori'=>  $campoOri, 'campo_dest'=> $campoDest])
-            ->update();
+                ->where('tabella_dest', $tabella)
+                ->where('campo_dest', $campoDest)
+                ->set(['campo_ori' =>  $campoOri, 'campo_dest' => $campoDest])
+                ->update();
         }
         session()->setFlashdata('success', 'Mappatura salvata con successo');
         return redirect()->to(url_to('import_index'));
     }
 
-    public function fromDatabase($table){
+    public function fromDatabase($table)
+    {
         /* Verifico che il database esterno sia raggiungibile prima di tentare la connessione,
          * evitando il timeout/errore grezzo di CodeIgniter in caso di server irraggiungibile */
         if (!db_is_available('external')) {
@@ -106,9 +108,11 @@ class ImportController extends BaseController
             session()->setFlashdata('success', $message);
             return redirect()->to(url_to('clienti_index'));
         } catch (\Exception $e) {
-            log_message('error', 'Errore importazione da database: ' . $e->getMessage());
-            session()->setFlashdata('error', 'Errore durante l\'importazione: ' . $e->getMessage());
-            return redirect()->to(url_to('import_index'));
+            $message = $e instanceof \App\Libraries\Import\ImportException
+                ? $e->getMessage()
+                : 'Errore imprevisto durante l\'importazione.';
+            session()->setFlashdata('error', $message);
+            return redirect()->back();
         }
     }
 }

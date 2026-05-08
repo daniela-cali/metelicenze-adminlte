@@ -8,13 +8,13 @@ use CodeIgniter\Model;
 class DatabaseInfoModel extends Model
 {
 
-    protected $dbConfig;
+    protected object $dbConfig;
 
+    /* Campi di sistema che non devono entrare in transcodifiche */
     protected $systemFields = [
-        'id', 
-        'dt_import', 
+        'id',
+        'dt_import',
         'utente_import',
-        'note',
         'created_at',
         'created_by',
         'updated_at',
@@ -23,7 +23,13 @@ class DatabaseInfoModel extends Model
         'deleted_by',
         'figlio_sn',
         'padre_id',
-        ];
+    ];
+
+    /* Campi necessari in allowed fields, ma non mappati per la transcodifica */
+    protected $autoSetFields = ['dt_import', 'utente_import'];
+
+
+
 
     public function __construct()
     {
@@ -31,7 +37,12 @@ class DatabaseInfoModel extends Model
         $this->dbConfig = config('Database');
     }
 
-    public function getDbInfo($db)
+    public function getAutoSetFields(): array
+    {
+        return $this->autoSetFields;
+    }
+
+    public function getDbInfo(object $db)
     {
         /**
          * Passo il db alla funzione e chiamo metodi privati a seconda del driver utilizzato
@@ -43,7 +54,7 @@ class DatabaseInfoModel extends Model
         };
     }
 
-    private function getDbInfoMysql($db)
+    private function getDbInfoMysql(object $db)
     {
         return $db->query("
             SELECT
@@ -54,7 +65,7 @@ class DatabaseInfoModel extends Model
         ")->getRowArray();
     }
 
-    private function getDbInfoPostgre($db)
+    private function getDbInfoPostgre(object $db)
     {
         return $db->query("
             SELECT
@@ -67,7 +78,7 @@ class DatabaseInfoModel extends Model
         ")->getRowArray();
     }
 
-    public function getTables($db)
+    public function getTables(object $db)
     {
         return match ($db->DBDriver) {
             'MySQLi' => $this->getTablesMysql($db),
@@ -75,7 +86,7 @@ class DatabaseInfoModel extends Model
             default => throw new \Exception("Driver {$db->DBDriver} non supportato"),
         };
     }
-    private function getTablesMysql($db)
+    private function getTablesMysql(object $db)
     {
         $dbName = $db->database;
         return $db->query("
@@ -86,7 +97,7 @@ class DatabaseInfoModel extends Model
     ", [$dbName])->getResultArray();
     }
 
-    private function getTablesPostgre($db)
+    private function getTablesPostgre(object $db)
     {
         $dbSchema = $db->schema;
         return $db->query("
@@ -97,7 +108,7 @@ class DatabaseInfoModel extends Model
     ", [$dbSchema])->getResultArray();
     }
 
-    public function getTableFields($db, $table)
+    public function getTableFields(object $db, string $table)
     {
         return match ($db->DBDriver) {
             'MySQLi' => $this->getTableFieldsMysql($db, $table),
@@ -106,12 +117,12 @@ class DatabaseInfoModel extends Model
         };
     }
 
-    private function getTableFieldsMysql($db, $table)
+    private function getTableFieldsMysql(object $db, string $table)
     {
         /** In MySQL lo schema è solo il nome database in quanto non prevede l'utilizzo di schema diversi (schema = database)*/
         //$dbname = $this->dbConfig->{$db->DBGroup}['database'] // → "metelicenze" uso la forma più breve qui sotto
         $dbName = $db->database;
-        return $db->table('information_schema.columns')
+        $result = $db->table('information_schema.columns')
             ->select('COLUMN_NAME as column_name, COLUMN_TYPE as data_type, IS_NULLABLE as is_nullable, COLUMN_DEFAULT as column_default')
             ->where('table_name', $table)
             ->where('table_schema', $dbName)
@@ -119,9 +130,10 @@ class DatabaseInfoModel extends Model
             ->orderBy('ORDINAL_POSITION')
             ->get()
             ->getResultArray();
+        return $result;
     }
 
-    private function getTableFieldsPostgre($db, $table)
+    private function getTableFieldsPostgre(object $db, string $table)
     {
         /** In Postgre lo schema può cambiare, il db è solo un contenitore che può contenere più schema diversi
          * e lo recupero dalla config istanziata nel costruttore
@@ -129,13 +141,12 @@ class DatabaseInfoModel extends Model
 
         $schema = $this->dbConfig->{$db->DBGroup}['schema'] ?? null;
         return $db->table('information_schema.columns')
-        ->select('COLUMN_NAME as column_name, COLUMN_TYPE as data_type, IS_NULLABLE as is_nullable, COLUMN_DEFAULT as column_default')
-        ->where('table_name', $table)
-        ->where('table_schema', $schema)
-        ->notLike('COLUMN_NAME', '_id_pk', 'after')
-        ->orderBy('ordinal_position')
-        ->get()
-        ->getResultArray();
-
+            ->select('COLUMN_NAME as column_name, COLUMN_TYPE as data_type, IS_NULLABLE as is_nullable, COLUMN_DEFAULT as column_default')
+            ->where('table_name', $table)
+            ->where('table_schema', $schema)
+            ->notLike('COLUMN_NAME', '_id_pk', 'after')
+            ->orderBy('ordinal_position')
+            ->get()
+            ->getResultArray();
     }
 }

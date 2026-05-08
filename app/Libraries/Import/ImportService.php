@@ -4,13 +4,15 @@ namespace App\Libraries\Import;
 
 use App\Models\Import\TranscodificheModel;
 use App\Models\Admin\DatabaseInfoModel;
-use App\Models\Import\ClientiExternalModel;
+use App\Models\Import\ExternalModel;
 use App\Models\Import\ClientiImportModel;
+use App\Models\Import\FornitoriImportModel;
+use App\Libraries\Import\ImportException;
 use CodeIgniter\Shield\Models\DatabaseException;
 
 class ImportService
 {
-    protected $trancodificheModel;
+    protected TranscodificheModel $trancodificheModel;
 
     public function __construct()
     {
@@ -51,7 +53,7 @@ class ImportService
             $this->trancodificheModel->upsertBatch($data);
             return "Campi interni caricati con successo nella tabella!";
         } else {
-            return "Nessuna tabella permessa nel database: ". implode( ' - ', $allowedTables);
+            return "Nessuna tabella permessa nel database: " . implode(' - ', $allowedTables);
         }
     }
 
@@ -66,13 +68,14 @@ class ImportService
 
     private function importFromDatabase(string $table): string
     {
-        $externalModel = match ($table) {
-            'clienti' =>  new ClientiExternalModel(),
+        $tipo = match($table){
+            'clienti' => 'C',
+            'fornitori' => 'F',
             default    => throw new \Exception("Tabella '$table' non implementata"),
         };
-        $externalRecords = $externalModel->getClientiExternal();
+        $externalRecords = (new ExternalModel())->getExternal($tipo);
         $campi_dest = $this->trancodificheModel->where('tabella_dest', $table)->findAll();
-        $records = [];
+        $records = $fields = [];
         foreach ($externalRecords as $extRecord) {
             foreach ($campi_dest as $campo) {
                 $fields[$campo['campo_dest']] = $extRecord[$campo['campo_ori']];
@@ -86,18 +89,18 @@ class ImportService
                     $value = mb_convert_encoding($value, 'UTF-8', 'ISO-8859-1');
                 }
             }
-                /**
-                 * Verifico campi vuoti che a db sono come not null
-                 */
-                $record['nome']      = $record['nome'] ?: 'Valore Mancante';
-                $record['indirizzo'] = $record['indirizzo'] ?: 'Valore Mancante';
-                $record['citta']      = $record['citta'] ?: 'Valore Mancante';
-                $record['cap']      = $record['cap'] ?: 'nullo';
-                $record['provincia'] = $record['provincia'] ?: 'nullo';
-                $record['dt_import'] = date('Y-m-d H:i:s');
-                $record['utente_import'] = auth()->id();
-                /* Casto i booleani in 0/1 per MySQL */
-                $record['stato'] = filter_var($record['stato'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
+            /**
+             * Verifico campi vuoti che a db sono come not null
+             */
+            $record['nome']      = $record['nome'] ?: 'Valore Mancante';
+            $record['indirizzo'] = $record['indirizzo'] ?: 'Valore Mancante';
+            $record['citta']      = $record['citta'] ?: 'Valore Mancante';
+            $record['cap']      = $record['cap'] ?: 'nullo';
+            $record['provincia'] = $record['provincia'] ?: 'nullo';
+            $record['dt_import'] = date('Y-m-d H:i:s');
+            $record['utente_import'] = auth()->id();
+            /* Casto i booleani in 0/1 per MySQL */
+            $record['stato'] = filter_var($record['stato'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
         }
 
         $model = match ($table) {
@@ -109,15 +112,32 @@ class ImportService
         return "Importazione completata: " . count($records) . " record elaborati";
     }
 
-    private function importFromCsv(string $table, $path): string
+    private function importFromCsv(string $table, string $path): string
     {
         //dd([$table, $path]);
+        $model = match ($table) {
+            'clienti' => new ClientiImportModel,
+            'fornitori' => new FornitoriImportModel,
+            default    => throw new ImportException("Tabella '$table' non supportata per l'import"),
+        };
+
         if (($handle = fopen($path, "r")) === FALSE) {
-            throw new \Exception("Impossibile aprire il file CSV:" . $path);
+            throw new ImportException("Impossibile aprire il file CSV:" . $path);
         }
         $campi_dest = $this->trancodificheModel->where('tabella_dest', $table)->findAll();
-        //dd($campi_dest);
+        /* Controllo che la prima riga contenga effettivamente le intestazione di colonne che ho nella tabella transcodifiche,
+         * quindi mi prendo i campi attesi e li confronto con gli headers recuperati: 
+         * la prima riga può essere nulla -vedi lancio di eccezione 
+         * oppure contenere direttamente un record, ma senza intestazioni di colonne*/
+        $expectedColumns = array_column($campi_dest, 'campo_ori');
         $headers = fgetcsv($handle);
+        $missingColumns = array_diff($expectedColumns, $headers);
+        //dd([$headers, $expectedColumns, $missingColumns]);
+        
+        if (empty($headers) || $headers === [null] || !empty($missingColumns)) {
+            throw new ImportException('Il file CSV non contiene intestazioni di colonna.');
+        }
+
         $headersIndexes = array_flip($headers);
         //dd([$campi_dest,$headers,$headersIndexes]);
         $fields = [];
@@ -139,17 +159,14 @@ class ImportService
             $record['stato'] = filter_var($record['stato'], FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
         }
         //dd($records);
-        $model = match ($table) {
-            'clienti' => new ClientiImportModel,
-            default    => throw new \Exception("Tabella '$table' non supportata per l'import"),
-        };
+
         $model->upsertBatch($records);
         return "Importazione completata: " . count($records) . " record elaborati";
     }
 
     public function getCsvFields(string $path, string $columnName = 'column_name')
     {
-        //dd([$path,$columnName]);
+        dd([$path,$columnName]);
         $fields = [];
         //Se non riesco ad aprire il file lancio un'eccezione 
         if (($handle = fopen($path, "r")) === FALSE) {

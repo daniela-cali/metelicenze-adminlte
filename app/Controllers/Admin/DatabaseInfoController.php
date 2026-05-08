@@ -84,11 +84,13 @@ class DatabaseInfoController extends BaseController
             
             $result = $databaseInfoModel->getTableFields($db, $table);
 
-            // Lista dei nomi dei campi
-            $allowedFields = array_filter(
-                array_column($result, 'column_name'),
-                fn($field) => $field !== 'id'
-            );
+            // Lista dei nomi dei campi + aggiunta di quelli che devono entrare negli allowedFields del model 
+            // Prendo i nomi colonne
+            $fieldsNames = array_column($result, 'column_name');
+            //Filtro i campi togliendo il campo id
+            $fieldsNames = array_values(array_filter($fieldsNames, fn($field) => $field !== 'id'));
+            $autoFields = $databaseInfoModel->getAutoSetFields();
+            $allowedFields = array_merge($fieldsNames, $autoFields);
 
             return $this->view('admin/database/dbFields', [
                 'fields'         => $result,
