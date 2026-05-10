@@ -1,3 +1,13 @@
+<?php
+/**
+ * @var string  $title
+ * @var array   $form
+ * @var string  $mode
+ * @var string  $internal_code
+ * @var array   $selectValues
+ */
+?>
+
 <?= $this->extend('layouts/main') ?>
 
 <?= $this->section('breadcrumb') ?>

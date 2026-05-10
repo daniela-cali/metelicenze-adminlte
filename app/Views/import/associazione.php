@@ -1,3 +1,12 @@
+<?php
+/**
+ * @var string $tabella
+ * @var array  $campiInterni
+ * @var array  $campiEsterni
+
+ */
+?>
+
 <?= $this->extend('layouts/main') ?>
 
 <?= $this->section('breadcrumb') ?>

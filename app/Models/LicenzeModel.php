@@ -8,7 +8,7 @@ class LicenzeModel extends AuditModel
 {
     protected $table            = 'licenze';
     protected $primaryKey       = 'id';
-    protected $beforeInsert =   ['setFakePadre'];
+    //protected $beforeInsert =   ['setFakePadre'];
     protected $afterInsert =    ['setPadreSelfIfMissing'];
 
     protected $allowedFields = [
@@ -41,7 +41,6 @@ class LicenzeModel extends AuditModel
     /**
      * Genera l'elenco delle licenze
      */
-
     public function getLicenze(): array
     {
         $result = $this->select('licenze.*,tipilicenze.tipo as tipilicenze_tipo, tipilicenze.modello as tipilicenze_modello, tipilicenze.categoria as tipilicenze_categoria')
@@ -141,18 +140,18 @@ class LicenzeModel extends AuditModel
     public function getTipoLicenzeByCliente(): array
     {
 
-        /*$rows = $this->select('licenze.clienti_id, t.tipo as tipo_licenza')
+        $rows = $this->select('licenze.clienti_id, t.tipo as tipo_licenza, t.modello as tipo_modello')
             ->join('tipilicenze t', 'licenze.tipilicenze_id = t.id', 'left')
-            ->groupBy('licenze.clienti_id, t.tipo')
-            ->get()
-            ->getResultArray(); // array normale, nessuna indicizzazione su PK come in findAll()*/
+            ->where('t.stato', 1)
+            ->groupBy('licenze.clienti_id, t.tipo, t.modello')
+            ->findAll();
 
-            $rows = $this->db->table('licenze l')
+         /*   $rows = $this->db->table('licenze l')
                 ->select('l.clienti_id, t.tipo as tipo_licenza')
                 ->join('tipilicenze t', 'l.tipilicenze_id = t.id', 'left')
                 ->groupBy('l.clienti_id, t.tipo')
                 ->get()
-                ->getResultArray(); 
+                ->getResultArray(); */
         // Estraggo un array associativo con clienti_id come chiave e tipo come valore 
         $result = [];
         foreach ($rows as $row) {
@@ -175,6 +174,20 @@ class LicenzeModel extends AuditModel
         foreach ($rows as &$row) {
             $row['nome'] = TipiLicenzeModel::decodeCategoriaLabel($row['categoria']);
         }
+        return $rows;
+    }
+
+    public function getLicenzePadre(): array
+    {
+        $rows = $this->select([
+                'licenze.id as value',
+                'CONCAT_WS(\' - \', c.nome, licenze.codice, t.tipo, t.modello) AS content'
+            ])
+            ->join('tipilicenze t', 'licenze.tipilicenze_id = t.id', 'left')
+            ->join('clienti c', 'c.id = licenze.clienti_id')
+            ->where('licenze.figlio_sn', 0)
+            ->findAll();
+            //dd($rows);
         return $rows;
     }
 }

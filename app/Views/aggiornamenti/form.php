@@ -1,3 +1,13 @@
+<?php
+/**
+* @var string $title 
+* @var string $backTo
+* @var string $mode
+* @var array $form
+* @var array $versioni
+**/
+?>
+
 <?= $this->extend('layouts/main') ?>
 
 <?= $this->section('breadcrumb') ?>

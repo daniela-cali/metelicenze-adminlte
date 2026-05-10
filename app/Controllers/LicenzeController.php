@@ -71,7 +71,7 @@ class LicenzeController extends BaseController
             'mode' => 'view',
             'licenza' => $licenza,
             'title' => 'Licenza ' . esc($licenza["codice"]) . ' - ' . esc($cliente_nome),
-            'backTo'=> $this->getBackTo(url_to('licenze_index')),
+            'backTo' => $this->getBackTo(url_to('licenze_index')),
             'form' => [
                 'action'     => '',
                 'method'     => 'get',
@@ -98,7 +98,10 @@ class LicenzeController extends BaseController
         }
 
         $cliente = $this->ClientiModel->getClientiById($idCliente);
+        $selectValues = $this->LicenzeModel->getLicenzePadre();
+        //dd($selectValues);
         $padre_id = $cliente["padre_id"];
+        //dd($padre_id);
         if (!$cliente) {
             return redirect()->back()->with('error', 'Cliente non trovato!.');
         } elseif ($padre_id) {
@@ -120,6 +123,7 @@ class LicenzeController extends BaseController
             'mode' => 'create',
             'licenza' => null,
             'licenzePadre' => $padreLic['licenzePadre'] ?? [], // Passo le licenze del padre se esistono
+            'selectValues' => $selectValues,
             'id_cliente' => $idCliente,
             'backTo' => $this->getBackTo(url_to('clienti_show', $idCliente)),
             'form' => [
@@ -140,6 +144,7 @@ class LicenzeController extends BaseController
     public function store()
     {
         $data = $this->request->getPost();
+        //dd($data);
         if (!$data) {
             return redirect()->back()->with('error', 'Dati mancanti per creare la licenza.');
         }
@@ -157,7 +162,7 @@ class LicenzeController extends BaseController
     {
         //dd($id);
         $licenza = $this->LicenzeModel->getLicenzeById($id);
-       // dd($licenza);
+        // dd($licenza);
         $cliente = $this->ClientiModel->find($licenza["clienti_id"]); // Ottengo il nome del cliente
         $codice =  $licenza["codice"];
 
@@ -168,7 +173,7 @@ class LicenzeController extends BaseController
             'backTo' => $this->getBackTo(url_to('licenze_index')),
             'id_cliente' => $cliente['id'],
             'nome_cliente' => $cliente['nome'],
-            'form' =>[
+            'form' => [
                 'action' => url_to('licenze_update', $id),
                 'method' => 'POST',
                 'spoof' => 'PUT',

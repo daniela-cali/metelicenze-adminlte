@@ -154,11 +154,11 @@
                         </tr>
                     </thead>
                     <tbody>
-
                         <?php foreach ($licenze as $licenza): ?>
                             <tr class="data-row"
                                 <?= audit_tooltip($licenza) ?>
                                 data-route="licenze"
+
                                 data-id="<?= esc($licenza["padre_lic_id"]) /* padre_lic_id = id per licenze padre; usato anche dal fetch aggiornamenti via click */ ?>"
                                 style="cursor:pointer;">
                                 <td><?= esc($licenza["id"]) ?></td>
@@ -298,6 +298,7 @@
         $('#tabella-aggiornamenti')
             .on('xhr.dt', function(e, settings, json, xhr) {
                 const rows = (json && Array.isArray(json.data)) ? json.data : [];
+                //console.log(rows);
                 if (rows.length === 0) setEmptyMessage(MSG_EMPTY);
                 else setEmptyMessage(MSG_SELECT);
 
