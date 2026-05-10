@@ -11,4 +11,9 @@ class AccountController extends BaseController
     {
         return $this->view('account/pending');
     }
+
+        public function nodev()
+    {
+        return view('account/nodev');
+    }
 }
