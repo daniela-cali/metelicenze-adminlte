@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Database\Migrations\PadreId;
 use CodeIgniter\HTTP\ResponseInterface;
 use App\Models\LicenzeModel;
 use App\Models\AggiornamentiModel;
@@ -98,13 +99,17 @@ class LicenzeController extends BaseController
         }
 
         $cliente = $this->ClientiModel->getClientiById($idCliente);
-        $selectValues = $this->LicenzeModel->getLicenzePadre();
-        //dd($selectValues);
-        $padre_id = $cliente["padre_id"];
-        //dd($padre_id);
         if (!$cliente) {
             return redirect()->back()->with('error', 'Cliente non trovato!.');
-        } elseif ($padre_id) {
+        } 
+        $selectValues = $this->LicenzeModel->getLicenzePadre();
+        $padre_id = $cliente["padre_id"] ? $cliente["padre_id"] : $this->request->getPost();
+        //dd($padre_id);
+
+        
+        //dd($selectValues);
+        //dd($padre_id);
+       if ($padre_id) {
             log_message('info', 'LicenzeController::crea Cliente selezionato è un figlio, prendo il padre ID: ' . $padre_id);
             $licenzePadre = $this->LicenzeModel->getLicenzeByCliente($padre_id);
             foreach ($licenzePadre as $licenza) {
@@ -117,6 +122,7 @@ class LicenzeController extends BaseController
             $padreLic = [];
             log_message('info', 'LicenzeController::crea Licenze del padre organizzate: ' . print_r($padreLic, true));
         }
+
 
         $data = [
             'title' => 'Crea Licenza per Cliente ' . esc($cliente["nome"]) . ' [ID: ' . esc($idCliente) . ']',
@@ -138,7 +144,7 @@ class LicenzeController extends BaseController
 
         log_message('info', 'LicenzeController::crea - Creazione licenza per Cliente ID: ' . $idCliente . ' con questi dati inviati alla view: ' . print_r($data, true));
 
-        return $this->view('licenze/form', $data);
+        return $this->view('licenze/create', $data);
     }
 
     public function store()
@@ -211,4 +217,13 @@ class LicenzeController extends BaseController
         return redirect()->to($this->getBackTo(url_to('licenze_index')))
             ->with('success', 'Licenza eliminata con successo.');
     }
+
+    public function byID(int $id)
+    {
+        $result = $this->LicenzeModel->getLicenzeById($id);
+
+        return $this->response->setJSON($result);
+    }
+
+
 }

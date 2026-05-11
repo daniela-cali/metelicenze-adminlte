@@ -33,6 +33,7 @@ $routes->group('licenze', ['filter' => 'notpending'], function($routes) {
     $routes->get('modifica/(:num)', 'LicenzeController::edit/$1', ['as' => 'licenze_edit']);
     $routes->put('(:num)', 'LicenzeController::update/$1', ['as' => 'licenze_update']);
     $routes->get('elimina/(:num)', 'LicenzeController::delete/$1', ['as' => 'licenze_delete']);
+    $routes->get('byID/(:num)', 'LicenzeController::byID/$1', ['as' => 'licenze_byID']);
 });
 
 $routes->group('aggiornamenti', ['filter' => 'notpending'], function($routes) {

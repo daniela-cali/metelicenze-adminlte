@@ -143,8 +143,10 @@ class LicenzeModel extends AuditModel
         $rows = $this->select('licenze.clienti_id, t.tipo as tipo_licenza, t.modello as tipo_modello')
             ->join('tipilicenze t', 'licenze.tipilicenze_id = t.id', 'left')
             ->where('t.stato', 1)
+            ->where('licenze.stato', 1)
             ->groupBy('licenze.clienti_id, t.tipo, t.modello')
             ->findAll();
+
 
          /*   $rows = $this->db->table('licenze l')
                 ->select('l.clienti_id, t.tipo as tipo_licenza')
@@ -186,6 +188,7 @@ class LicenzeModel extends AuditModel
             ->join('tipilicenze t', 'licenze.tipilicenze_id = t.id', 'left')
             ->join('clienti c', 'c.id = licenze.clienti_id')
             ->where('licenze.figlio_sn', 0)
+            ->where('licenze.stato', 1)
             ->findAll();
             //dd($rows);
         return $rows;
